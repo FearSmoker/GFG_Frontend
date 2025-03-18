@@ -52,7 +52,10 @@ const AboutUs=()=>{
           reiciendis quis ea est?
         </p>
         <div className="w-[80%] max-w-[77.625rem] h-[0.01rem] bg-white mx-auto"></div>
-        <a className="pb-5 underline" href="mailto:geeksforgeekmits@gmail.com">
+        <a
+          className="pb-5 underline"
+          href="https://mail.google.com/mail/?view=cm&to=geeksforgeekmits@gmail.com" target="_blank"
+        >
           <GradientBox text="geeksforgeekmits@gmail.com" />
         </a>
       </div>
