@@ -26,7 +26,7 @@ const HomePage = () => {
         <div className="hidden md:flex space-x-4 lg:space-x-20 text-sm md:text-lg">
         <Link to="/about-us" className="hover:text-gray-700 text-lg sm:text-xl md:text-2xl lg:text-3xl">About Us</Link>
 <Link to="/events" className="hover:text-gray-700 text-lg sm:text-xl md:text-2xl lg:text-3xl">Events</Link>
-<Link to="/our-geeks" className="hover:text-gray-700 text-lg sm:text-xl md:text-2xl lg:text-3xl">Our Geeks</Link>
+<Link to="/meet-our-geeks" className="hover:text-gray-700 text-lg sm:text-xl md:text-2xl lg:text-3xl">Our Geeks</Link>
 
         </div>
 
