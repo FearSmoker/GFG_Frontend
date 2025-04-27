@@ -6,17 +6,18 @@ import Events from './pages/Events';
 import LetsConnect from './pages/LetsConnect';
 import POTD from './pages/POTD';
 import MeetOurGeeks from "./pages/MeetOurGeeks";
-
+import Developers from "./pages/Developers";
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={<HomePage />} /> 
         <Route path="/about-us" element={<AboutUs />} />
         <Route path="/events" element={<Events />} />
         <Route path="/lets-connect" element={<LetsConnect />} />
         <Route path="/potd" element={<POTD />} />
         <Route path="/meet-our-geeks" element={<MeetOurGeeks />} />
+        <Route path="/Devlopers" element={<Developers />} />
       </Routes>
     </Router>
   );
