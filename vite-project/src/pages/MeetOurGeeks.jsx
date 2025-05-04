@@ -55,7 +55,7 @@ const MeetOurGeeks = () => {
 
     return (
         <div>
-            <Navbar/>
+            
             <div className="bg-black text-white w-full h-fit pb-20 flex flex-col items-center p-6 ">
                 {/* Flickering Heading */}
                 <h1 className="text-[120px] font-bold mb-6 text-center h-[225px] w-[1025px] flex items-center justify-center">
@@ -106,7 +106,7 @@ const MeetOurGeeks = () => {
                     ))}
                 </div>
             </div>
-            <Footer/>
+            
         </div>
     );
 };

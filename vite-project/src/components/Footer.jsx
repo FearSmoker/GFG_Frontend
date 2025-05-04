@@ -1,6 +1,8 @@
 import { Linkedin,Instagram,Copyright} from "lucide-react"; 
 import NeonText from "../components/NeonText";
+import { useNavigation } from "../context/NavigationContext";
 const Footer=()=>{
+    const { goTo } = useNavigation();
     return(
         <footer>
             <div className="bg-black border-t w-full md:h-[15rem] h-[10rem] flex flex-col items-center text-white">

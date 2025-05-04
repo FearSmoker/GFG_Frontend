@@ -8,7 +8,7 @@ const POTD = () => {
   return (
     
     <div>
-      <Navbar/>
+      
       <div
         className="relative min-h-screen bg-cover bg-center flex flex-col items-center justify-center py-10 px-4"
         style={{ backgroundImage: "url('/src/assets/potd-bg.jpg')" }}
@@ -39,7 +39,7 @@ const POTD = () => {
             </div>
         </a>
       </div>
-      <Footer/>
+      
     </div>
   );
 };

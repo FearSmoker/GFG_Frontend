@@ -5,7 +5,7 @@ import Footer from "../components/Footer";
 const AboutUs=()=>{
     return (
       <div>
-        <Navbar/>
+        
         <div className="bg-[#000000] min-h-screen text-white flex flex-col justify-center items-center gap-10 ">
           <div className="flex gap-5 justify-center mt-5 ">
             <NeonText text="ABOUT" color="text-white underline" />
@@ -63,7 +63,7 @@ const AboutUs=()=>{
             <GradientBox text="geeksforgeekmits@gmail.com" />
           </a>
         </div>
-        <Footer/>
+        
       </div>
     );
 }

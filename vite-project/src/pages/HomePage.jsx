@@ -9,10 +9,7 @@ const HomePage = () => {
       className="min-h-screen flex flex-col bg-cover bg-center text-white"
       style={{ backgroundImage: "url('/src/assets/background.png')" }}
     >
-      {/* Navigation Bar */}
-      <Navbar/>
-
-      {/* Main Content */}
+      
       <div className="flex flex-col items-center justify-center flex-grow px-4 md:px-8 text-center h-[42rem]">
         {/* Logo Card */}
         <div className="bg-white/20 backdrop-blur-md border-4 border-green-400 rounded-2xl p-6 md:p-10 shadow-lg transition-all duration-500 hover:scale-105">
@@ -37,7 +34,7 @@ const HomePage = () => {
         <div className=" w-full h-[80rem]">
           
         </div>
-        <Footer/>
+        
     </div>
   );
 };
