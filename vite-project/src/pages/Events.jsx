@@ -1,10 +1,29 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 const Events = () => {
-  const [events, setEvents] = useState([]);
+  const events = [
+    {
+      id: 1,
+      title: "Tech Talk 2025",
+      description: "A session on AI trends and career paths.",
+      image: "https://via.placeholder.com/300x150.png?text=Tech+Talk+2025",
+    },
+    {
+      id: 2,
+      title: "Hackathon Night",
+      description: "Code all night with a team to win exciting prizes.",
+      image: "https://via.placeholder.com/300x150.png?text=Hackathon+Night",
+    },
+    {
+      id: 3,
+      title: "Web Dev Bootcamp",
+      description: "Learn React & backend basics in a weekend workshop.",
+      image: "https://via.placeholder.com/300x150.png?text=Web+Dev+Bootcamp",
+    },
+  ];
 
   const settings = {
     dots: true,
@@ -16,29 +35,11 @@ const Events = () => {
     autoplaySpeed: 3000,
   };
 
-  useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-
-    if (!token) {
-      window.location.href = "/login";
-      return;
-    }
-
-    fetch("  ", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((data) => setEvents(data))
-      .catch((err) => console.error("Failed to fetch events:", err));
-  }, []);
-
   return (
     <div className="bg-black min-h-screen flex flex-col items-center justify-center p-10">
       <h2 className="text-white text-4xl font-bold mb-8 relative">
         EVENTS
-        <span className="block w-full h-1 bg-white absolute left-0 bottom-0 mt-4"></span>
+        <span className="block w-full h-1 bg-white absolute left-0 bottom-[-10px]"></span>
       </h2>
 
       <div className="w-80">
