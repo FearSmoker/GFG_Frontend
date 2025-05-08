@@ -17,7 +17,7 @@ function App() {
     <NavigationProvider>
       <Navbar /> 
       <Routes>
-      <Route path="/homepage" element={<HomePage />} /> 
+      <Route path="/" element={<HomePage />} /> 
         <Route path="/change-password" element={<ChangePassword />} /> 
         <Route path="/get-profile" element={<Get_Profile/>} /> 
         <Route path="/about-us" element={<AboutUs />} />
