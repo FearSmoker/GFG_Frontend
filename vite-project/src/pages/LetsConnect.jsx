@@ -1,30 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 const ConnectPage = () => {
-  const [links, setLinks] = useState([]);
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    const userData = JSON.parse(localStorage.getItem("user"));
-
-    if (!token) {
-      window.location.href = "/login";
-      return;
-    }
-
-    setUser(userData);
-
-    fetch("  ", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then(res => res.json())
-      .then(data => setLinks(data))
-      .catch(err => console.error("Failed to fetch socials:", err));
-  }, []);
-
   return (
     <div className="flex items-center justify-center min-h-screen bg-black px-6">
       <div className="text-center text-white w-full max-w-lg">
@@ -38,17 +14,12 @@ const ConnectPage = () => {
             <span className="underline-green"></span>
           </span>
         </h1>
-
-        {user && (
-          <p className="text-neonGreen mt-4 text-lg">Welcome, {user.username}!</p>
-        )}
-
         <div className="mt-10 grid grid-cols-2 gap-6 place-items-center sm:w-[90%] mx-auto">
-          {links.map(({ name, url }) => (
-            <a key={name} href={url} className="neon-button" target="_blank" rel="noreferrer">
-              {name}
-            </a>
-          ))}
+          <a href="https://instagram.com" className="neon-button">Instagram</a>
+          <a href="https://linkedin.com" className="neon-button">LinkedIn</a>
+          <a href="https://twitter.com" className="neon-button col-span-2">X</a>
+          <a href="https://discord.com" className="neon-button">Discord</a>
+          <a href="https://facebook.com" className="neon-button">Facebook</a>
         </div>
       </div>
 
