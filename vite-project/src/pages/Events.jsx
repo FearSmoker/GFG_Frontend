@@ -7,21 +7,21 @@ const Events = () => {
   const events = [
     {
       id: 1,
-      title: "Tech Talk 2025",
-      description: "A session on AI trends and career paths.",
-      image: "https://via.placeholder.com/300x150.png?text=Tech+Talk+2025",
+      title: "My Event",
+      description: "Event details go here.",
+      image: "https://your-image-url",
     },
     {
       id: 2,
-      title: "Hackathon Night",
-      description: "Code all night with a team to win exciting prizes.",
-      image: "https://via.placeholder.com/300x150.png?text=Hackathon+Night",
+      title: "My Event",
+      description: "Event details go here.",
+      image: "https://your-image-url",
     },
     {
       id: 3,
-      title: "Web Dev Bootcamp",
-      description: "Learn React & backend basics in a weekend workshop.",
-      image: "https://via.placeholder.com/300x150.png?text=Web+Dev+Bootcamp",
+      title: "My Event",
+      description: "Event details go here.",
+      image: "https://your-image-url",
     },
   ];
 
