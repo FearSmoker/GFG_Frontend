@@ -1,6 +1,6 @@
 import React from "react";
 
-const ConnectPage = () => {
+const LetsConnect = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-black px-6">
       <div className="text-center text-white w-full max-w-lg">
@@ -86,4 +86,4 @@ const ConnectPage = () => {
   );
 };
 
-export default ConnectPage;
+export default LetsConnect;
