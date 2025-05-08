@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom"; 
 import './App.css';
 import HomePage from './pages/HomePage';
 import AboutUs from './pages/AboutUs';
@@ -9,9 +9,13 @@ import MeetOurGeeks from "./pages/MeetOurGeeks";
 import Developers from "./pages/Developers";
 import ChangePassword from "./pages/ChangePassword";
 import Get_Profile from "./pages/Get_Profile";
+import Navbar from "./components/Navbar";
+import { NavigationProvider } from "./context/NavigationContext";
+import Footer from "./components/Footer";
 function App() {
   return (
-    <Router>
+    <NavigationProvider>
+      <Navbar /> 
       <Routes>
       <Route path="/homepage" element={<HomePage />} /> 
         <Route path="/change-password" element={<ChangePassword />} /> 
@@ -23,9 +27,9 @@ function App() {
         <Route path="/meet-our-geeks" element={<MeetOurGeeks />} />
         <Route path="/Devlopers" element={<Developers />} />
       </Routes>
-    </Router>
+      <Footer/>
+    </NavigationProvider>
   );
 }
 
 export default App;
-
