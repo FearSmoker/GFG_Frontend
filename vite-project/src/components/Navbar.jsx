@@ -45,7 +45,7 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="flex flex-col md:hidden bg-white/20 backdrop-blur-md py-6 space-y-4 text-center shadow-md">
+        <div className="flex flex-col md:hidden bg-green-300/20 backdrop-blur-md py-6 space-y-4 text-center shadow-md">
           <button onClick={() => { goTo("/meet-our-geeks"); setIsOpen(false); }} className="text-white text-lg hover:text-green-300">
             Register / Sign In
           </button>
