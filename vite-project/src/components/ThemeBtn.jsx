@@ -1,6 +1,5 @@
-import React from "react";
 import "bootstrap-icons/font/bootstrap-icons.css";
-import useTheme from "../context/theme.jsx";
+import useTheme from "../context/ThemeContext.jsx";
 
 function ThemeBtn() {
 
