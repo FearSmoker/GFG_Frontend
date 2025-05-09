@@ -31,7 +31,7 @@ const Navbar = () => {
           <button onClick={() => goTo("/potd")} className="bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-6 rounded-full hover:cursor-pointer">
             POTD
           </button>
-          <button onClick={() => goTo("/Profile")} className="bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-6 rounded-full hover:cursor-pointer">
+          <button onClick={() => goTo("/get-profile")} className="bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-6 rounded-full hover:cursor-pointer">
             Profile
           </button>
           <ThemeBtn />
