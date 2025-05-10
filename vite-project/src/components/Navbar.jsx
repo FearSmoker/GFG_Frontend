@@ -1,6 +1,8 @@
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { useNavigation } from "../context/NavigationContext";
+import ThemeBtn from "./ThemeBtn.jsx";
+
 const Navbar = () => {
   const { goTo } = useNavigation();
   const [isOpen, setIsOpen] = useState(false);
@@ -29,9 +31,10 @@ const Navbar = () => {
           <button onClick={() => goTo("/potd")} className="bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-6 rounded-full hover:cursor-pointer">
             POTD
           </button>
-          <button onClick={() => goTo("/Profile")} className="bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-6 rounded-full hover:cursor-pointer">
+          <button onClick={() => goTo("/get-profile")} className="bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-6 rounded-full hover:cursor-pointer">
             Profile
           </button>
+          <ThemeBtn />
         </div>
 
         {/* Mobile Menu Button */}
@@ -59,6 +62,7 @@ const Navbar = () => {
           <button onClick={() => { goTo("/Profile"); setIsOpen(false); }} className="text-white text-lg hover:text-green-300 border w-fit rounded-lg px-2">
             Profile
           </button>
+          <ThemeBtn />
         </div>
       )}
     </div>

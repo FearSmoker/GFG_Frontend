@@ -7,6 +7,8 @@ import LetsConnect from './pages/LetsConnect';
 import POTD from './pages/POTD';
 import MeetOurGeeks from "./pages/MeetOurGeeks";
 import Developers from "./pages/Developers";
+import ChangePassword from "./pages/ChangePassword";
+import Get_Profile from "./pages/Get_Profile";
 import Navbar from "./components/Navbar";
 import { NavigationProvider } from "./context/NavigationContext";
 import Footer from "./components/Footer";
@@ -15,7 +17,9 @@ function App() {
     <NavigationProvider>
       <Navbar /> 
       <Routes>
-        <Route path="/" element={<HomePage />} /> 
+      <Route path="/" element={<HomePage />} /> 
+        <Route path="/change-password" element={<ChangePassword />} /> 
+        <Route path="/get-profile" element={<Get_Profile/>} /> 
         <Route path="/about-us" element={<AboutUs />} />
         <Route path="/events" element={<Events />} />
         <Route path="/lets-connect" element={<LetsConnect />} />
