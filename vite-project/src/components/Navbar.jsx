@@ -34,7 +34,9 @@ const Navbar = () => {
           <button onClick={() => goTo("/get-profile")} className="bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-6 rounded-full hover:cursor-pointer">
             Profile
           </button>
-          <ThemeBtn />
+          <div>
+            <ThemeBtn />
+          </div>
         </div>
 
         {/* Mobile Menu Button */}
@@ -45,7 +47,7 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="flex flex-col md:hidden bg-black backdrop-blur-md py-6 space-y-4 text-center shadow-md items-center">
+        <div className="flex flex-col md:hidden bg-gradient-to-r from-emerald-500 to-black backdrop-blur-md py-6 space-y-4 text-center shadow-md items-center">
           <button onClick={() => { goTo("/meet-our-geeks"); setIsOpen(false); }} className="text-white text-lg hover:text-green-300 border w-fit rounded-lg px-2 ">
             Register / Sign In
           </button>
