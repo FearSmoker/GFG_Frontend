@@ -4,7 +4,7 @@ import React from "react";
 const GradientBoxx = ({ text }) => {
   return (
     <div
-      className="flex items-center text-center  justify-center p-1 rounded-2xl text-white text-base md:text-lg font-normal leading-relaxed"
+      className="flex items-center text-center   justify-center p-1 rounded-2xl text-white text-[15px] md:text-lg font-normal leading-relaxed"
       style={{
         border: "4px solid transparent",
         backgroundImage:

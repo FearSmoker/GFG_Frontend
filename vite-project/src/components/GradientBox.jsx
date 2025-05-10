@@ -1,7 +1,7 @@
-const GradientBox = ({ text }) => {
+const GradientBox = ({ text,color}) => {
   return (
     <div
-      className=" flex items-center justify-center  text-white text-lg font-semibold bg-black rounded-full w-fit "
+      className={` flex items-center hover:cursor-pointer justify-center text-lg ${color}  text-white  font-semibold bg-black rounded-full w-fit `}
       style={{
         border: "4px solid transparent",
         backgroundImage:

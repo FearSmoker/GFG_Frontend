@@ -42,20 +42,21 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="flex flex-col md:hidden bg-white/20 backdrop-blur-md py-6 space-y-4 text-center shadow-md">
-          <button onClick={() => { goTo("/meet-our-geeks"); setIsOpen(false); }} className="text-white text-lg hover:text-green-300">
+        <div className="flex flex-col md:hidden bg-black backdrop-blur-md py-6 space-y-4 text-center shadow-md items-center">
+          <button onClick={() => { goTo("/meet-our-geeks"); setIsOpen(false); }} className="text-white text-lg hover:text-green-300 border w-fit rounded-lg px-2 ">
             Register / Sign In
           </button>
-          <button onClick={() => { goTo("/events"); setIsOpen(false); }} className="text-white text-lg hover:text-green-300">
+          
+          <button onClick={() => { goTo("/events"); setIsOpen(false); }} className="text-white text-lg hover:text-green-300 border w-fit rounded-lg px-2">
             Events
           </button>
-          <button onClick={() => { goTo("/about-us"); setIsOpen(false); }} className="text-white text-lg hover:text-green-300">
+          <button onClick={() => { goTo("/about-us"); setIsOpen(false); }} className="text-white text-lg hover:text-green-300 border w-fit rounded-lg px-2">
             About us
           </button>
-          <button onClick={() => { goTo("/potd"); setIsOpen(false); }} className="text-white text-lg hover:text-green-300">
+          <button onClick={() => { goTo("/potd"); setIsOpen(false); }} className="text-white text-lg hover:text-green-300 border w-fit rounded-lg px-2">
             POTD
           </button>
-          <button onClick={() => { goTo("/Profile"); setIsOpen(false); }} className="text-white text-lg hover:text-green-300">
+          <button onClick={() => { goTo("/Profile"); setIsOpen(false); }} className="text-white text-lg hover:text-green-300 border w-fit rounded-lg px-2">
             Profile
           </button>
         </div>
