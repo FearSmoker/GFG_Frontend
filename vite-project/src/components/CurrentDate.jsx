@@ -14,9 +14,7 @@ const CurrentDate = () => {
         setCurrentDate(now);
       }
     };
-
     const interval = setInterval(updateDateIfNeeded, 60 * 1000);
-
     return () => clearInterval(interval);
   }, [currentDate]);
 
