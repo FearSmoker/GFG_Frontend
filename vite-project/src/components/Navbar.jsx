@@ -2,6 +2,8 @@ import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { useNavigation } from "../context/NavigationContext";
 import ThemeBtn from "./ThemeBtn.jsx";
+import logoutIcon from "../assets/logout.png"; 
+
 
 const Navbar = () => {
   const { goTo } = useNavigation();
@@ -19,8 +21,11 @@ const Navbar = () => {
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex space-x-6">
+        <button onClick={() => goTo("/sign-in")} className="bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-6 rounded-full hover:cursor-pointer">
+            Register/Sign In
+          </button>
           <button onClick={() => goTo("/meet-our-geeks")} className="bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-6 rounded-full hover:cursor-pointer">
-            Register / Sign In
+            Meet Our Geeks
           </button>
           <button onClick={() => goTo("/events")} className="bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-6 rounded-full hover:cursor-pointer">
             Events
@@ -34,6 +39,14 @@ const Navbar = () => {
           <button onClick={() => goTo("/get-profile")} className="bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-6 rounded-full hover:cursor-pointer">
             Profile
           </button>
+          <button
+            onClick={() => goTo("/Logout")}
+            className="bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-6 rounded-full hover:cursor-pointer flex items-center justify-center"
+          >
+            <img src={logoutIcon} alt="Logout" className="h-6 w-6" />
+          </button>
+
+          <ThemeBtn />
           <div>
             <ThemeBtn />
           </div>
