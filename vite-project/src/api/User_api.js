@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:8000/api/v1/user";
+const BASE_URL = "http://localhost:8000/api/v1/users";
 
 // Register user
 export const registerUser = async (formData) => {
