@@ -3,7 +3,6 @@ import { useState } from "react";
 import { useNavigation } from "../context/NavigationContext";
 import ThemeBtn from "./ThemeBtn.jsx";
 import logoutIcon from "../assets/logout.png";
-
 const Navbar = () => {
   const { goTo } = useNavigation();
   const [isOpen, setIsOpen] = useState(false);
@@ -20,7 +19,6 @@ const Navbar = () => {
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex space-x-6 items-center">
-          {/* ✅ Only Sign In shown now */}
           <button onClick={() => goTo("/signin")} className="bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-6 rounded-full hover:cursor-pointer">
             Sign In
           </button>
@@ -43,7 +41,7 @@ const Navbar = () => {
             onClick={() => goTo("/logout")}
             className="bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-6 rounded-full hover:cursor-pointer flex items-center justify-center"
           >
-            <img src={logoutIcon} alt="Logout" className="h-6 w-6" />
+            <img src={logoutIcon} alt="Logout" className="h-6 w-6 " />
           </button>
           <ThemeBtn />
         </div>

@@ -47,18 +47,20 @@ const POTD = () => {
       <div className="z-10 mb-5 mt-[-80px] border-4 border-emerald-500 bg-black  rounded-xl text-white p-6 text-center">
         <NeonText text="Problem Of The Day" color="text-white text-[25px]" />
         <div className="flex gap-8 md:gap-70 mt-2  justify-center">
-          <div className="text-white text-xl md:text-2xl">
+          <div className="text-white text-xl md:text-2xl ">
+          <div className=" ml-[-58px] md:ml-[-35px]">
             <CurrentDate />
+          </div>
             <div className="text-sm text-start">
               <div>Name:{problem ? problem.problem_name : "Loading..."}</div>
               <div>Difficulty:{problem ? problem.difficulty : "Loading..."}</div>
             </div>
           </div>
 
-          <div className=" flex items-center" onClick={hideP}>
+          <div className=" flex items-center w-23 md:w-50" onClick={hideP}>
             <GradientBox
               text="&nbsp;Show Problem&nbsp;"
-              color="text-[0.8rem] md:text-xl"
+              color="text-[0.6rem] md:text-xl "
             />
           </div>
         </div>

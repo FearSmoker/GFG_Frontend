@@ -1,11 +1,8 @@
 import GradientBox from "../components/GradientBox";
 import NeonText from "../components/NeonText";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
 const AboutUs=()=>{
     return (
       <div>
-        
         <div className="bg-[#000000] min-h-screen text-white flex flex-col justify-center items-center gap-10 ">
           <div className="flex gap-5 justify-center mt-5 ">
             <NeonText text="ABOUT" color="text-white underline" />
@@ -60,10 +57,9 @@ const AboutUs=()=>{
             className="pb-5 underline"
             href="https://mail.google.com/mail/?view=cm&to=geeksforgeekmits@gmail.com" target="_blank"
           >
-            <GradientBox text="geeksforgeekmits@gmail.com" />
+            <GradientBox text="&nbsp;geeksforgeekmits@gmail.com&nbsp;" />
           </a>
         </div>
-        
       </div>
     );
 }
