@@ -45,8 +45,6 @@ const Navbar = () => {
           >
             <img src={logoutIcon} alt="Logout" className="h-6 w-6" />
           </button>
-
-          <ThemeBtn />
           <div>
             <ThemeBtn />
           </div>
