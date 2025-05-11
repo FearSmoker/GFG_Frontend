@@ -13,7 +13,7 @@ const AboutUs=()=>{
             debitis, cupiditate voluptate fugiat perspiciatis totam. Dolores
             magnam ex neque quas sit facere aperiam deserunt dolorem consequuntur,
             quo, nulla itaque aut! Lorem ipsum dolor sit amet consectetur
-            adipisicing elit. Esse nemo incidunt blanditiis tempore commodi, earum
+            adipisicing nemo incidunt blanditiis tempore commodi, earum
             nostrum quisquam saepe ab facilis, atque perspiciatis consequuntur
             quos ducimus ipsam tempora quibusdam fugit rerum. Lorem ipsum dolor
             sit amet consectetur adipisicing elit. Et repudiandae minus,

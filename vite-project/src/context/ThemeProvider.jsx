@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { ThemeContext } from "./ThemeContext";
-
 const ThemeProvider = ({ children }) => {
   const [themeMode, setThemeMode] = useState("light");
 
