@@ -2,8 +2,7 @@ import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { useNavigation } from "../context/NavigationContext";
 import ThemeBtn from "./ThemeBtn.jsx";
-import logoutIcon from "../assets/logout.png"; 
-
+import logoutIcon from "../assets/logout.png";
 
 const Navbar = () => {
   const { goTo } = useNavigation();
@@ -20,9 +19,12 @@ const Navbar = () => {
         </div>
 
         {/* Desktop Navigation */}
-        <div className="hidden md:flex space-x-6">
-        <button onClick={() => goTo("/sign-in")} className="bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-6 rounded-full hover:cursor-pointer">
-            Register/Sign In
+        <div className="hidden md:flex space-x-6 items-center">
+          <button onClick={() => goTo("/register")} className="bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-6 rounded-full hover:cursor-pointer">
+            Register
+          </button>
+          <button onClick={() => goTo("/signin")} className="bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-6 rounded-full hover:cursor-pointer">
+            Sign In
           </button>
           <button onClick={() => goTo("/meet-our-geeks")} className="bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-6 rounded-full hover:cursor-pointer">
             Meet Our Geeks
@@ -31,7 +33,7 @@ const Navbar = () => {
             Events
           </button>
           <button onClick={() => goTo("/about-us")} className="bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-6 rounded-full hover:cursor-pointer">
-            About us
+            About Us
           </button>
           <button onClick={() => goTo("/potd")} className="bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-6 rounded-full hover:cursor-pointer">
             POTD
@@ -40,16 +42,12 @@ const Navbar = () => {
             Profile
           </button>
           <button
-            onClick={() => goTo("/Logout")}
+            onClick={() => goTo("/logout")}
             className="bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-6 rounded-full hover:cursor-pointer flex items-center justify-center"
           >
             <img src={logoutIcon} alt="Logout" className="h-6 w-6" />
           </button>
-
           <ThemeBtn />
-          <div>
-            <ThemeBtn />
-          </div>
         </div>
 
         {/* Mobile Menu Button */}
@@ -61,20 +59,25 @@ const Navbar = () => {
       {/* Mobile Menu */}
       {isOpen && (
         <div className="flex flex-col md:hidden bg-gradient-to-r from-emerald-500 to-black backdrop-blur-md py-6 space-y-4 text-center shadow-md items-center">
-          <button onClick={() => { goTo("/meet-our-geeks"); setIsOpen(false); }} className="text-white text-lg hover:text-green-300 border w-fit rounded-lg px-2 ">
-            Register / Sign In
+          <button onClick={() => { goTo("/register"); setIsOpen(false); }} className="text-white text-lg hover:text-green-300 border w-fit rounded-lg px-4 py-2">
+            Register
           </button>
-          
-          <button onClick={() => { goTo("/events"); setIsOpen(false); }} className="text-white text-lg hover:text-green-300 border w-fit rounded-lg px-2">
+          <button onClick={() => { goTo("/signin"); setIsOpen(false); }} className="text-white text-lg hover:text-green-300 border w-fit rounded-lg px-4 py-2">
+            Sign In
+          </button>
+          <button onClick={() => { goTo("/meet-our-geeks"); setIsOpen(false); }} className="text-white text-lg hover:text-green-300 border w-fit rounded-lg px-4 py-2">
+            Meet Our Geeks
+          </button>
+          <button onClick={() => { goTo("/events"); setIsOpen(false); }} className="text-white text-lg hover:text-green-300 border w-fit rounded-lg px-4 py-2">
             Events
           </button>
-          <button onClick={() => { goTo("/about-us"); setIsOpen(false); }} className="text-white text-lg hover:text-green-300 border w-fit rounded-lg px-2">
-            About us
+          <button onClick={() => { goTo("/about-us"); setIsOpen(false); }} className="text-white text-lg hover:text-green-300 border w-fit rounded-lg px-4 py-2">
+            About Us
           </button>
-          <button onClick={() => { goTo("/potd"); setIsOpen(false); }} className="text-white text-lg hover:text-green-300 border w-fit rounded-lg px-2">
+          <button onClick={() => { goTo("/potd"); setIsOpen(false); }} className="text-white text-lg hover:text-green-300 border w-fit rounded-lg px-4 py-2">
             POTD
           </button>
-          <button onClick={() => { goTo("/Profile"); setIsOpen(false); }} className="text-white text-lg hover:text-green-300 border w-fit rounded-lg px-2">
+          <button onClick={() => { goTo("/get-profile"); setIsOpen(false); }} className="text-white text-lg hover:text-green-300 border w-fit rounded-lg px-4 py-2">
             Profile
           </button>
           <ThemeBtn />
@@ -85,3 +88,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
