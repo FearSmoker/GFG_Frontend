@@ -1,6 +1,3 @@
-// src/components/Gradientforpotd.jsx
-import React from "react";
-
 const GradientBoxx = ({ text }) => {
   return (
     <div
