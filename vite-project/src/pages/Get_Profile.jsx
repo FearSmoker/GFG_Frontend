@@ -62,7 +62,7 @@ export default function UserProfileScreen() {
         }
       } else {
         // No token, user is not logged in
-        setIsLoggedIn(true);
+        setIsLoggedIn(false);
         setShowLoginPrompt(true);
       }
     } catch (error) {
