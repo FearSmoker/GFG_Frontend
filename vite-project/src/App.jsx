@@ -15,31 +15,35 @@ import Get_Profile from "./pages/Get_Profile";
 import Register from "./pages/Register";
 import SignIn from "./pages/SignIn";
 
+
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { NavigationProvider } from "./context/NavigationContext";
+import { AuthProvider } from "./context/AuthContext"; 
 
 function App() {
   return (
-    <NavigationProvider>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/about-us" element={<AboutUs />} />
-        <Route path="/events" element={<Events />} />
-        <Route path="/lets-connect" element={<LetsConnect />} />
-        <Route path="/potd" element={<POTD />} />
-        <Route path="/meet-our-geeks" element={<MeetOurGeeks />} />
-        <Route path="/Devlopers" element={<Developers />} />
-        <Route path="/change-password" element={<ChangePassword />} />
-        <Route path="/get-profile" element={<Get_Profile />} />
-        <Route path="/logout" element={<Logout />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/signin" element={<SignIn />} />
-        <Route path="*" element={<div className="text-white text-center mt-10">404 - Page Not Found</div>} />
-      </Routes>
-      <Footer />
-    </NavigationProvider>
+    <AuthProvider>
+      <NavigationProvider>
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/about-us" element={<AboutUs />} />
+          <Route path="/events" element={<Events />} />
+          <Route path="/lets-connect" element={<LetsConnect />} />
+          <Route path="/potd" element={<POTD />} />
+          <Route path="/meet-our-geeks" element={<MeetOurGeeks />} />
+          <Route path="/Devlopers" element={<Developers />} />
+          <Route path="/change-password" element={<ChangePassword />} />
+          <Route path="/get-profile" element={<Get_Profile />} />
+          <Route path="/logout" element={<Logout />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/signin" element={<SignIn />} />
+          <Route path="*" element={<div className="text-white text-center mt-10">404 - Page Not Found</div>} />
+        </Routes>
+        <Footer />
+      </NavigationProvider>
+    </AuthProvider>
   );
 }
 
