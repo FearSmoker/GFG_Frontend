@@ -1,7 +1,13 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+// src/components/ChangePassword.js
+import { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { changePassword } from '../api/User_api';
+import { useAuth } from '../context/AuthContext';
 
 const ChangePassword = () => {
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+  
   const [formData, setFormData] = useState({
     currentPassword: '',
     newPassword: '',
@@ -10,6 +16,8 @@ const ChangePassword = () => {
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [message, setMessage] = useState({ text: '', type: '' });
+
+ 
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -22,18 +30,15 @@ const ChangePassword = () => {
   const validateForm = () => {
     const newErrors = {};
     
-  
     if (!formData.currentPassword.trim()) {
       newErrors.currentPassword = 'Current password is required';
     }
     
-
     if (!formData.newPassword) {
       newErrors.newPassword = 'New password is required';
     } else if (formData.newPassword.length < 8) {
       newErrors.newPassword = 'Password must be at least 8 characters';
     }
-    
     
     if (!formData.confirmPassword) {
       newErrors.confirmPassword = 'Please confirm your new password';
@@ -56,23 +61,29 @@ const ChangePassword = () => {
     setMessage({ text: '', type: '' });
     
     try {
+      // Call API to change password
+      await changePassword({
+        currentPassword: formData.currentPassword,
+        newPassword: formData.newPassword
+      });
       
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-     
       setMessage({
         text: 'Password changed successfully!',
         type: 'success'
       });
       
-   
+      // Reset form after successful password change
       setFormData({
         currentPassword: '',
         newPassword: '',
         confirmPassword: ''
       });
+      
+      // Optionally redirect back to profile after a delay
+      setTimeout(() => {
+        navigate('/profile');
+      }, 2000);
     } catch (error) {
-     
       setMessage({
         text: error.message || 'Failed to change password. Please try again.',
         type: 'error'
@@ -81,6 +92,7 @@ const ChangePassword = () => {
       setIsSubmitting(false);
     }
   };
+  
   const glowStyles = {
     textGlow: {
       textShadow: '0 0 10px rgba(255, 255, 255, 0.6), 0 0 20px rgba(255, 255, 255, 0.5), 0 0 30px rgba(255, 255, 255, 0.3)'
@@ -208,10 +220,10 @@ const ChangePassword = () => {
               </button>
               
               <Link 
-                to="/" 
+                to="/profile" 
                 className="text-center text-green-400 hover:text-green-300 transition-colors"
               >
-                Back to Home
+                Back to Profile
               </Link>
             </div>
           </form>
