@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Camera } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { updateAccountDetails, updateUserAvatar } from '../api/User_api';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../context/PassContext.jsx';
 
 export default function UserProfileScreen() {
   const navigate = useNavigate();

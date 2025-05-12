@@ -18,11 +18,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import ContactUs from "./pages/ContactUs"
 import { NavigationProvider } from "./context/NavigationContext";
-<<<<<<< HEAD
-
-=======
-import { AuthProvider } from "./context/AuthContext"; 
->>>>>>> 8312af7be8e329c2a80a93cf61dcda70e39b10af
+import { AuthProvider } from "./context/PassContext.jsx"; 
 
 function App() {
   return (
