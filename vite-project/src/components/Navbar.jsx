@@ -6,7 +6,7 @@ import logoutIcon from "../assets/logout.png";
 const Navbar = () => {
   const { goTo } = useNavigation();
   const [isOpen, setIsOpen] = useState(false);
-
+  const token = localStorage.getItem("accessToken");
   return (
     <div>
       <nav className="w-full flex justify-between items-center px-6 md:px-12 py-2 bg-gradient-to-r from-gray-300 via-gray-400 to-green-300 backdrop-blur-md shadow-lg">
@@ -37,12 +37,12 @@ const Navbar = () => {
           <button onClick={() => goTo("/get-profile")} className="bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-6 rounded-full hover:cursor-pointer">
             Profile
           </button>
-          <button
+          {token && <button
             onClick={() => goTo("/logout")}
             className="bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-6 rounded-full hover:cursor-pointer flex items-center justify-center"
           >
             <img src={logoutIcon} alt="Logout" className="h-6 w-6 " />
-          </button>
+          </button>}
           <ThemeBtn />
         </div>
 
