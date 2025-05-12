@@ -1,8 +1,6 @@
-// src/pages/SignIn.jsx
-// src/pages/SignIn.jsx
 import React, { useState } from 'react';
 import { loginUser } from '../api/User_api';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { GoogleLogin } from '@react-oauth/google';
 
 const SignIn = () => {
@@ -25,7 +23,6 @@ const SignIn = () => {
 
   const handleGoogleSuccess = credentialResponse => {
     console.log('Google Token:', credentialResponse.credential);
-    // You should send this to your backend for verification
     alert('Google login successful!');
     navigate('/');
   };
@@ -46,6 +43,14 @@ const SignIn = () => {
           onSuccess={handleGoogleSuccess}
           onError={() => alert('Google login failed')}
         />
+
+        {/* ✅ New Register Prompt */}
+        <p className="mt-6 text-center text-sm text-gray-400">
+          Not registered yet?{" "}
+          <Link to="/register" className="text-green-400 underline hover:text-green-300">
+            Click here
+          </Link>
+        </p>
       </form>
     </div>
   );

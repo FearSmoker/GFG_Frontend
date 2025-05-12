@@ -1,7 +1,5 @@
-// src/App.jsx
 import { Routes, Route } from "react-router-dom";
 import './App.css';
-
 import HomePage from './pages/HomePage';
 import AboutUs from './pages/AboutUs';
 import Events from './pages/Events';
@@ -18,6 +16,7 @@ import SignIn from "./pages/SignIn";
 
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import ContactUs from "./pages/ContactUs"
 import { NavigationProvider } from "./context/NavigationContext";
 import { AuthProvider } from "./context/AuthContext"; 
 
@@ -39,11 +38,13 @@ function App() {
           <Route path="/logout" element={<Logout />} />
           <Route path="/register" element={<Register />} />
           <Route path="/signin" element={<SignIn />} />
+          <Route path="/contact-us" element={<ContactUs />} />
           <Route path="*" element={<div className="text-white text-center mt-10">404 - Page Not Found</div>} />
         </Routes>
         <Footer />
       </NavigationProvider>
     </AuthProvider>
+
   );
 }
 

@@ -3,7 +3,6 @@ import { useState } from "react";
 import { useNavigation } from "../context/NavigationContext";
 import ThemeBtn from "./ThemeBtn.jsx";
 import logoutIcon from "../assets/logout.png";
-
 const Navbar = () => {
   const { goTo } = useNavigation();
   const [isOpen, setIsOpen] = useState(false);
@@ -20,9 +19,6 @@ const Navbar = () => {
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex space-x-6 items-center">
-          <button onClick={() => goTo("/register")} className="bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-6 rounded-full hover:cursor-pointer">
-            Register
-          </button>
           <button onClick={() => goTo("/signin")} className="bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-6 rounded-full hover:cursor-pointer">
             Sign In
           </button>
@@ -45,7 +41,7 @@ const Navbar = () => {
             onClick={() => goTo("/logout")}
             className="bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-6 rounded-full hover:cursor-pointer flex items-center justify-center"
           >
-            <img src={logoutIcon} alt="Logout" className="h-6 w-6" />
+            <img src={logoutIcon} alt="Logout" className="h-6 w-6 " />
           </button>
           <ThemeBtn />
         </div>
@@ -59,9 +55,7 @@ const Navbar = () => {
       {/* Mobile Menu */}
       {isOpen && (
         <div className="flex flex-col md:hidden bg-gradient-to-r from-emerald-500 to-black backdrop-blur-md py-6 space-y-4 text-center shadow-md items-center">
-          <button onClick={() => { goTo("/register"); setIsOpen(false); }} className="text-white text-lg hover:text-green-300 border w-fit rounded-lg px-4 py-2">
-            Register
-          </button>
+          {/* ✅ Only Sign In shown here */}
           <button onClick={() => { goTo("/signin"); setIsOpen(false); }} className="text-white text-lg hover:text-green-300 border w-fit rounded-lg px-4 py-2">
             Sign In
           </button>
