@@ -15,19 +15,39 @@ export const registerUser = async (formData) => {
 
 // Login user
 export const loginUser = async (data) => {
-  const response = await fetch(`${BASE_URL}/login`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-    credentials: "include",
-  });
-  const responseData = await response.json();
+  try {
+    const response = await fetch(`${BASE_URL}/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+      credentials: "include",
+    });
 
-  const { userId, username, email, token } = responseData;
+    if (!response.ok) {
+      throw new Error("Login failed");
+    }
 
-  return { userId, username, email, token };
+    const responseData = await response.json();
+    console.log('Response Data:', responseData);
+
+    const { user, accessToken } = responseData.data;
+
+    if (!user || !accessToken) {
+      throw new Error("Missing user or accessToken in the response");
+    }
+
+    return {
+      userId: user._id,
+      username: user.username,
+      email: user.email,
+      token: accessToken,
+    };
+  } catch (error) {
+    console.error("Error during login:", error);
+    return { error: error.message };
+  }
 };
 
 // Logout user

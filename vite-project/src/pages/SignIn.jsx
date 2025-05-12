@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import { loginUser } from '../api/User_api';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import useAuth from '../context/AuthContext.jsx';
 import { GoogleLogin } from '@react-oauth/google';
+import { Link } from 'react-router-dom';
+
 
 const SignIn = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
 
@@ -13,8 +17,9 @@ const SignIn = () => {
     e.preventDefault();
     try {
       const { token } = await loginUser(formData);
-      localStorage.setItem('token', token);
-      alert('Login successful!');
+
+      login(token);
+
       navigate('/');
     } catch (error) {
       alert('Login failed');
@@ -32,8 +37,22 @@ const SignIn = () => {
       <form onSubmit={handleSubmit} className="bg-gray-900 p-8 rounded shadow-md w-full max-w-md">
         <h2 className="text-2xl mb-6 text-green-400 text-center">Sign In</h2>
 
-        <input className="w-full p-3 mb-4 rounded bg-gray-800" placeholder="Email" name="email" type="email" onChange={handleChange} required />
-        <input className="w-full p-3 mb-6 rounded bg-gray-800" placeholder="Password" name="password" type="password" onChange={handleChange} required />
+        <input 
+          className="w-full p-3 mb-4 rounded bg-gray-800" 
+          placeholder="Email" 
+          name="email" 
+          type="email" 
+          onChange={handleChange} 
+          required 
+        />
+        <input 
+          className="w-full p-3 mb-6 rounded bg-gray-800" 
+          placeholder="Password" 
+          name="password" 
+          type="password" 
+          onChange={handleChange} 
+          required 
+        />
 
         <button type="submit" className="w-full bg-green-600 hover:bg-green-700 p-3 rounded">Sign In</button>
 

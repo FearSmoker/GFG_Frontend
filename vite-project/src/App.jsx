@@ -16,6 +16,8 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import ContactUs from "./pages/ContactUs"
 import { NavigationProvider } from "./context/NavigationContext";
+
+
 function App() {
   return (
     <NavigationProvider>
