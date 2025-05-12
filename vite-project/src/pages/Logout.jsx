@@ -1,15 +1,31 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
+
 const Logout = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    localStorage.clear(); 
-  }, []);
+    const performLogout = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        if (token) {
+          await logoutUser(token); 
+        }
+        localStorage.clear(); 
+        navigate("/logout"); 
+      } catch (error) {
+        console.error("Logout failed:", error);
+        
+      }
+    };
+
+
+    performLogout();
+  }, [navigate]);
 
   const handleSignInRedirect = () => {
-    navigate("/login");
+    navigate("/signin");
   };
 
   return (
@@ -29,3 +45,4 @@ const Logout = () => {
 };
 
 export default Logout;
+
