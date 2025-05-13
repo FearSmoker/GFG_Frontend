@@ -1,28 +1,23 @@
 import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-
+import useAuth from "../context/AuthContext.jsx";
 
 const Logout = () => {
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
   useEffect(() => {
     const performLogout = async () => {
       try {
-        const token = localStorage.getItem("accessToken");
-        if (token) {
-          await logoutUser(token); 
-        }
-        localStorage.clear(); 
-        navigate("/logout"); 
+        logout();
+        navigate("/logout");
       } catch (error) {
         console.error("Logout failed:", error);
-        
       }
     };
 
-
     performLogout();
-  }, [navigate]);
+  }, [logout, navigate]);
 
   const handleSignInRedirect = () => {
     navigate("/signin");
@@ -45,4 +40,3 @@ const Logout = () => {
 };
 
 export default Logout;
-

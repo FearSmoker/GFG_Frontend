@@ -18,11 +18,9 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import ContactUs from "./pages/ContactUs"
 import { NavigationProvider } from "./context/NavigationContext";
-import { AuthProvider } from "./context/PassContext.jsx"; 
 
 function App() {
   return (
-    <AuthProvider>
       <NavigationProvider>
         <Navbar />
         <Routes>
@@ -43,8 +41,6 @@ function App() {
         </Routes>
         <Footer />
       </NavigationProvider>
-    </AuthProvider>
-
   );
 }
 

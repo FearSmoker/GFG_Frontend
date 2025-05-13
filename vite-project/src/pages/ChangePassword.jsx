@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { changePassword } from '../api/User_api';
-import { useAuth } from '../context/PassContext.jsx';
+import useAuth from '../context/AuthContext.jsx';
 
 const ChangePassword = () => {
   const navigate = useNavigate();
