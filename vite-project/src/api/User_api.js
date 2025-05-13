@@ -54,7 +54,10 @@ export const loginUser = async (data) => {
 export const logoutUser = async () => {
   const accessToken = localStorage.getItem("access_token");
 
-  if (!accessToken) return;
+  if (!accessToken) {
+    console.warn("No access token found — skipping logout request.");
+    return;
+  }
 
   try {
     const response = await fetch(`${BASE_URL}/logout`, {
@@ -70,6 +73,8 @@ export const logoutUser = async () => {
 
     if (!response.ok) {
       console.error("Logout failed:", data);
+    } else {
+      console.log("Logout successful:", data);
     }
 
     return data;

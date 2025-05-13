@@ -1,14 +1,37 @@
 import { Menu, X } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigation } from "../context/NavigationContext";
 import ThemeBtn from "./ThemeBtn.jsx";
 import logoutIcon from "../assets/logout.png";
 import useAuth from "../context/AuthContext.jsx";
+import { getCurrentUser } from "../api/User_api.js";
 
 const Navbar = () => {
   const { goTo } = useNavigation();
   const [isOpen, setIsOpen] = useState(false);
+  const [user, setUser] = useState(null);
   const { isAuthenticated } = useAuth();
+
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      try {
+        const data = await getCurrentUser();
+
+        if (data && data.data) {
+          setUser(data.data);
+          console.log("User set:", data.data);
+        }
+      } catch (error) {
+        console.error("Error fetching current user:", error);
+      }
+    };
+
+    if (isAuthenticated) {
+      fetchCurrentUser();
+    }else {
+      console.log("User is not authenticated.");
+    }
+  }, [isAuthenticated]);
 
   const goToProfile = () => {
     if (!isAuthenticated) {
@@ -17,6 +40,7 @@ const Navbar = () => {
     }
     goTo("/get-profile");
   };
+
   return (
     <div>
       <nav className="w-full flex justify-between items-center px-6 md:px-12 py-2 bg-gradient-to-r from-gray-300 via-gray-400 to-green-300 backdrop-blur-md shadow-lg">
@@ -33,12 +57,18 @@ const Navbar = () => {
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex space-x-6 items-center">
-          <button
-            onClick={() => goTo("/signin")}
-            className="bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-6 rounded-full hover:cursor-pointer"
-          >
-            Sign In
-          </button>
+          { !isAuthenticated ? (
+            <button
+              onClick={() => goTo("/signin")}
+              className="bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-6 rounded-full hover:cursor-pointer"
+            >
+              Sign In
+            </button>
+          ) : (
+            <div className="text-green-500 font-semibold">
+              {user ? `Hi, ${user.username}` : "Loading user..."}
+            </div>
+          )}
           <button
             onClick={() => goTo("/meet-our-geeks")}
             className="bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-6 rounded-full hover:cursor-pointer"
@@ -94,7 +124,6 @@ const Navbar = () => {
       {/* Mobile Menu */}
       {isOpen && (
         <div className="flex flex-col md:hidden bg-gradient-to-r from-emerald-500 to-black backdrop-blur-md py-6 space-y-4 text-center shadow-md items-center">
-          {/* ✅ Only Sign In shown here */}
           <button
             onClick={() => {
               goTo("/signin");
