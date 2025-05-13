@@ -28,8 +28,6 @@ const Navbar = () => {
 
     if (isAuthenticated) {
       fetchCurrentUser();
-    }else {
-      console.log("User is not authenticated.");
     }
   }, [isAuthenticated]);
 
