@@ -52,11 +52,30 @@ export const loginUser = async (data) => {
 
 // Logout user
 export const logoutUser = async () => {
-  const response = await fetch(`${BASE_URL}/logout`, {
-    method: "POST",
-    credentials: "include",
-  });
-  return response.json();
+  const accessToken = localStorage.getItem("access_token");
+
+  if (!accessToken) return;
+
+  try {
+    const response = await fetch(`${BASE_URL}/logout`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${accessToken}`,
+      },
+      credentials: "include",
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      console.error("Logout failed:", data);
+    }
+
+    return data;
+  } catch (err) {
+    console.error("Logout error:", err);
+  }
 };
 
 // Refresh token
