@@ -55,7 +55,7 @@ const Navbar = () => {
 
         {/* Desktop Navigation */}
         <div className="hidden md:flex space-x-6 items-center">
-          { !isAuthenticated ? (
+          {!isAuthenticated ? (
             <button
               onClick={() => goTo("/signin")}
               className="bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-6 rounded-full hover:cursor-pointer"
@@ -63,7 +63,7 @@ const Navbar = () => {
               Sign In
             </button>
           ) : (
-            <div className="text-green-500 font-semibold">
+            <div className="text-black-800 font-bold">
               {user ? `Hi, ${user.username}` : "Loading user..."}
             </div>
           )}
@@ -91,13 +91,17 @@ const Navbar = () => {
           >
             POTD
           </button>
-          {isAuthenticated && (
-            <button
+          {isAuthenticated && user && (
+            <div
               onClick={() => goToProfile()}
-              className="bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-6 rounded-full hover:cursor-pointer"
+              className="w-10 h-10 bg-blue-700 rounded-full cursor-pointer overflow-hidden flex items-center justify-center"
             >
-              Profile
-            </button>
+              <img
+                src={user.avatar}
+                alt="User Avatar"
+                className="w-full h-full object-cover"
+              />
+            </div>
           )}
           {isAuthenticated && (
             <button
@@ -122,15 +126,21 @@ const Navbar = () => {
       {/* Mobile Menu */}
       {isOpen && (
         <div className="flex flex-col md:hidden bg-gradient-to-r from-emerald-500 to-black backdrop-blur-md py-6 space-y-4 text-center shadow-md items-center">
-          <button
-            onClick={() => {
+          {!isAuthenticated ? (
+            <button
+              onClick={() => {
               goTo("/signin");
               setIsOpen(false);
             }}
-            className="text-white text-lg hover:text-green-300 border w-fit rounded-lg px-4 py-2"
-          >
-            Sign In
-          </button>
+              className="bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-6 rounded-full hover:cursor-pointer"
+            >
+              Sign In
+            </button>
+          ) : (
+            <div className="text-black-800 font-bold">
+              {user ? `Hi, ${user.username}` : "Loading user..."}
+            </div>
+          )}
           <button
             onClick={() => {
               goTo("/meet-our-geeks");
@@ -167,16 +177,20 @@ const Navbar = () => {
           >
             POTD
           </button>
-          {isAuthenticated && (
-            <button
+          {isAuthenticated && user && (
+            <div
               onClick={() => {
                 goToProfile();
                 setIsOpen(false);
               }}
-              className="text-white text-lg hover:text-green-300 border w-fit rounded-lg px-4 py-2"
+              className="w-10 h-10 bg-blue-700 rounded-full cursor-pointer overflow-hidden flex items-center justify-center"
             >
-              Profile
-            </button>
+              <img
+                src={user.avatar}
+                alt="User Avatar"
+                className="w-full h-full object-cover"
+              />
+            </div>
           )}
           {isAuthenticated && (
             <button
