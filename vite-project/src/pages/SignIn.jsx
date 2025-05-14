@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect  } from 'react';
 import { loginUser } from '../api/User_api';
 import { useNavigate } from 'react-router-dom';
 import useAuth from '../context/AuthContext.jsx';
@@ -9,7 +9,13 @@ import { Link } from 'react-router-dom';
 const SignIn = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login , isAuthenticated } = useAuth();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate('/');
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleChange = e => setFormData({ ...formData, [e.target.name]: e.target.value });
 

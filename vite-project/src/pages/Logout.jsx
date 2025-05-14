@@ -5,7 +5,13 @@ import { logoutUser } from "../api/User_api.js";
 
 const Logout = () => {
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { logout , isAuthenticated } = useAuth();
+
+  useEffect(() => {
+      if (!isAuthenticated) {
+        navigate('/');
+      }
+    }, [isAuthenticated, navigate]);
 
   useEffect(() => {
     const performLogoutAPI = async () => {

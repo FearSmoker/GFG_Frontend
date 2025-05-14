@@ -1,11 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { registerUser } from '../api/User_api';
+import useAuth from '../context/AuthContext.jsx';
 
 const Register = () => {
   const [formData, setFormData] = useState({ fullName: '', email: '', username: '', password: '' , avatar: '' , mobileNo: ''});
   const [ avatarPreview, setAvatarPreview] = useState(null);
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+
+  useEffect(() => {
+      if (isAuthenticated) {
+        navigate('/');
+      }
+    }, [isAuthenticated, navigate]);
 
   const handleChange = e => {
     if (e.target.name === 'avatar') {
