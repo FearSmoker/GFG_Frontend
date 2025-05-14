@@ -21,7 +21,6 @@ const AuthProvider = ({ children }) => {
         localStorage.removeItem('access_token');
       }
     } else {
-      console.log("No valid token found in localStorage.");
       setUser(null);
       setIsAuthenticated(false);
     }
