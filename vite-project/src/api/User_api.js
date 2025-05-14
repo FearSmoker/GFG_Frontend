@@ -30,7 +30,7 @@ export const loginUser = async (data) => {
     }
 
     const responseData = await response.json();
-    console.log('Response Data:', responseData);
+    console.log("Response Data:", responseData);
 
     const { user, accessToken } = responseData.data;
 
@@ -53,11 +53,6 @@ export const loginUser = async (data) => {
 // Logout user
 export const logoutUser = async () => {
   const accessToken = localStorage.getItem("access_token");
-
-  if (!accessToken) {
-    console.warn("No access token found — skipping logout request.");
-    return;
-  }
 
   try {
     const response = await fetch(`${BASE_URL}/logout`, {
@@ -148,11 +143,10 @@ export const updateAccountDetails = async (data) => {
     body: JSON.stringify(data),
     credentials: "include",
   });
-  const dataResponse = await response.json();
-
-  const { fullName, email } = dataResponse;
-
-  return { fullName, email };
+  const {
+    data: { fullName, email, mobileNo },
+  } = await response.json();
+  return { fullName, email, mobileNo };
 };
 
 // Update avatar

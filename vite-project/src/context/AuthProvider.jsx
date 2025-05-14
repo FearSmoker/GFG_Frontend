@@ -1,11 +1,14 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { jwtDecode } from 'jwt-decode';
 import { AuthContext } from './AuthContext.jsx';
+import { getCurrentUser } from '../api/User_api.js'; 
 
 const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
+  
+  const userDataFetched = useRef(false);
 
   useEffect(() => {
     const token = localStorage.getItem('access_token');
@@ -14,6 +17,10 @@ const AuthProvider = ({ children }) => {
         const decoded = jwtDecode(token);
         setUser(decoded);
         setIsAuthenticated(true);
+        if (!userDataFetched.current) {
+          fetchAndUpdateUserData();
+          userDataFetched.current = true;
+        }
       } catch (error) {
         console.error("Invalid token in localStorage:", error);
         setUser(null);
@@ -27,7 +34,7 @@ const AuthProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
-  const login = (token) => {
+  const login = async (token) => {
     if (!token || token.split('.').length !== 3) {
       console.error("Invalid token format during login:", token);
       return;
@@ -38,6 +45,11 @@ const AuthProvider = ({ children }) => {
       const decoded = jwtDecode(token);
       setUser(decoded);
       setIsAuthenticated(true);
+      
+      if (!userDataFetched.current) {
+        await fetchAndUpdateUserData();
+        userDataFetched.current = true;
+      }
     } catch (error) {
       console.error("Failed to decode or store token:", error);
       localStorage.removeItem('access_token');
@@ -52,11 +64,18 @@ const AuthProvider = ({ children }) => {
     setIsAuthenticated(false);
   };
 
-  const updateUserData = (newUserData) => {
-    setUser((prev) => ({
-      ...prev,
-      ...newUserData,
-    }));
+  const fetchAndUpdateUserData = async () => {
+    try {
+      const res = await getCurrentUser();
+      if (res && res.data) {
+        setUser((prev) => ({
+          ...prev,
+          ...res.data,
+        }));
+      }
+    } catch (err) {
+      console.error("Failed to fetch current user data:", err);
+    }
   };
 
   return (
@@ -67,7 +86,7 @@ const AuthProvider = ({ children }) => {
         logout,
         isAuthenticated,
         loading,
-        updateUserData,
+        fetchAndUpdateUserData,
       }}
     >
       {children}

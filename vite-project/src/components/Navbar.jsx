@@ -4,32 +4,11 @@ import { useNavigation } from "../context/NavigationContext";
 import ThemeBtn from "./ThemeBtn.jsx";
 import logoutIcon from "../assets/logout.png";
 import useAuth from "../context/AuthContext.jsx";
-import { getCurrentUser } from "../api/User_api.js";
 
 const Navbar = () => {
   const { goTo } = useNavigation();
   const [isOpen, setIsOpen] = useState(false);
-  const [user, setUser] = useState(null);
-  const { isAuthenticated } = useAuth();
-
-  useEffect(() => {
-    const fetchCurrentUser = async () => {
-      try {
-        const data = await getCurrentUser();
-
-        if (data && data.data) {
-          setUser(data.data);
-          console.log("User set:", data.data);
-        }
-      } catch (error) {
-        console.error("Error fetching current user:", error);
-      }
-    };
-
-    if (isAuthenticated) {
-      fetchCurrentUser();
-    }
-  }, [isAuthenticated]);
+  const { isAuthenticated, user } = useAuth();
 
   const goToProfile = () => {
     if (!isAuthenticated) {
