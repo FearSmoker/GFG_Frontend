@@ -26,7 +26,19 @@ export const loginUser = async (data) => {
     });
 
     if (!response.ok) {
-      throw new Error("Login failed");
+      let errorMessage = "Login failed";
+      try {
+        const errorData = await response.json();
+        console.log("Error response body:", errorData);
+        errorMessage =
+          errorData.message ||
+          errorData.error ||
+          errorData.detail ||
+          errorMessage;
+      } catch (parseError) {
+        console.error("Failed to parse error response:", parseError);
+      }
+      throw new Error(errorMessage);
     }
 
     const responseData = await response.json();
@@ -46,7 +58,7 @@ export const loginUser = async (data) => {
     };
   } catch (error) {
     console.error("Error during login:", error);
-    return { error: error.message };
+    throw error;
   }
 };
 
