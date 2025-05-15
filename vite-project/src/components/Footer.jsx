@@ -1,6 +1,6 @@
 import { Linkedin, Instagram, Copyright } from "lucide-react"; 
 import NeonText from "../components/NeonText";
-import { useNavigation } from "../context/NavigationContext";
+import { useNavigation } from "../context/NavigationContext.jsx";
 import VisitorCountDisplay from "./VisitorCountDisplay.jsx";
 
 const Footer = () => {

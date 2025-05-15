@@ -1,6 +1,6 @@
 import { Menu, X } from "lucide-react";
-import { useState, useEffect } from "react";
-import { useNavigation } from "../context/NavigationContext";
+import { useState} from "react";
+import { useNavigation } from "../context/NavigationContext.jsx";
 import ThemeBtn from "./ThemeBtn.jsx";
 import logoutIcon from "../assets/logout.png";
 import useAuth from "../context/AuthContext.jsx";

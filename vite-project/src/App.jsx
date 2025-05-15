@@ -17,7 +17,7 @@ import SignIn from "./pages/SignIn";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import ContactUs from "./pages/ContactUs"
-import { NavigationProvider } from "./context/NavigationContext";
+import NavigationProvider from "./context/NavigationProvider.jsx";
 
 function App() {
   return (
