@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { loginUser } from "../api/User_api";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../context/AuthContext.jsx";
@@ -8,38 +8,43 @@ import { toast } from "react-hot-toast";
 
 const SignIn = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
+  const [signingIn, setSigningIn] = useState(false);
   const navigate = useNavigate();
-  const { login, isAuthenticated } = useAuth();
-
-  useEffect(() => {
-    if (isAuthenticated) {
-      navigate("/");
-    }
-  }, [isAuthenticated, navigate]);
+  const { login } = useAuth();
 
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setSigningIn(true);
+
+    const signingInToast = toast.loading("Signing in...");
+
     try {
       const { token, refreshToken } = await loginUser(formData);
-      login(token, refreshToken);
+      await login(token, refreshToken);
+
+      toast.dismiss(signingInToast);
+      toast.success("Login successful!");
 
       navigate("/");
     } catch (error) {
-      console.log('Error caught:', error);
+      console.log("Error caught:", error);
       const errorMessage =
         error.response?.data?.message ||
         error.message ||
         "Login failed. Please try again.";
-      toast.error(errorMessage);
+
+      toast.error(errorMessage, { id: signingInToast });
+    } finally {
+      setSigningIn(false);
     }
   };
 
   const handleGoogleSuccess = (credentialResponse) => {
     console.log("Google Token:", credentialResponse.credential);
-    alert("Google login successful!");
+    toast.success("Google login successful!");
     navigate("/");
   };
 
@@ -71,18 +76,18 @@ const SignIn = () => {
         <button
           type="submit"
           className="w-full bg-green-600 hover:bg-green-700 p-3 rounded"
+          disabled={signingIn}
         >
-          Sign In
+          {signingIn ? "Signing In..." : "Sign In"}
         </button>
 
         <div className="my-4 text-center text-gray-400">or</div>
 
         <GoogleLogin
           onSuccess={handleGoogleSuccess}
-          onError={() => alert("Google login failed")}
+          onError={() => toast.error("Google login failed")}
         />
 
-        {/* ✅ New Register Prompt */}
         <p className="mt-6 text-center text-sm text-gray-400">
           Not registered yet?{" "}
           <Link
@@ -93,6 +98,21 @@ const SignIn = () => {
           </Link>
         </p>
       </form>
+
+      {/* Add animation styles */}
+      <style jsx>{`
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+        .animate-fade-in {
+          animation: fadeIn 0.3s ease-in-out;
+        }
+      `}</style>
     </div>
   );
 };
