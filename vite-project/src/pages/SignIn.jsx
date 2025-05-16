@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import useAuth from "../context/AuthContext.jsx";
 import { GoogleLogin } from "@react-oauth/google";
 import { Link } from "react-router-dom";
-import {toast} from "react-hot-toast";
+import { toast } from "react-hot-toast";
 
 const SignIn = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -23,9 +23,8 @@ const SignIn = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const { token } = await loginUser(formData);
-
-      login(token);
+      const { token, refreshToken } = await loginUser(formData);
+      login(token, refreshToken);
 
       navigate("/");
     } catch (error) {

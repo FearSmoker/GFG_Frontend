@@ -5,31 +5,29 @@ import { logoutUser } from "../api/User_api.js";
 
 const Logout = () => {
   const navigate = useNavigate();
-  const { logout , isAuthenticated } = useAuth();
+  const { logout, isAuthenticated } = useAuth();
 
   useEffect(() => {
-  if (!isAuthenticated) {
-    const timer = setTimeout(() => {
-      navigate('/');
-    }, 15000);
-    return () => clearTimeout(timer);
-  }
-}, [isAuthenticated, navigate]);
+    if (!isAuthenticated) {
+      const timer = setTimeout(() => {
+        navigate('/');
+      }, 15000);
+      return () => clearTimeout(timer);
+    }
+  }, [isAuthenticated, navigate]);
 
   useEffect(() => {
-    const performLogoutAPI = async () => {
+    const performLogout = async () => {
       try {
-        await logoutUser(); 
+        await logoutUser();
+        logout();
       } catch (error) {
-        console.error("Logout failed:", error);
+        console.error("Logout API failed:", error);
+        logout();
       }
     };
 
-    performLogoutAPI();
-  }, []);
-
-  useEffect(() => {
-    logout();
+    performLogout();
   }, [logout]);
 
   const handleSignInRedirect = () => {

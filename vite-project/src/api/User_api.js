@@ -44,10 +44,14 @@ export const loginUser = async (data) => {
     const responseData = await response.json();
     console.log("Response Data:", responseData);
 
-    const { user, accessToken } = responseData.data;
+    const { user, accessToken, refreshToken } = responseData.data;
 
     if (!user || !accessToken) {
       throw new Error("Missing user or accessToken in the response");
+    }
+
+    if (refreshToken) {
+      localStorage.setItem("refresh_token", refreshToken);
     }
 
     return {
@@ -55,6 +59,7 @@ export const loginUser = async (data) => {
       username: user.username,
       email: user.email,
       token: accessToken,
+      refreshToken: refreshToken,
     };
   } catch (error) {
     console.error("Error during login:", error);
@@ -84,23 +89,56 @@ export const logoutUser = async () => {
       console.log("Logout successful:", data);
     }
 
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+
     return data;
   } catch (err) {
     console.error("Logout error:", err);
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
   }
 };
 
 // Refresh token
 export const refreshAccessToken = async () => {
-  const response = await fetch(`${BASE_URL}/refresh-token`, {
-    method: "POST",
-    credentials: "include",
-  });
-  const data = await response.json();
-
-  const { accessToken } = data;
-
-  return { accessToken };
+  try {
+    const refreshToken = localStorage.getItem("refresh_token");
+    
+    if (!refreshToken) {
+      throw new Error("No refresh token available");
+    }
+    
+    const response = await fetch(`${BASE_URL}/refresh-token`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ refreshToken }),
+      credentials: "include",
+    });
+    
+    if (!response.ok) {
+      localStorage.removeItem("access_token");
+      localStorage.removeItem("refresh_token");
+      throw new Error("Failed to refresh token");
+    }
+    
+    const data = await response.json();
+    
+    if (data.accessToken) {
+      localStorage.setItem("access_token", data.accessToken);
+    }
+    
+    if (data.refreshToken) {
+      localStorage.setItem("refresh_token", data.refreshToken);
+    }
+    
+    return data;
+  } catch (error) {
+    console.error("Refresh token error:", error);
+    throw error;
+  }
 };
 
 // Change current password
@@ -122,11 +160,40 @@ export const changePassword = async (data) => {
 
 // Get current user
 export const getCurrentUser = async () => {
-  const response = await fetch(`${BASE_URL}/current-user`, {
-    method: "GET",
-    credentials: "include",
-  });
-  return response.json();
+  try {
+    const accessToken = localStorage.getItem("access_token");
+    
+    const response = await fetch(`${BASE_URL}/current-user`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+      credentials: "include",
+    });
+    
+    if (response.status === 401) {
+      try {
+        await refreshAccessToken();
+        const newToken = localStorage.getItem("access_token");
+        const retryResponse = await fetch(`${BASE_URL}/current-user`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${newToken}`,
+          },
+          credentials: "include",
+        });
+        return retryResponse.json();
+      } catch (refreshError) {
+        console.error("Failed to refresh token:", refreshError);
+        throw refreshError;
+      }
+    }
+    
+    return response.json();
+  } catch (error) {
+    console.error("Error fetching current user:", error);
+    throw error;
+  }
 };
 
 // Get profile
