@@ -7,6 +7,7 @@ npm install bootstrap-icons
 npm install @react-oauth/google
 npm install jwt-decode
 npm install react-hot-toast
+npm install react-calendar uuid
 
 
 

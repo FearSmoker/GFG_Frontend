@@ -8,10 +8,13 @@ const Logout = () => {
   const { logout , isAuthenticated } = useAuth();
 
   useEffect(() => {
-      if (!isAuthenticated) {
-        navigate('/');
-      }
-    }, [isAuthenticated, navigate]);
+  if (!isAuthenticated) {
+    const timer = setTimeout(() => {
+      navigate('/');
+    }, 15000);
+    return () => clearTimeout(timer);
+  }
+}, [isAuthenticated, navigate]);
 
   useEffect(() => {
     const performLogoutAPI = async () => {
