@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../context/AuthContext.jsx";
 import { logoutUser } from "../api/User_api.js";
+import { toast } from "react-hot-toast";
 
 const Logout = () => {
   const navigate = useNavigate();
@@ -18,12 +19,15 @@ const Logout = () => {
 
   useEffect(() => {
     const performLogout = async () => {
+      const loggingOutToast = toast.loading("Logging out...");
       try {
         await logoutUser();
         logout();
+        toast.success("Logout successful!", { id: loggingOutToast });
       } catch (error) {
         console.error("Logout API failed:", error);
         logout();
+        toast.error("Logout failed.", { id: loggingOutToast });
       }
     };
 

@@ -12,8 +12,7 @@ import ChangePassword from "./pages/ChangePassword";
 import Get_Profile from "./pages/Get_Profile";
 import Register from "./pages/Register";
 import SignIn from "./pages/SignIn";
-
-
+import DeleteEvents from "./pages/DeleteEvents.jsx";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import ContactUs from "./pages/ContactUs"
@@ -37,6 +36,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/signin" element={<SignIn />} />
           <Route path="/contact-us" element={<ContactUs />} />
+          <Route path="/delete-events" element={<DeleteEvents />} />
           <Route path="*" element={<div className="text-white text-center mt-10">404 - Page Not Found</div>} />
         </Routes>
         <Footer />

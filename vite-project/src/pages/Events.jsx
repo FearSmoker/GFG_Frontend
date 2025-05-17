@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { fetchEvents, addEvent, deleteEvent } from "../api/Events_api.js";
-import { EventCalendar, EventCarousel, EventForm } from "../components/EventComponents.jsx";
+import {
+  EventCalendar,
+  EventCarousel,
+  EventForm,
+} from "../components/EventComponents.jsx";
 
 const Events = () => {
+  const navigate = useNavigate();
   const [events, setEvents] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [newEvent, setNewEvent] = useState({
@@ -27,8 +33,10 @@ const Events = () => {
       }));
 
       setEvents(formattedEvents);
-      
-      const uniqueDates = [...new Set(formattedEvents.map(event => event.date))];
+
+      const uniqueDates = [
+        ...new Set(formattedEvents.map((event) => event.date)),
+      ];
       setEventDates(uniqueDates);
     }
     loadEvents();
@@ -38,7 +46,7 @@ const Events = () => {
 
   const handleAddEvent = async () => {
     if (isLoading) return;
-    
+
     if (!newEvent.title || !newEvent.description || !newEvent.imageFile) {
       alert("Please fill all fields and select an image.");
       return;
@@ -54,7 +62,7 @@ const Events = () => {
       formData.append("image", newEvent.imageFile);
 
       const savedEvent = await addEvent(formData);
-      
+
       if (savedEvent) {
         const formattedNewEvent = {
           id: savedEvent._id || savedEvent.id,
@@ -69,7 +77,7 @@ const Events = () => {
           return [...prev, formattedNewEvent];
         });
 
-        setEventDates(prev => {
+        setEventDates((prev) => {
           if (!prev.includes(formattedNewEvent.date)) {
             return [...prev, formattedNewEvent.date];
           }
@@ -77,9 +85,9 @@ const Events = () => {
         });
 
         setNewEvent({ title: "", description: "", imageFile: null });
-        
+
         setShowSuccess(true);
-        
+
         setTimeout(() => {
           setShowSuccess(false);
         }, 3000);
@@ -95,15 +103,17 @@ const Events = () => {
   const handleDeleteEvent = async (id) => {
     const result = await deleteEvent(id);
     if (result) {
-      const deletedEvent = events.find(event => event.id === id);
+      const deletedEvent = events.find((event) => event.id === id);
       setEvents((prev) => {
         const filtered = prev.filter((event) => event.id !== id);
-        
-        const sameDay = filtered.some(e => e.date === deletedEvent.date);
+
+        const sameDay = filtered.some((e) => e.date === deletedEvent.date);
         if (!sameDay) {
-          setEventDates(prev => prev.filter(date => date !== deletedEvent.date));
+          setEventDates((prev) =>
+            prev.filter((date) => date !== deletedEvent.date)
+          );
         }
-        
+
         return filtered;
       });
     }
@@ -125,8 +135,19 @@ const Events = () => {
       {showSuccess && (
         <div className="fixed top-4 right-4 bg-green-500 text-black p-4 rounded-lg shadow-lg z-50 animate-bounce">
           <div className="flex items-center">
-            <svg className="w-6 h-6 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+            <svg
+              className="w-6 h-6 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M5 13l4 4L19 7"
+              ></path>
             </svg>
             <p className="font-semibold">Event added successfully!</p>
           </div>
@@ -141,10 +162,10 @@ const Events = () => {
 
       {/* EVENTS CAROUSEL - BIGGER AND CENTERED */}
       <div className="w-full max-w-3xl mb-16">
-        <EventCarousel 
-          events={events} 
-          isLoading={false} 
-          className="event-carousel-large" 
+        <EventCarousel
+          events={events}
+          isLoading={false}
+          className="event-carousel-large"
         />
       </div>
 
@@ -167,6 +188,14 @@ const Events = () => {
           />
         </div>
       </div>
+
+      {/* ✅ Delete Events Button */}
+      <button
+        onClick={() => navigate("/delete-events")}
+        className="absolute top-8 right-8 bg-red-600 hover:bg-red-700 px-5 py-2 rounded-md text-white font-bold z-30"
+      >
+        Delete Events
+      </button>
     </div>
   );
 };
