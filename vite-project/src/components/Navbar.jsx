@@ -111,7 +111,7 @@ const Navbar = () => {
               goTo("/signin");
               setIsOpen(false);
             }}
-              className="bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-6 rounded-full hover:cursor-pointer"
+              className="text-white text-lg hover:text-green-300 border w-fit rounded-lg px-4 py-2"
             >
               Sign In
             </button>
