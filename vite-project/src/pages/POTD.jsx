@@ -31,7 +31,7 @@ const POTD = () => {
 
   return (
     <div
-      className="relative min-h-screen bg-cover bg-center flex flex-col items-center justify-center py-10 px-4 overflow-hidden"
+      className="relative min-h-screen bg-cover bg-center flex flex-col items-center justify-center py-10 px-4 pb-20 overflow-hidden"
       style={{ backgroundImage: "url('/src/assets/potd-bg.jpg')" }}
     >
       {/* Black overlay */}
@@ -56,8 +56,14 @@ const POTD = () => {
               <CurrentDate />
             </div>
             <div className="mt-2">
-              <div><strong>Name:</strong> {problem ? problem.problem_name : "Loading..."}</div>
-              <div><strong>Difficulty:</strong> {problem ? problem.difficulty : "Loading..."}</div>
+              <div>
+                <strong>Name:</strong>{" "}
+                {problem ? problem.problem_name : "Loading..."}
+              </div>
+              <div>
+                <strong>Difficulty:</strong>{" "}
+                {problem ? problem.difficulty : "Loading..."}
+              </div>
             </div>
           </div>
 
@@ -72,11 +78,17 @@ const POTD = () => {
       </div>
 
       {/* POTD question */}
-      <div className="z-10 question hidden md:mb-[-15rem]">
+      <div className="z-10 question hidden md:mb-[-15rem] max-h-[500px] overflow-y-auto px-4">
         <div className="z-10 w-full max-w-4xl">
-          <GradientBoxx text={problem ? problem.description : "Loading..."} />
+          <div className="bg-gradient-to-r from-emerald-500 to-teal-400 p-4 rounded-xl text-black whitespace-pre-wrap break-words overflow-y-auto max-h-[400px]">
+            {problem ? problem.description : "Loading..."}
+          </div>
         </div>
-        <a href="https://www.geeksforgeeks.org/problem-of-the-day" target="_blank">
+        <a
+          href="https://www.geeksforgeeks.org/problem-of-the-day"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           <div className="z-10 w-full max-w-4xl mt-8 flex justify-center scale-140">
             <GradientBox text="&nbsp;Solve&nbsp;" />
           </div>
