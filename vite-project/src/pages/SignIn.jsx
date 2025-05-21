@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { loginUser } from "../api/User_api";
+import { loginUser } from "../api/User_api.js";
+import { googleLoginAPI } from "../api/GoogleLogin_api.js";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../context/AuthContext.jsx";
 import { GoogleLogin } from "@react-oauth/google";
@@ -42,10 +43,19 @@ const SignIn = () => {
     }
   };
 
-  const handleGoogleSuccess = (credentialResponse) => {
-    console.log("Google Token:", credentialResponse.credential);
-    toast.success("Google login successful!");
-    navigate("/");
+  const handleGoogleSuccess = async (credentialResponse) => {
+    const code = credentialResponse.credential;
+
+    try {
+      const { accessToken, refreshToken, user } = await googleLoginAPI(code);
+      await login(accessToken, refreshToken);
+
+      toast.success("Google login successful!");
+      navigate("/");
+    } catch (error) {
+      console.error("Google login failed:", error);
+      toast.error(error.message || "Google login failed");
+    }
   };
 
   return (
@@ -99,8 +109,7 @@ const SignIn = () => {
         </p>
       </form>
 
-      {/* Add animation styles */}
-      <style jsx>{`
+      <style>{`
         @keyframes fadeIn {
           from {
             opacity: 0;
