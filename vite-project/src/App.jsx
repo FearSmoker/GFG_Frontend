@@ -6,7 +6,7 @@ import Events from './pages/Events';
 import LetsConnect from './pages/LetsConnect';
 import POTD from './pages/POTD';
 import Logout from "./pages/Logout";
-import MeetOurGeeks from "./pages/MeetOurGeeks";
+import MeetOurGeeks from "./pages/MeetOurGeeks.jsx";
 import Developers from "./pages/Developers";
 import ChangePassword from "./pages/ChangePassword";
 import Get_Profile from "./pages/Get_Profile";

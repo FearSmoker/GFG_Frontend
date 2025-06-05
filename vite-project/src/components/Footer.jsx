@@ -8,7 +8,7 @@ const Footer = () => {
 
   return (
     <footer>
-      <div className="bg-black border-t w-full md:h-[15rem] h-[10rem] flex flex-col items-center text-white">
+      <div className="bg-black border-t w-full md:h-[15rem] h-[10rem] flex flex-col items-center text-white overflow-x-hidden">
         <NeonText color={"mt-2 md:mt-5"} text={"GET IN TOUCH"} />
         <div className="flex justify-center md:gap-10 gap-2 md:pt-5 pt-3 items-center">
           <button

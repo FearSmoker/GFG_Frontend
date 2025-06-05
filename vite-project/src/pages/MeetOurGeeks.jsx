@@ -1,114 +1,98 @@
-import React, { useState, useEffect, useMemo } from "react";
-import { motion } from "framer-motion"; 
-import "../App.css";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
+import pic from "../assets/pic.jpg";
 const CIRCLE_MEMBERS = [
-    { name: "Shivani Sharma", role: "CONTENT LEAD", img: "https://via.placeholder.com/200x350" },
-    { name: "Pulkit Kapoor", role: "SOCIAL MEDIA LEAD", img: "https://via.placeholder.com/200x350" },
-    { name: "Varsha Narwariya", role: "PR AND OUTREACH LEAD", img: "https://via.placeholder.com/200x350" },
-    { name: "Ishaan Sharma", role: "TECHNICAL LEAD", img: "https://via.placeholder.com/200x350" },
-    { name: "Bhoomi Garg", role: "MARKETING LEAD", img: "https://via.placeholder.com/200x350" },
+  { name: "Shivani Sharma", role: "Content Lead", img: pic ,link:""},
+  { name: "Pulkit Kapoor", role: "Social-Media Lead", img: pic ,link:""},
+  { name: "Varsha Narwariya", role: "PR and Outreach Lead", img: pic ,link:""},
+  { name: "Ishaan Sharma", role: "Technical Lead", img: pic ,link:""},
+  { name: "Bhoomi Garg", role: "Marketing Lead", img: pic ,link:""},
 ];
-
+const DEV_MEMBERS = [
+    { name: "Aryan Saxena", role: "Full-Stack Developer", img: pic ,link:""},
+    { name: "Priyansh Soni", role: "Frontend Developer", img: pic ,link:""},
+    { name: "Titiksha Yadav", role: "Designer", img: pic ,link:""},
+    { name: "Harshit Tiwari", role: "Frontend Developer", img: pic,link:"" },
+    { name: "Jagrat Agrawal", role: "Frontend Developer", img: pic ,link:""},
+    { name: "Unnati Jadon", role: "Frontend Developer", img: pic ,link:""},
+    { name: "Sneha Tomar", role: "Frontend Developer", img: pic ,link:""},
+  ];
 const LEADS = [
-    { name: "Priyanka Sikarwar", role: "PRESIDENT", img: "https://via.placeholder.com/500x550" },
-    { name: "Bhumi Shivhare", role: "VICE PRESIDENT", img: "https://via.placeholder.com/500x550" },
+  { name: "Priyanka Sikarwar", role: "President", img: pic ,link:""},
+  { name: "Bhumi Shivhare", role: "Vice president", img: pic ,link:""},
 ];
 
 const MeetOurGeeks = () => {
-    const [isMeetGreen, setIsMeetGreen] = useState(true);
-    const [isVisible, setIsVisible] = useState(false);
+  return (
+    <div style={{ fontFamily: 'Cabin, sans-serif' }} className=" bg-gradient-to-b from-[#011725] via-[#013a28] to-[#011725] text-white p-10 ">
+      
+      <h1 className="text-center text-4xl md:text-[3rem] mb-4"><span className='text-[#0065A5]'>&lt; </span><span className='text-[#00FFAF]'>Meet Our Geeks</span> <span className='text-[#0065A5]'>&gt;</span></h1>
+      <p className="text-center text-lg md:text-xl mb-15 text-[#A6A6A6]">
+        The Hardworkers behind the Success of <span className='text-emerald-700'>Geeks<span className='text-[#0065A5]'>For</span>Geeks</span>
+      </p>
 
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setIsMeetGreen(prev => !prev);
-        }, 1500);
-        return () => clearInterval(interval);
-    }, []);
-
-    useEffect(() => {
-        const handleScroll = () => {
-            const section = document.getElementById("circle-container");
-            if (section) {
-                const rect = section.getBoundingClientRect();
-                if (rect.top < window.innerHeight * 0.75) {
-                    setIsVisible(true);
-                }
-            }
-        };
-        window.addEventListener("scroll", handleScroll);
-        return () => window.removeEventListener("scroll", handleScroll);
-    }, []);
-
-    const circlePositions = useMemo(() => {
-        const radius = 500;
-        return CIRCLE_MEMBERS.map((_, index) => {
-            const angle = (index / CIRCLE_MEMBERS.length) * (2 * Math.PI);
-            return {
-                top: `calc(50% + ${Math.sin(angle) * radius}px - 175px)`,
-                left: `calc(50% + ${Math.cos(angle) * radius}px - 125px)`,
-                initialX: Math.cos(angle) > 0 ? 200 : -200, // Move from left or right
-            };
-        });
-    }, []);
-
-    return (
-        <div>
-            
-            <div className="bg-black text-white w-full h-fit pb-20 flex flex-col items-center p-6 ">
-                {/* Flickering Heading */}
-                <h1 className="text-[120px] font-bold mb-6 text-center h-[225px] w-[1025px] flex items-center justify-center">
-                    <span className={`font-bold ${isMeetGreen ? 'text-green-500' : 'text-white'}`}> MEET </span>&nbsp;
-                    <span className={`font-bold ${isMeetGreen ? 'text-white' : 'text-green-500'}`}> OUR </span>&nbsp;
-                    <span className={`font-bold ${isMeetGreen ? 'text-green-500' : 'text-white'}`}> GEEKS </span>
-                </h1>
-                {/* Leads */}
-                <div className="flex gap-16 mb-16">
-                    {LEADS.map(({ name, role, img }, idx) => (
-                        <div key={idx} className="w-[300px] h-[500px] flex flex-col items-center">
-                            <div className="profile-card">
-                                <div className="content">
-                                    <img src="https://via.placeholder.com/200x350" alt="Profile Name" />
-                                </div>
-                            </div>
-                            <h2 className="text-2xl font-bold text-center mt-6">{name}</h2>
-                            <p className="text-green-400 text-center text-xl">{role}</p>
-                        </div>
-                    ))}
-                </div>
-                {/* Circular Formation */}
-                <div id="circle-container" className="relative w-[1300px] h-[1300px] mx-auto">
-                    {/* Center Person */}
-                    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-center">
-                        <div className="profile-card">
-                            <img src="https://via.placeholder.com/200x350" alt="Anushka Thapa" />
-                        </div>
-                        <h2 className="text-lg font-bold mt-6">Anushka Thapa</h2>
-                        <p className="text-green-400 text-base">DESIGN LEAD</p>
-                    </div>
-                    {/* Circular Members with Side Entry Effect */}
-                    {CIRCLE_MEMBERS.map(({ name, role, img }, index) => (
-                        <motion.div
-                            key={index}
-                            className="absolute text-center"
-                            style={circlePositions[index]}
-                            initial={{ opacity: 0, x: circlePositions[index].initialX }} // Enter from left or right
-                            animate={isVisible ? { opacity: 1, x: 0 } : {}}
-                            transition={{ duration: 1.2, delay: index * 0.3 }} // Increased duration for smooth effect
-                        >
-                            <div className="profile-card">
-                                <img src={img} alt={name} />
-                            </div>
-                            <h2 className="text-lg font-bold mt-6">{name}</h2>
-                            <p className="text-green-400 text-base">{role}</p>
-                        </motion.div>
-                    ))}
+      {/* Leads Section */}
+      <div className="flex flex-wrap justify-center  gap-14 xl:gap-52 mb-10">
+        {LEADS.map((person, index) => (
+          <div key={index} className=" text-black rounded-lg p-4 w-96 flex flex-col  bg-[#011725] border-[0px] border-white shadow-[0_0_4px_0.1px_white]">
+            <div className='flex'>
+                <img src={person.img} alt={person.name} className="w-24 h-24 object-cover  rounded-full border-3 border-white" />
+                <div>
+                    <h2 className="text-2xl text-[#FFFFFF] pl-3  mt-2">{person.name}</h2>
+                    <p className="text-lg text-[#00FFAF] pl-3">{person.role}</p>
                 </div>
             </div>
-            
+            <a href={person.link} className="border w-40 ml-24 ">
+              <button className="border-[0px] hover:cursor-pointer border-white shadow-[0_0_4px_0.1px_white] text-lg w-40   bg-gradient-to-r from-[#0BA5C9] to-[#00fcB1] text-white py-2 px-4 rounded hover:bg-teal-700">
+                View Profile
+              </button>
+            </a>
+          </div>
+        ))}
+      </div>
+      {/* Circle Members Section */}
+      <p className='flex justify-center text-3xl mb-10'>Leads</p>
+      <div className="flex flex-wrap justify-center gap-14">
+        {CIRCLE_MEMBERS.map((person, index) => (
+          <div key={index} className=" text-black rounded-lg p-4 w-96 flex flex-col  bg-[#011725] border-[0px] border-white shadow-[0_0_4px_0.1px_white]">
+          <div className='flex'>
+              <img src={person.img} alt={person.name} className="w-24 h-24 object-cover  rounded-full border-3 border-white" />
+              <div>
+                  <h2 className="text-2xl text-[#FFFFFF] pl-3  mt-2">{person.name}</h2>
+                  <p className="text-lg text-[#00FFAF] pl-3">{person.role}</p>
+              </div>
+          </div>
+          <a href={person.link} className="border w-40 ml-24 ">
+              <button className="border-[0px] hover:cursor-pointer border-white shadow-[0_0_4px_0.1px_white] text-lg w-40   bg-gradient-to-r from-[#0BA5C9] to-[#00fcB1] text-white py-2 px-4 rounded hover:bg-teal-700">
+                View Profile
+              </button>
+            </a>
         </div>
-    );
+        ))}
+      </div>
+      <h1 className="text-center text-2xl sm:text-3xl mt-24">Meet Our Designer(s) & Developers</h1>
+      <p className="text-center mb-14 mt-4 text-lg sm:text-xl text-[#A6A6A6]">
+        The Brilliant Minds behind the making of <span className='text-emerald-700'>Geeks<span className='text-[#0065A5]'>For</span>Geeks</span> Website
+      </p>
+      {/* DEVS */}
+      <div className="flex flex-wrap justify-center gap-14">
+        {DEV_MEMBERS.map((person, index) => (
+          <div key={index} className=" text-black rounded-lg p-4 w-96 flex flex-col  bg-[#011725] border-[0px] border-white shadow-[0_0_4px_0.1px_white]">
+          <div className='flex'>
+              <img src={person.img} alt={person.name} className="w-24 h-24 object-cover  rounded-full border-3 border-white" />
+              <div>
+                  <h2 className="text-2xl text-[#FFFFFF] pl-3  mt-2">{person.name}</h2>
+                  <p className="text-lg text-[#00FFAF] pl-3">{person.role}</p>
+              </div>
+          </div>
+          <a href={person.link} className="border w-40 ml-24 ">
+              <button className="border-[0px] hover:cursor-pointer border-white shadow-[0_0_4px_0.1px_white] text-lg w-40   bg-gradient-to-r from-[#0BA5C9] to-[#00fcB1] text-white py-2 px-4 rounded hover:bg-teal-700">
+                View Profile
+              </button>
+            </a>
+        </div>
+        ))}
+      </div>
+    </div>
+  );
 };
 
 export default MeetOurGeeks;
