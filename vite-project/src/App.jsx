@@ -7,7 +7,6 @@ import LetsConnect from './pages/LetsConnect';
 import POTD from './pages/POTD';
 import Logout from "./pages/Logout";
 import MeetOurGeeks from "./pages/MeetOurGeeks.jsx";
-import Developers from "./pages/Developers";
 import ChangePassword from "./pages/ChangePassword";
 import Get_Profile from "./pages/Get_Profile";
 import Register from "./pages/Register";
@@ -29,7 +28,6 @@ function App() {
           <Route path="/lets-connect" element={<LetsConnect />} />
           <Route path="/potd" element={<POTD />} />
           <Route path="/meet-our-geeks" element={<MeetOurGeeks />} />
-          <Route path="/Devlopers" element={<Developers />} />
           <Route path="/change-password" element={<ChangePassword />} />
           <Route path="/get-profile" element={<Get_Profile />} />
           <Route path="/logout" element={<Logout />} />
