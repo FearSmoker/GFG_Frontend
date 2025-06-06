@@ -1,13 +1,11 @@
-import NeonText from "../components/NeonText";
-import GradientBoxx from "../components/Gradientforpotd";
-import GradientBox from "../components/GradientBox";
-import CurrentDate from "../components/CurrentDate.jsx";
-import { getTodayProblem } from "../api/POTD_api.js";
 import { useEffect, useState } from "react";
+import GradientBox from "../components/GradientBox";
+import CurrentDate from "../components/CurrentDate";
+import { getTodayProblem } from "../api/Potd_api.js";
 
 const POTD = () => {
-  console.log("POTD component rendered");
   const [problem, setProblem] = useState(null);
+  const [showProblem, setShowProblem] = useState(false);
 
   useEffect(() => {
     const fetchProblem = async () => {
@@ -22,78 +20,74 @@ const POTD = () => {
     fetchProblem();
   }, []);
 
-  const hideP = () => {
-    const element = document.querySelector(".question");
-    if (element) {
-      element.style.display = "block";
-    }
-  };
-
   return (
     <div
-      className="relative min-h-screen bg-cover bg-center flex flex-col items-center justify-center py-10 px-4 pb-20 overflow-hidden"
-      style={{ backgroundImage: "url('/src/assets/potd-bg.jpg')" }}
+      className="relative min-h-screen w-full bg-[#011725] text-white backdrop-blur-[25px] overflow-hidden flex flex-col items-center justify-center px-4"
+      style={{ fontFamily: "Cabin, sans-serif" }}
     >
-      {/* Black overlay */}
-      <div className="absolute inset-0 bg-black opacity-70 z-0"></div>
 
-      {/* Neon Heading */}
-      <div className="z-10 mb-10 mt-[-5rem] xl:mt-[-20rem]">
-        <NeonText
-          text="POTD"
-          color="text-emerald-400 underline scale-150 pt-20"
-        />
-      </div>
+      {/* Heading */}
+      <h1 className="z-10 text-[#0E86D2] text-4xl md:text-5xl font-bold tracking-wide mb-12 text-center">
+       <span className="text-[#0E86D2]">&lt;</span>
+      <span className="text-[#00FFAF] mx-2">Problem Of The Day</span>
+      <span className="text-[#0E86D2]">&gt;</span>
+      </h1>
 
-      {/* POTD Box */}
-      <div className="z-10 mb-5 mt-[-80px] border-4 border-emerald-500 bg-black rounded-xl text-white p-6 text-center">
-        <NeonText text="Problem Of The Day" color="text-white text-[25px]" />
+      {/* POTD Container */}
+      <div className="w-full bg-[#002B46]/60 border border-[#004C7C] rounded-[20px] p-6">
+    
 
-        <div className="flex flex-col md:flex-row justify-center items-center gap-6 mt-4">
-          {/* Left Column: Date + Problem Info */}
-          <div className="flex flex-col text-white text-left text-sm md:text-base">
-            <div className="flex justify-center md:justify-start">
-              <CurrentDate />
+        {/* Info Row */}
+        <div className="flex justify-between items-center mb-4">
+          <CurrentDate />
+        </div>
+
+        <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+          {/* Problem Info */}
+          <div className="font-[Cabin] p-6 mb-6 rounded-xl border border-[#004C7C] flex flex-col text-left text-sm md:text-base">
+            <div>
+              <strong>Name:</strong>{" "}
+              {problem ? problem.problem_name : "Loading..."}
             </div>
-            <div className="mt-2">
-              <div>
-                <strong>Name:</strong>{" "}
-                {problem ? problem.problem_name : "Loading..."}
-              </div>
-              <div>
-                <strong>Difficulty:</strong>{" "}
-                {problem ? problem.difficulty : "Loading..."}
-              </div>
+            <div>
+              <strong>Difficulty:</strong>{" "}
+              {problem ? problem.difficulty : "Loading..."}
             </div>
           </div>
 
-          {/* Right: Button */}
-          <div className="flex items-center" onClick={hideP}>
-            <GradientBox
-              text="&nbsp;Show Problem&nbsp;"
-              color="text-[0.6rem] md:text-xl"
-            />
-          </div>
+          {/* Show Problem Button */}
+          <button
+            onClick={() => setShowProblem(true)}
+            className="bg-[#00FFAF] border border-[#004C7C] text-black font-semibold px-6 py-2 rounded-md text-sm md:text-base"
+          >
+            Show Problem
+          </button>
         </div>
       </div>
 
-      {/* POTD question */}
-      <div className="z-10 question hidden md:mb-[-15rem] max-h-[500px] overflow-y-auto px-4">
-        <div className="z-10 w-full max-w-4xl">
-          <div className="bg-gradient-to-r from-emerald-500 to-teal-400 p-4 rounded-xl text-black whitespace-pre-wrap break-words overflow-y-auto max-h-[400px]">
-            {problem ? problem.description : "Loading..."}
-          </div>
-        </div>
-        <a
-          href="https://www.geeksforgeeks.org/problem-of-the-day"
-          target="_blank"
-          rel="noopener noreferrer"
+      {/* Problem Description Box */}
+      {showProblem && (
+        <div className="z-10 w-full max-w-3xl mt-10 bg-[#002B46]/60 border border-[#004C7C] backdrop-blur-sm rounded-[20px] p-6 transition-all duration-5000 ease-out opacity-100 scale-100"
         >
-          <div className="z-10 w-full max-w-4xl mt-8 flex justify-center scale-140">
-            <GradientBox text="&nbsp;Solve&nbsp;" />
+          <div className="bg-[#002B46]/60 border border-[#004C7C] rounded-lg p-4 mb-4">
+            <p className="text-gray-300 text-sm md:text-base leading-relaxed whitespace-pre-wrap">
+              {problem ? problem.description : "Loading..."}
+            </p>
           </div>
-        </a>
-      </div>
+
+          <div className="flex justify-center">
+            <a
+              href="https://www.geeksforgeeks.org/problem-of-the-day"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <button className=" w-full md:text-base px-6 py-2 h-[40px] bg-[#00FFAF] border border-[#004C7C] rounded-md flex items-center justify-center">
+        <span className="text-[#002B46] text-sm font-semibold">Submit</span>
+      </button>
+            </a>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
