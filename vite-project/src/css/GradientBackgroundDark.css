@@ -1,0 +1,139 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Dongle', sans-serif;
+}
+
+:root {
+  
+  --color-bg1-dark: rgb(1, 23, 37);
+  --color-bg2-dark: rgb(0, 12, 20);
+  
+  --color1-dark: 255, 255, 255;
+  --color2-dark: 14, 134, 210;
+  --color3-dark: 128, 217, 189;
+  --color4-dark: 0, 137, 94;
+  --color5-dark: 0, 255, 175;
+  --color6-dark: 0, 76, 124;
+  --color7-dark: 126, 174, 204;
+  
+  
+  --color-interactive-dark: 0, 255, 175;
+  
+  --circle-size-dark: 80%;
+  --blending-dark: hard-light;
+}
+
+@keyframes moveInCircle-dark {
+  0% { transform: rotate(0deg); }
+  50% { transform: rotate(180deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes moveVertical-dark {
+  0% { transform: translateY(-50%); }
+  50% { transform: translateY(50%); }
+  100% { transform: translateY(-50%); }
+}
+
+@keyframes moveHorizontal-dark {
+  0% { transform: translateX(-50%) translateY(-10%); }
+  50% { transform: translateX(50%) translateY(10%); }
+  100% { transform: translateX(-50%) translateY(-10%); }
+}
+
+.gradient-bg-dark {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: linear-gradient(40deg, var(--color-bg1-dark), var(--color-bg2-dark));
+  z-index: -10;          
+  pointer-events: none;  
+  transform: translateZ(0); 
+  backface-visibility: hidden; 
+}
+
+.gradient-bg-dark svg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+}
+
+.gradients-container-dark {
+  filter: url(#goo-dark) blur(40px);
+  width: 100%;
+  height: 100%;
+}
+
+.g1-dark, .g2-dark, .g3-dark, .g4-dark, .g5-dark, .interactive-dark {
+  position: absolute;
+  mix-blend-mode: var(--blending-dark);
+  background: radial-gradient(circle at center, transparent 0, transparent 50%) no-repeat;
+  opacity: 1;
+}
+
+.g1-dark {
+  background: radial-gradient(circle at center, rgba(var(--color1-dark), 0.8) 0, rgba(var(--color1-dark), 0) 50%);
+  width: var(--circle-size-dark);
+  height: var(--circle-size-dark);
+  top: calc(50% - var(--circle-size-dark) / 2);
+  left: calc(50% - var(--circle-size-dark) / 2);
+  transform-origin: center center;
+  animation: moveVertical-dark 30s ease infinite;
+}
+
+.g2-dark {
+  background: radial-gradient(circle at center, rgba(var(--color2-dark), 0.8) 0, rgba(var(--color2-dark), 0) 50%);
+  width: var(--circle-size-dark);
+  height: var(--circle-size-dark);
+  top: calc(50% - var(--circle-size-dark) / 2);
+  left: calc(50% - var(--circle-size-dark) / 2);
+  transform-origin: calc(50% - 400px);
+  animation: moveInCircle-dark 20s reverse infinite;
+}
+
+.g3-dark {
+  background: radial-gradient(circle at center, rgba(var(--color3-dark), 0.8) 0, rgba(var(--color3-dark), 0) 50%);
+  width: var(--circle-size-dark);
+  height: var(--circle-size-dark);
+  top: calc(50% - var(--circle-size-dark) / 2 + 200px);
+  left: calc(50% - var(--circle-size-dark) / 2 - 500px);
+  transform-origin: calc(50% + 400px);
+  animation: moveInCircle-dark 40s linear infinite;
+}
+
+.g4-dark {
+  background: radial-gradient(circle at center, rgba(var(--color4-dark), 0.8) 0, rgba(var(--color4-dark), 0) 50%);
+  width: var(--circle-size-dark);
+  height: var(--circle-size-dark);
+  top: calc(50% - var(--circle-size-dark) / 2);
+  left: calc(50% - var(--circle-size-dark) / 2);
+  transform-origin: calc(50% - 200px);
+  animation: moveHorizontal-dark 40s ease infinite;
+  opacity: 0.7;
+}
+
+.g5-dark {
+  background: radial-gradient(circle at center, rgba(var(--color5-dark), 0.8) 0, rgba(var(--color5-dark), 0) 50%);
+  width: calc(var(--circle-size-dark) * 2);
+  height: calc(var(--circle-size-dark) * 2);
+  top: calc(50% - var(--circle-size-dark));
+  left: calc(50% - var(--circle-size-dark));
+  transform-origin: calc(50% - 800px) calc(50% + 200px);
+  animation: moveInCircle-dark 20s ease infinite;
+}
+
+.interactive-dark {
+  background: radial-gradient(circle at center, rgba(var(--color-interactive-dark), 0.8) 0, rgba(var(--color-interactive-dark), 0) 50%);
+  width: 100%;
+  height: 100%;
+  top: -50%;
+  left: -50%;
+  opacity: 0.7;
+  transition: background 0.3s ease;
+}

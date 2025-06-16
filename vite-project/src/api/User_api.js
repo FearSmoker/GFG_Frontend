@@ -6,10 +6,19 @@ export const registerUser = async (formData) => {
     method: "POST",
     body: formData,
   });
+  
   const data = await response.json();
+  
+  if (!response.ok) {
+    const error = new Error(data.message || 'Registration failed');
+    error.response = {
+      status: response.status,
+      data: data
+    };
+    throw error;
+  }
 
-  const { fullName, email, username, avatar } = data;
-
+  const { fullName, email, username, avatar } = data.data;
   return { fullName, email, username, avatar };
 };
 

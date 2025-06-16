@@ -1,24 +1,91 @@
-import GradientBox from "../components/GradientBox";
-import NeonText from "../components/NeonText";
-const ContactUs=()=>{
-    return (
-      <div> 
-        <div className="bg-[#000000] min-h-screen text-white flex flex-col justify-center items-center gap-10 ">
-          <div className="flex gap-5 justify-center mt-5 ">
-            <NeonText text="CONTACT" color="text-white underline" />
-            <NeonText text="US" color="text-emerald-500 underline" />
-          </div>
-          <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfmPUIo9414HCOxThoFRXl8XeLz0yOBAtwXMaVRoktkJCsK8Q/viewform?embedded=true" width="640" height="856" frameborder="0" marginheight="0" marginwidth="0" className="w-fit md:w-full" >Loading…</iframe>
-          <div className="w-[80%] max-w-[77.625rem] h-[0.01rem] bg-white mx-auto"></div>
-          <a
-            className="pb-5 underline"
-            href="https://mail.google.com/mail/?view=cm&to=geeksforgeekmits@gmail.com" target="_blank"
-          >
-            <GradientBox text="geeksforgeekmits@gmail.com" />
-          </a>
-        </div>
-        
-      </div>
-    );
-}
-export default ContactUs
+import React, { useState } from 'react';
+import ContactUsComponent from '../components/ContactUsBackground.jsx';
+
+const ContactUs = () => {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    message: ''
+  });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitMessage, setSubmitMessage] = useState('');
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!formData.name || !formData.email || !formData.phone || !formData.message) {
+      setSubmitMessage('Please fill in all fields.');
+      setTimeout(() => setSubmitMessage(''), 3000);
+      return;
+    }
+
+    setIsSubmitting(true);
+    setSubmitMessage('');
+
+    const form = document.createElement('form');
+    form.action = 'https://docs.google.com/forms/d/e/1FAIpQLSfmPUIo9414HCOxThoFRXl8XeLz0yOBAtwXMaVRoktkJCsK8Q/formResponse';
+    form.method = 'POST';
+    form.target = 'hidden_iframe';
+
+    const addField = (name, value) => {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = name;
+      input.value = value;
+      form.appendChild(input);
+    };
+
+    addField('entry.2005620554', formData.name);    
+    addField('entry.1045781291', formData.email);   
+    addField('entry.1166974658', formData.phone);   
+    addField('entry.839337160', formData.message);
+
+    const submitBtn = document.createElement('button');
+    submitBtn.type = 'submit';
+    submitBtn.style.display = 'none';
+    form.appendChild(submitBtn);
+
+    document.body.appendChild(form);
+    submitBtn.click();  
+    document.body.removeChild(form);
+
+    setTimeout(() => {
+      setSubmitMessage("Message sent successfully! We'll get back to you soon.");
+      setFormData({ name: '', email: '', phone: '', message: '' });
+      setIsSubmitting(false);
+    }, 1000);
+
+    setTimeout(() => setSubmitMessage(''), 8000);
+  };
+
+  return (
+    <>
+      <ContactUsComponent 
+        formData={formData}
+        handleInputChange={handleInputChange}
+        handleSubmit={handleSubmit}
+        isSubmitting={isSubmitting}
+        submitMessage={submitMessage}
+      />
+
+      {/* Hidden iframe for Google Form submission */}
+      <iframe
+        name="hidden_iframe"
+        id="hidden_iframe"
+        style={{ display: 'none' }}
+      />
+    </>
+  );
+};
+
+export default ContactUs;

@@ -5,7 +5,7 @@ const VisitorCountDisplay = () => {
   const { visitorCount } = useContext(VisitorContext);
 
   return (
-    <div style={{ padding: "1rem", fontSize: "1.3rem", color: "#fff" }}>
+    <div style={{ padding: "1rem", fontSize: "1.1rem", color: "#fff" }}>
       {visitorCount !== null ? (
         <p>👋 Total Visitors: <strong>{visitorCount}</strong></p>
       ) : (

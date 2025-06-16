@@ -1,19 +1,29 @@
-import React, { useState , useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { registerUser } from '../api/User_api';
 import useAuth from '../context/AuthContext.jsx';
+import RegisterCard from '../components/RegisterCard.jsx';
 
 const Register = () => {
-  const [formData, setFormData] = useState({ fullName: '', email: '', username: '', password: '' , avatar: '' , mobileNo: ''});
-  const [ avatarPreview, setAvatarPreview] = useState(null);
+  const [formData, setFormData] = useState({ 
+    fullName: '', 
+    email: '', 
+    username: '', 
+    password: '', 
+    avatar: '', 
+    mobileNo: '' 
+  });
+  const [avatarPreview, setAvatarPreview] = useState(null);
+  const [backendError, setBackendError] = useState('');
+  const [registering, setRegistering] = useState(false);
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
 
   useEffect(() => {
-      if (isAuthenticated) {
-        navigate('/');
-      }
-    }, [isAuthenticated, navigate]);
+    if (isAuthenticated) {
+      navigate('/');
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleChange = e => {
     if (e.target.name === 'avatar') {
@@ -31,63 +41,90 @@ const Register = () => {
       }
     } else {
       setFormData({ ...formData, [e.target.name]: e.target.value });
+
+      if (backendError) {
+        setBackendError('');
+      }
     }
   };
 
   const handleSubmit = async e => {
     e.preventDefault();
+    setRegistering(true);
+    
     const body = new FormData();
     body.append("fullName", formData.fullName);
     body.append("email", formData.email);
     body.append("username", formData.username);
     body.append("password", formData.password);
     body.append("mobileNo", formData.mobileNo);
+    
     if (formData.avatar) {
-    body.append("avatar", formData.avatar);
-    }else {
-    const response = await fetch("https://cdn-icons-png.flaticon.com/512/149/149071.png");
-    const blob = await response.blob();
-    const defaultFile = new File([blob], "default-avatar.png", { type: blob.type });
-    body.append("avatar", defaultFile);
-  }
+      body.append("avatar", formData.avatar);
+    } else {
+      const response = await fetch("https://cdn-icons-png.flaticon.com/512/149/149071.png");
+      const blob = await response.blob();
+      const defaultFile = new File([blob], "default-avatar.png", { type: blob.type });
+      body.append("avatar", defaultFile);
+    }
 
     try {
+      setBackendError('');
       await registerUser(body);
       alert('Registered successfully');
       navigate('/signin');
     } catch (err) {
-      alert('Registration failed');
+      console.error('Full error object:', err);
+      console.log('Error response:', err.response);
+      console.log('Error response data:', err.response?.data);
+      
+      let errorMessage = 'Registration failed. Please try again.';
+      
+      if (err.response?.data) {
+        const { data } = err.response;
+        
+        if (data.message) {
+          errorMessage = data.message;
+        } else if (data.errors && Array.isArray(data.errors) && data.errors.length > 0) {
+          errorMessage = data.errors.join(', ');
+        } else if (data.error) {
+          errorMessage = data.error;
+        } else if (typeof data === 'string') {
+          if (data.includes('<!DOCTYPE html>')) {
+            errorMessage = 'Server encountered an unexpected error. Please try again later.';
+          } else {
+            errorMessage = data;
+          }
+        } else if (data.success === false) {
+          errorMessage = 'Registration failed. Please check your information and try again.';
+        }
+      } else if (err.message) {
+        if (err.message.includes('Network Error')) {
+          errorMessage = 'Network error. Please check your internet connection.';
+        } else if (err.code === 'ECONNREFUSED') {
+          errorMessage = 'Unable to connect to server. Please try again later.';
+        } else {
+          errorMessage = err.message;
+        }
+      }
+      
+      setBackendError(errorMessage);
+    } finally {
+      setRegistering(false);
     }
   };
 
   return (
-  <div className="min-h-screen bg-black text-white flex justify-center items-center">
-    <form onSubmit={handleSubmit} className="bg-gray-900 p-8 pt-10 rounded shadow-md w-full max-w-md relative">
-
-      <h2 className="text-2xl mb-4 text-green-400 text-center">Register</h2>
-      
-      <div className="flex justify-center mb-6">
-        <label htmlFor="avatar-upload" className="cursor-pointer relative group">
-          <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-green-500 group-hover:opacity-80 transition">
-            {avatarPreview ? (
-              <img src={avatarPreview} alt="Avatar" className="w-full h-full object-cover" />
-            ) : (
-              <div className="w-full h-full bg-gray-700 flex items-center justify-center text-gray-300 text-sm">Upload</div>
-            )}
-          </div>
-          <input id="avatar-upload" type="file" name="avatar" accept="image/*" onChange={handleChange} className="hidden" />
-        </label>
-      </div>
-
-      <input className="w-full p-3 mb-4 rounded bg-gray-800" placeholder="Full Name" name="fullName" onChange={handleChange} required />
-      <input className="w-full p-3 mb-4 rounded bg-gray-800" placeholder="Email" type="email" name="email" onChange={handleChange} required />
-      <input className="w-full p-3 mb-4 rounded bg-gray-800" placeholder="Username" name="username" onChange={handleChange} required />
-      <input className="w-full p-3 mb-6 rounded bg-gray-800" placeholder="Password" type="password" name="password" onChange={handleChange} required />
-      <input className="w-full p-3 mb-6 rounded bg-gray-800" placeholder="Mobile No." type="mobileNo" name="mobileNo" onChange={handleChange} required />
-
-      <button type="submit" className="w-full bg-green-600 hover:bg-green-700 p-3 rounded">Register</button>
-    </form>
-  </div>
+    <div className="min-h-screen bg-black text-white flex justify-center items-center">
+      <RegisterCard
+        formData={formData}
+        avatarPreview={avatarPreview}
+        registering={registering}
+        backendError={backendError}
+        handleChange={handleChange}
+        handleSubmit={handleSubmit}
+      />
+    </div>
   );
 };
 

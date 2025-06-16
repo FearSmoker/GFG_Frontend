@@ -1,29 +1,40 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { fetchEvents, addEvent, deleteEvent } from "../api/Events_api.js";
+import { fetchEvents } from "../api/Events_api.js";
 import {
   EventCalendar,
   EventCarousel,
-  EventForm,
+  EventMiniCard,
 } from "../components/EventComponents.jsx";
+import EventsBg1Component from "../components/EventBgComponent.jsx";
+import EventsBg1DarkComponent from "../components/EventBgDarkComponent.jsx";
+import useAuth from "../context/AuthContext.jsx";
+import useTheme from "../context/ThemeContext.jsx";
+import "../css/EventBg.css";
+import "../css/EventBgDark.css";
+import EventTabs from "../components/EventTab.jsx";
 
 const Events = () => {
   const navigate = useNavigate();
+  const { user } = useAuth();
+  const { themeMode } = useTheme();
   const [events, setEvents] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
-  const [newEvent, setNewEvent] = useState({
-    title: "",
-    description: "",
-    imageFile: null,
-  });
-  const [isLoading, setIsLoading] = useState(false);
-  const [showSuccess, setShowSuccess] = useState(false);
+  const [selectedEventType, setSelectedEventType] = useState("All");
   const [eventDates, setEventDates] = useState([]);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [password, setPassword] = useState("");
   const [onPasswordSuccess, setOnPasswordSuccess] = useState(() => () => {});
+  
+  const [currentPage, setCurrentPage] = useState(1);
+  const eventsPerPage = 24;
+  const eventsPerRow = 4;
 
   const correctPassword = "admin123";
+
+  const isAdmin = user?.type === "admin";
+
+  const overlayHeight = 890;
 
   useEffect(() => {
     async function loadEvents() {
@@ -34,6 +45,14 @@ const Events = () => {
         description: e.description,
         image: e.image,
         date: new Date(e.date).toDateString(),
+        eventType: e.eventType,
+        eventPrize: e.eventPrize,
+        registrationFee: e.registrationFee,
+        maxParticipants: e.maxParticipants,
+        currentParticipants: e.currentParticipants,
+        registrationDeadline: e.registrationDeadline,
+        eventStatus: e.eventStatus,
+        _id: e._id,
       }));
       setEvents(formattedEvents);
       const uniqueDates = [
@@ -45,6 +64,51 @@ const Events = () => {
   }, []);
 
   const handleDateChange = (date) => setSelectedDate(date);
+
+const filteredEvents = selectedEventType === "All" 
+  ? events 
+  : events.filter(event => {
+
+      if (!event.eventType || event.eventType.trim() === "") {
+        return false;
+      }
+      
+      const eventType = event.eventType.trim(); 
+      const selectedType = selectedEventType;
+      
+      switch (selectedType) {
+        case "Competitions":
+          return eventType === "Competition";
+        case "Workshops":
+          return eventType === "Workshop";
+        case "Seminars":
+          return eventType === "Seminar";
+        default:
+          return eventType === selectedType;
+      }
+    });
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedEventType]);
+
+  const totalPages = Math.ceil(filteredEvents.length / eventsPerPage);
+  const startIndex = (currentPage - 1) * eventsPerPage;
+  const endIndex = startIndex + eventsPerPage;
+  const currentEvents = filteredEvents.slice(startIndex, endIndex);
+
+  const calculateBottomMargin = () => {
+    const numberOfEvents = currentEvents.length;
+    const numberOfRows = Math.ceil(numberOfEvents / eventsPerRow);
+    
+    const baseMargin = 64;
+    const isIncompleteRow = numberOfEvents % eventsPerRow !== 0;
+    const additionalMargin = isIncompleteRow ? 32 : 0;
+    
+    const rowSpacing = numberOfRows > 1 ? (numberOfRows - 1) * 16 : 0;
+    
+    return baseMargin + additionalMargin + rowSpacing;
+  };
 
   const triggerPasswordModal = (callback) => {
     setOnPasswordSuccess(() => callback);
@@ -61,118 +125,33 @@ const Events = () => {
     }
   };
 
-  const handleAddEvent = async () => {
-    if (isLoading) return;
-
-    if (!newEvent.title || !newEvent.description || !newEvent.imageFile) {
-      alert("Please fill all fields and select an image.");
-      return;
-    }
-
-    triggerPasswordModal(async () => {
-      setIsLoading(true);
-      try {
-        const formData = new FormData();
-        formData.append("title", newEvent.title);
-        formData.append("description", newEvent.description);
-        formData.append("date", selectedDate.toISOString());
-        formData.append("image", newEvent.imageFile);
-
-        const savedEvent = await addEvent(formData);
-
-        if (savedEvent) {
-          const formattedNewEvent = {
-            id: savedEvent._id || savedEvent.id,
-            title: savedEvent.title,
-            description: savedEvent.description,
-            image: savedEvent.image,
-            date: new Date(savedEvent.date).toDateString(),
-          };
-
-          setEvents((prev) => {
-            if (prev.find((e) => e.id === formattedNewEvent.id)) return prev;
-            return [...prev, formattedNewEvent];
-          });
-
-          setEventDates((prev) => {
-            if (!prev.includes(formattedNewEvent.date)) {
-              return [...prev, formattedNewEvent.date];
-            }
-            return prev;
-          });
-
-          setNewEvent({ title: "", description: "", imageFile: null });
-          setShowSuccess(true);
-
-          setTimeout(() => setShowSuccess(false), 3000);
-        }
-      } catch (error) {
-        console.error("Error adding event:", error);
-        alert("Failed to add event. Please try again.");
-      } finally {
-        setIsLoading(false);
-      }
-    });
-  };
-
   const handleDeleteButtonClick = () => {
     triggerPasswordModal(() => {
       navigate("/delete-events");
     });
   };
 
-  const handleDeleteEvent = async (id) => {
-    const result = await deleteEvent(id);
-    if (result) {
-      const deletedEvent = events.find((event) => event.id === id);
-      setEvents((prev) => {
-        const filtered = prev.filter((event) => event.id !== id);
-        const sameDay = filtered.some((e) => e.date === deletedEvent.date);
-        if (!sameDay) {
-          setEventDates((prev) =>
-            prev.filter((date) => date !== deletedEvent.date)
-          );
-        }
-        return filtered;
-      });
-    }
+  const handleAddEventButtonClick = () => {
+    triggerPasswordModal(() => {
+      navigate("/add-events");
+    });
   };
 
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    document.querySelector('.event-tabs-section')?.scrollIntoView({ 
+      behavior: 'smooth',
+      block: 'start'
+    });
+  };
+
+  const BackgroundComponent = themeMode === "dark" ? EventsBg1DarkComponent : EventsBg1Component;
+
   return (
-    <div className="bg-black min-h-screen text-white p-8 flex flex-col items-center relative">
-      {/* Loading Popup */}
-      {isLoading && (
-        <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
-          <div className="bg-gray-800 p-6 rounded-lg shadow-lg flex flex-col items-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white mb-4"></div>
-            <p className="text-lg font-semibold">Adding your event...</p>
-          </div>
-        </div>
-      )}
-
-      {/* Success Popup */}
-      {showSuccess && (
-        <div className="fixed top-4 right-4 bg-green-500 text-black p-4 rounded-lg shadow-lg z-50 animate-bounce">
-          <div className="flex items-center">
-            <svg
-              className="w-6 h-6 mr-2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M5 13l4 4L19 7"
-              ></path>
-            </svg>
-            <p className="font-semibold">Event added successfully!</p>
-          </div>
-        </div>
-      )}
-
+    <BackgroundComponent 
+      className="text-white overflow-hidden"
+      overlayHeight={overlayHeight}
+    >
       {/* Password Modal */}
       {showPasswordModal && (
         <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
@@ -203,49 +182,193 @@ const Events = () => {
         </div>
       )}
 
-      {/* Heading */}
-      <h2 className="text-white text-4xl font-bold mb-8 relative">
-        EVENTS
-        <span className="block w-full h-1 bg-white absolute left-0 bottom-[-10px]"></span>
-      </h2>
+      {/* Content */}
+      <div className="p-8 flex flex-col items-center">
+        {/* Heading */}
+        <div
+          style={{
+            marginTop: "5rem",
+            marginBottom: "2rem",
+            userSelect: "none",
+          }}
+        >
+          <span
+            style={{
+              color: "#0E86D2",
+              fontSize: "48px",
+              fontFamily: "Cabin, sans-serif",
+              fontWeight: 700,
+              wordWrap: "break-word",
+            }}
+          >
+            &lt;
+          </span>
+          <span
+            style={{
+              color: "#00FFAF",
+              fontSize: "48px",
+              fontFamily: "Cabin, sans-serif",
+              fontWeight: 700,
+              wordWrap: "break-word",
+            }}
+          >
+            {" "}
+            Upcoming Events{" "}
+          </span>
+          <span
+            style={{
+              color: "#0E86D2",
+              fontSize: "48px",
+              fontFamily: "Cabin, sans-serif",
+              fontWeight: 700,
+              wordWrap: "break-word",
+            }}
+          >
+            &gt;
+          </span>
+        </div>
 
-      {/* Carousel */}
-      <div className="w-full max-w-3xl mb-16">
-        <EventCarousel
-          events={events}
-          isLoading={false}
-          className="event-carousel-large"
-        />
-      </div>
+        {/* Carousel and Calendar Section */}
+        <div className="flex flex-col lg:flex-row gap-12 items-center justify-center w-full max-w-7xl mb-12">
+          {/* Carousel - Left Side */}
+          <div className="w-full lg:w-2/3 flex justify-center">
+            <div className="w-full max-w-4xl">
+              <EventCarousel
+                events={events}
+                isLoading={false}
+                className="event-carousel-large w-full"
+              />
+            </div>
+          </div>
 
-      {/* Calendar + Form */}
-      <div className="flex flex-col md:flex-row gap-8 items-start w-full max-w-5xl">
-        <div>
-          <EventCalendar
-            selectedDate={selectedDate}
-            handleDateChange={handleDateChange}
-            eventDates={eventDates}
+          {/* Calendar - Right Side */}
+          <div className="w-full lg:w-1/3 flex flex-col justify-center lg:justify-end lg:pl-8">
+            {/* Admin Action Buttons - Above Calendar */}
+            {isAdmin && (
+              <div className="flex gap-3 mb-6 w-full max-w-sm">
+                <button
+                  onClick={handleDeleteButtonClick}
+                  className="bg-red-600 hover:bg-red-700 px-4 py-3 rounded-md text-white font-bold flex-1"
+                >
+                  Delete Events
+                </button>
+                <button
+                  onClick={handleAddEventButtonClick}
+                  className="bg-green-600 hover:bg-green-700 px-4 py-3 rounded-md text-white font-bold flex-1"
+                >
+                  Add Event
+                </button>
+              </div>
+            )}
+            
+            <div className="w-full max-w-sm">
+              <EventCalendar
+                selectedDate={selectedDate}
+                handleDateChange={handleDateChange}
+                eventDates={eventDates}
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Event Tabs - Moved down a bit */}
+        <div className="mb-10 mt-8 event-tabs-section">
+          <EventTabs 
+            selectedEventType={selectedEventType}
+            onEventTypeChange={setSelectedEventType}
           />
         </div>
 
-        <div className="flex-1 mt-0">
-          <EventForm
-            newEvent={newEvent}
-            setNewEvent={setNewEvent}
-            handleAddEvent={handleAddEvent}
-            isLoading={isLoading}
+        {/* Pagination Info */}
+        {filteredEvents.length > 0 && (
+          <div className="mb-6 text-center">
+            <span className="text-gray-300 text-sm">
+              Showing {startIndex + 1}-{Math.min(endIndex, filteredEvents.length)} of {filteredEvents.length} events
+            </span>
+          </div>
+        )}
+
+        {/* Event Mini Cards Section with Dynamic Bottom Margin */}
+        <div 
+          className="w-full max-w-7xl"
+          style={{ marginBottom: `${calculateBottomMargin()}px` }}
+        >
+          <EventMiniCard
+            events={currentEvents}
+            isLoading={false}
+            title=""
+            enableImageClick={true}
+            className="event-mini-cards-container"
+            eventsPerRow={eventsPerRow}
           />
         </div>
-      </div>
 
-      {/* Delete Events Button */}
-      <button
-        onClick={handleDeleteButtonClick}
-        className="absolute top-8 right-8 bg-red-600 hover:bg-red-700 px-5 py-2 rounded-md text-white font-bold z-30"
-      >
-        Delete Events
-      </button>
-    </div>
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+          <div className="flex items-center justify-center gap-2 mb-16">
+            {/* Previous Button */}
+            <button
+              onClick={() => handlePageChange(currentPage - 1)}
+              disabled={currentPage === 1}
+              className={`px-4 py-2 rounded-md font-medium transition-colors ${
+                currentPage === 1
+                  ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                  : 'bg-blue-600 hover:bg-blue-700 text-white'
+              }`}
+            >
+              Previous
+            </button>
+
+            {/* Page Numbers */}
+            {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
+              const showPage = 
+                page === 1 || 
+                page === totalPages || 
+                (page >= currentPage - 2 && page <= currentPage + 2);
+              
+              if (!showPage) {
+                // Show ellipsis for gaps
+                if (page === currentPage - 3 || page === currentPage + 3) {
+                  return (
+                    <span key={page} className="px-2 py-2 text-gray-400">
+                      ...
+                    </span>
+                  );
+                }
+                return null;
+              }
+
+              return (
+                <button
+                  key={page}
+                  onClick={() => handlePageChange(page)}
+                  className={`px-4 py-2 rounded-md font-medium transition-colors ${
+                    currentPage === page
+                      ? 'bg-green-600 text-white'
+                      : 'bg-gray-700 hover:bg-gray-600 text-white'
+                  }`}
+                >
+                  {page}
+                </button>
+              );
+            })}
+
+            {/* Next Button */}
+            <button
+              onClick={() => handlePageChange(currentPage + 1)}
+              disabled={currentPage === totalPages}
+              className={`px-4 py-2 rounded-md font-medium transition-colors ${
+                currentPage === totalPages
+                  ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                  : 'bg-blue-600 hover:bg-blue-700 text-white'
+              }`}
+            >
+              Next
+            </button>
+          </div>
+        )}
+      </div>
+    </BackgroundComponent>
   );
 };
 
