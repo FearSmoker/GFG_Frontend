@@ -24,7 +24,9 @@ const POTD = () => {
   
   return (
     <div
-      className={`relative min-h-screen w-full backdrop-blur-[25px] overflow-hidden flex flex-col items-center justify-center px-4 ${
+      className={`relative min-h-screen w-full backdrop-blur-[25px] overflow-hidden flex flex-col items-center px-4 ${
+        showProblem ? 'justify-start pt-30' : 'justify-center'
+      } ${
         isLightTheme 
           ? 'bg-white text-black' 
           : 'bg-[#011725] text-white'
@@ -38,8 +40,8 @@ const POTD = () => {
       <span className="text-[#0E86D2]">&gt;</span>
       </h1>
       
-      {/* POTD Container */}
-      <div className={`w-full rounded-[20px] p-6 ${
+      {/* POTD Container - Made smaller with max-width */}
+      <div className={`w-full max-w-2xl rounded-[20px] p-4 ${
         isLightTheme
           ? 'bg-[rgba(0,43,70,0.6)] border border-[#004C7C]'
           : 'bg-[#002B46]/60 border border-[#004C7C]'
@@ -51,7 +53,7 @@ const POTD = () => {
         </div>
         <div className="flex flex-col md:flex-row justify-between items-center gap-6">
           {/* Problem Info */}
-          <div className={`font-[Cabin] p-6 mb-6 rounded-xl border flex flex-col text-left text-sm md:text-base ${
+          <div className={`font-[Cabin] p-4 mb-4 rounded-xl border flex flex-col text-left text-sm md:text-base ${
             isLightTheme
               ? 'border-[#66BEF5] text-white'
               : 'border-[#004C7C]'
@@ -80,9 +82,9 @@ const POTD = () => {
         </div>
       </div>
       
-      {/* Problem Description Box */}
+      {/* Problem Description Box - Increased margin top and bottom */}
       {showProblem && (
-        <div className={`z-10 w-full max-w-3xl mt-10 backdrop-blur-sm rounded-[20px] p-6 transition-all duration-5000 ease-out opacity-100 scale-100 ${
+        <div className={`z-10 w-full max-w-3xl mt-16 mb-16 backdrop-blur-sm rounded-[20px] p-6 transition-all duration-5000 ease-out opacity-100 scale-100 ${
           isLightTheme
             ? 'bg-[rgba(0,43,70,0.6)] border border-[#004C7C]'
             : 'bg-[#002B46]/60 border border-[#004C7C]'
@@ -111,7 +113,7 @@ const POTD = () => {
               }`}>
                 <span className={`text-sm font-semibold ${
                   isLightTheme ? 'text-[#014570]' : 'text-[#002B46]'
-                }`}>Submit</span>
+                }`}>Solve</span>
               </button>
             </a>
           </div>

@@ -25,7 +25,7 @@ const MeetOurGeeks = () => {
   const { themeMode } = useTheme();
   const isLightTheme = themeMode === "light";
   return (
-    <div style={{ fontFamily: 'Cabin, sans-serif' }} className={`p-10 min-h-screen w-full px-4 py-10 overflow-hidden 
+    <div style={{ fontFamily: 'Cabin, sans-serif' }} className={`p-10 min-h-screen w-full px-4 pt-32 pb-20 overflow-hidden 
       ${isLightTheme
     ? "bg-gradient-to-b from-white via-emerald-300 to-white text-black"
     : "bg-gradient-to-b from-[#011725] via-[#013a28] to-[#011725] text-white"
