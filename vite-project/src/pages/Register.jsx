@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { toast } from "react-hot-toast";
 import { useNavigate } from 'react-router-dom';
 import { registerUser } from '../api/User_api';
 import useAuth from '../context/AuthContext.jsx';
@@ -14,7 +15,6 @@ const Register = () => {
     mobileNo: '' 
   });
   const [avatarPreview, setAvatarPreview] = useState(null);
-  const [backendError, setBackendError] = useState('');
   const [registering, setRegistering] = useState(false);
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
@@ -41,10 +41,6 @@ const Register = () => {
       }
     } else {
       setFormData({ ...formData, [e.target.name]: e.target.value });
-
-      if (backendError) {
-        setBackendError('');
-      }
     }
   };
 
@@ -69,46 +65,13 @@ const Register = () => {
     }
 
     try {
-      setBackendError('');
       await registerUser(body);
-      alert('Registered successfully');
+      toast.success('Registered successfully');
       navigate('/signin');
     } catch (err) {
-      console.error('Full error object:', err);
-      console.log('Error response:', err.response);
-      console.log('Error response data:', err.response?.data);
-      
-      let errorMessage = 'Registration failed. Please try again.';
-      
-      if (err.response?.data) {
-        const { data } = err.response;
-        
-        if (data.message) {
-          errorMessage = data.message;
-        } else if (data.errors && Array.isArray(data.errors) && data.errors.length > 0) {
-          errorMessage = data.errors.join(', ');
-        } else if (data.error) {
-          errorMessage = data.error;
-        } else if (typeof data === 'string') {
-          if (data.includes('<!DOCTYPE html>')) {
-            errorMessage = 'Server encountered an unexpected error. Please try again later.';
-          } else {
-            errorMessage = data;
-          }
-        } else if (data.success === false) {
-          errorMessage = 'Registration failed. Please check your information and try again.';
-        }
-      } else if (err.message) {
-        if (err.message.includes('Network Error')) {
-          errorMessage = 'Network error. Please check your internet connection.';
-        } else if (err.code === 'ECONNREFUSED') {
-          errorMessage = 'Unable to connect to server. Please try again later.';
-        } else {
-          errorMessage = err.message;
-        }
-      }
-      
-      setBackendError(errorMessage);
+      // Since your API function already extracts the backend message,
+      // just use err.message which contains the backend error message
+      toast.error(err.message || 'Registration failed. Please try again.');
     } finally {
       setRegistering(false);
     }
@@ -120,7 +83,6 @@ const Register = () => {
         formData={formData}
         avatarPreview={avatarPreview}
         registering={registering}
-        backendError={backendError}
         handleChange={handleChange}
         handleSubmit={handleSubmit}
       />

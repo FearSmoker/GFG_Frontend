@@ -152,19 +152,30 @@ export const refreshAccessToken = async () => {
 
 // Change current password
 export const changePassword = async (data) => {
+  const token = localStorage.getItem('access_token');
+  
   const response = await fetch(`${BASE_URL}/change-password`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
+      "Authorization": `Bearer ${token}`,
     },
     body: JSON.stringify(data),
     credentials: "include",
   });
-  const dataResponse = await response.json();
+  
+  const responseData = await response.json();
 
-  const { successMessage } = dataResponse;
+  if (!response.ok) {
+    const error = new Error(responseData.message || 'Failed to change password');
+    error.response = {
+      status: response.status,
+      data: responseData
+    };
+    throw error;
+  }
 
-  return { successMessage };
+  return responseData;
 };
 
 // Get current user

@@ -1,7 +1,11 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
 import { changePassword } from "../api/User_api";
 import useAuth from "../context/AuthContext.jsx";
+import ChangePasswordCard from "../components/ChangePasswordCard.jsx";
+import ChangePasswordPageDark from "../components/ChangePasswordPage.jsx";
+import "../css/ChangePasswordPage.css";
 
 const ChangePassword = () => {
   const navigate = useNavigate();
@@ -10,11 +14,16 @@ const ChangePassword = () => {
   const [formData, setFormData] = useState({
     currentPassword: "",
     newPassword: "",
-    confirmPassword: "",
+    confirmNewPassword: "",
   });
-  const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [message, setMessage] = useState({ text: "", type: "" });
+
+  useEffect(() => {
+    if (!isAuthenticated) {
+      toast.error("Please login to access this page");
+      navigate("/signin");
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,26 +34,28 @@ const ChangePassword = () => {
   };
 
   const validateForm = () => {
-    const newErrors = {};
-
     if (!formData.currentPassword.trim()) {
-      newErrors.currentPassword = "Current password is required";
+      toast.error("Current password is required");
+      return false;
     }
 
     if (!formData.newPassword) {
-      newErrors.newPassword = "New password is required";
+      toast.error("New password is required");
+      return false;
     } else if (formData.newPassword.length < 8) {
-      newErrors.newPassword = "Password must be at least 8 characters";
+      toast.error("Password must be at least 8 characters");
+      return false;
     }
 
-    if (!formData.confirmPassword) {
-      newErrors.confirmPassword = "Please confirm your new password";
-    } else if (formData.newPassword !== formData.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
+    if (!formData.confirmNewPassword) {
+      toast.error("Please confirm your new password");
+      return false;
+    } else if (formData.newPassword !== formData.confirmNewPassword) {
+      toast.error("Passwords do not match");
+      return false;
     }
 
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return true;
   };
 
   const handleSubmit = async (e) => {
@@ -55,192 +66,69 @@ const ChangePassword = () => {
     }
 
     setIsSubmitting(true);
-    setMessage({ text: "", type: "" });
 
     try {
-      await changePassword({
+      const response = await changePassword({
         oldPassword: formData.currentPassword,
         newPassword: formData.newPassword,
-        confirmPassword: formData.confirmPassword,
+        confirmPassword: formData.confirmNewPassword,
       });
 
-      setMessage({
-        text: "Password changed successfully!",
-        type: "success",
-      });
+      const successMessage = response.message || "Password changed successfully!";
+      toast.success(successMessage);
 
       setFormData({
         currentPassword: "",
         newPassword: "",
-        confirmPassword: "",
+        confirmNewPassword: "",
       });
 
       setTimeout(() => {
-        navigate("/profile");
-      }, 2000);
+        navigate("/get-profile");
+      }, 1500);
     } catch (error) {
-      setMessage({
-        text: error.message || "Failed to change password. Please try again.",
-        type: "error",
-      });
+      toast.error(error.message || "Failed to change password. Please try again.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const glowStyles = {
-    textGlow: {
-      textShadow:
-        "0 0 10px rgba(255, 255, 255, 0.6), 0 0 20px rgba(255, 255, 255, 0.5), 0 0 30px rgba(255, 255, 255, 0.3)",
-    },
-
-    headingGlow: {
-      textShadow:
-        "0 0 10px rgba(255, 255, 255, 0.8), 0 0 20px rgba(255, 255, 255, 0.5), 0 0 30px rgba(255, 255, 255, 0.3), 0 0 40px rgba(255, 255, 255, 0.2)",
-    },
-
-    successGlow: {
-      textShadow:
-        "0 0 10px rgba(74, 222, 128, 0.8), 0 0 20px rgba(74, 222, 128, 0.5), 0 0 30px rgba(74, 222, 128, 0.3)",
-    },
-
-    errorGlow: {
-      textShadow:
-        "0 0 10px rgba(248, 113, 113, 0.8), 0 0 20px rgba(248, 113, 113, 0.5), 0 0 30px rgba(248, 113, 113, 0.3)",
-    },
-  };
+  if (!isAuthenticated) {
+    return null;
+  }
 
   return (
-    <div
-      className="min-h-screen bg-black text-white flex items-center justify-center py-12 px-4"
-      style={{
-        backgroundImage: "url('src/assets/password.jpg')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-        fontSize: "1.25rem",
-      }}
-    >
-      <div
-        className="w-full max-w-lg rounded-lg shadow-xl overflow-hidden"
-        style={{
-          backgroundColor: "rgba(255, 255, 255, 0.1)",
-          backdropFilter: "blur(12px)",
-          WebkitBackdropFilter: "blur(12px)",
-          boxShadow: "0 8px 32px rgba(0, 0, 0, 0.2)",
-          border: "1px solid rgba(255, 255, 255, 0.18)",
-        }}
-      >
-        <div className="p-8">
-          <h1 className="text-3xl font-bold mb-6 text-center text-green-300">
+    <ChangePasswordPageDark>
+      <div className="flex flex-col items-center justify-center space-y-8">
+        {/* Page Title */}
+        <div className="text-center">
+          <h1 className="text-4xl font-bold text-white mb-4">
             Change Password
           </h1>
+          <p className="text-white/70 text-lg">
+            Update your account password securely
+          </p>
+        </div>
 
-          {message.text && (
-            <div
-              className={`mb-6 p-3 rounded ${
-                message.type === "success"
-                  ? "bg-green-900 text-green-300 border border-green-700"
-                  : "bg-red-900 text-red-300 border border-red-700"
-              }`}
-            >
-              {message.text}
-            </div>
-          )}
+        {/* Change Password Card */}
+        <ChangePasswordCard
+          formData={formData}
+          changingPassword={isSubmitting}
+          handleChange={handleChange}
+          handleSubmit={handleSubmit}
+        />
 
-          <form onSubmit={handleSubmit}>
-            <div className="mb-5">
-              <label
-                htmlFor="currentPassword"
-                className="block text-lg font-medium text-green-300 mb-2"
-              >
-                Current Password
-              </label>
-              <input
-                type="password"
-                id="currentPassword"
-                name="currentPassword"
-                value={formData.currentPassword}
-                onChange={handleChange}
-                className={`w-full px-4 py-3 bg-black border rounded-md text-white ${
-                  errors.currentPassword ? "border-red-500" : "border-green-700"
-                } focus:outline-none focus:border-green-500`}
-              />
-              {errors.currentPassword && (
-                <p className="mt-1 text-lg text-red-400">
-                  {errors.currentPassword}
-                </p>
-              )}
-            </div>
-
-            <div className="mb-5">
-              <label
-                htmlFor="newPassword"
-                className="block text-lg font-medium text-green-300 mb-2"
-              >
-                New Password
-              </label>
-              <input
-                type="password"
-                id="newPassword"
-                name="newPassword"
-                value={formData.newPassword}
-                onChange={handleChange}
-                className={`w-full px-4 py-3 bg-black border rounded-md text-white ${
-                  errors.newPassword ? "border-red-500" : "border-green-700"
-                } focus:outline-none focus:border-green-500`}
-              />
-              {errors.newPassword && (
-                <p className="mt-1 text-lg text-red-400">
-                  {errors.newPassword}
-                </p>
-              )}
-            </div>
-
-            <div className="mb-6">
-              <label
-                htmlFor="confirmPassword"
-                className="block text-lg font-medium text-green-300 mb-2"
-              >
-                Confirm New Password
-              </label>
-              <input
-                type="password"
-                id="confirmPassword"
-                name="confirmPassword"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-                className={`w-full px-4 py-3 bg-black border rounded-md text-white ${
-                  errors.confirmPassword ? "border-red-500" : "border-green-700"
-                } focus:outline-none focus:border-green-500`}
-              />
-              {errors.confirmPassword && (
-                <p className="mt-1 text-lg text-red-400">
-                  {errors.confirmPassword}
-                </p>
-              )}
-            </div>
-
-            <div className="flex flex-col gap-4">
-              <button
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full bg-green-700 text-white py-3 px-4 rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-black disabled:opacity-50 transition-colors"
-              >
-                {isSubmitting ? "Changing..." : "Change Password"}
-              </button>
-
-              <Link
-                to="/get-profile"
-                className="text-center text-green-400 hover:text-green-300 transition-colors"
-              >
-                Back to Profile
-              </Link>
-            </div>
-          </form>
+        {/* Back to Profile Link */}
+        <div className="text-center">
+          <button
+            onClick={() => navigate("/get-profile")}
+            className="text-green-400 hover:text-green-300 transition-colors duration-200 underline"
+          >
+            Back to Profile
+          </button>
         </div>
       </div>
-    </div>
+    </ChangePasswordPageDark>
   );
 };
 

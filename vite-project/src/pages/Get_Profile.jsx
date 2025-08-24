@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Camera } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
 import { updateAccountDetails, updateUserAvatar } from "../api/User_api";
 import useAuth from "../context/AuthContext.jsx";
 import OtherPage3 from "../components/OtherPage3.jsx";
@@ -68,7 +69,7 @@ export default function UserProfileScreen() {
       }
       setAvatarModalVisible(false);
     } catch (error) {
-      alert("Failed to update avatar: " + (error.message || "Unknown error"));
+      toast.error("Failed to update avatar: " + (error.message || "Unknown error"));
     }
   };
 
@@ -81,7 +82,7 @@ export default function UserProfileScreen() {
       showSuccessMessage();
       setProfileModalVisible(false);
     } catch (error) {
-      alert("Failed to update profile: " + (error.message || "Unknown error"));
+      toast.error("Failed to update profile: " + (error.message || "Unknown error"));
     }
   };
 

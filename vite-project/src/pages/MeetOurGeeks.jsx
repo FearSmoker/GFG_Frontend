@@ -13,7 +13,6 @@ const DEV_MEMBERS = [
     { name: "Titiksha Yadav", role: "Designer", img: pic ,link:""},
     { name: "Harshit Tiwari", role: "Frontend Developer", img: pic,link:"" },
     { name: "Jagrat Agrawal", role: "Frontend Developer", img: pic ,link:""},
-    { name: "Unnati Jadon", role: "Frontend Developer", img: pic ,link:""},
     { name: "Sneha Tomar", role: "Frontend Developer", img: pic ,link:""},
   ];
 const LEADS = [

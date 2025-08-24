@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
 import { addEvent } from "../api/Events_api.js";
 import { EventForm } from "../components/EventComponents.jsx";
 import EventsBg1Component from "../components/EventBgComponent.jsx";
@@ -42,7 +43,7 @@ const AddEvents = () => {
     if (isLoading) return;
 
     if (!newEvent.title || !newEvent.description || !newEvent.imageFile || !newEvent.eventType) {
-      alert("Please fill all required fields: Title, Description, Event Type, and Image.");
+      toast.error("Please fill all required fields: Title, Description, Event Type, and Image.");
       return;
     }
 
@@ -91,7 +92,7 @@ const AddEvents = () => {
       }
     } catch (error) {
       console.error("Error adding event:", error);
-      alert("Failed to add event. Please try again.");
+      toast.error("Failed to add event. Please try again.");
     } finally {
       setIsLoading(false);
     }

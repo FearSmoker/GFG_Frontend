@@ -108,11 +108,18 @@ const Navbar = () => {
           {/* Logo */}
           <div className="flex items-center space-x-3">
             <a href="/">
+              {themeMode === "dark" ? (
               <img
-                src="/src/assets/logo.png"
+                src="/src/assets/NewLogoDark.png"
+                alt="Logo"
+                className="h-10 md:h-20"
+              /> ) : (
+                <img
+                src="/src/assets/NewLogoLight.png"
                 alt="Logo"
                 className="h-10 md:h-20"
               />
+              )}
             </a>
           </div>
 
@@ -186,7 +193,7 @@ const Navbar = () => {
                             goToProfile();
                             setIsProfileDropdownOpen(false);
                           }}
-                          className="w-full text-left px-4 py-2 text-white text-[16px] font-light font-[Merriweather Sans] transition-all duration-300 hover:text-[#00FFAF] hover:bg-[rgba(0,43,70,0.5)]"
+                          className={`w-full text-left px-4 py-2 ${themeMode === "dark" ? "text-white" : "text-[#002b46]"} text-[16px] font-light font-[Merriweather Sans] transition-all duration-300 hover:text-[#00FFAF] hover:bg-[rgba(0,43,70,0.5)]`}
                         >
                           My Profile
                         </button>
@@ -195,7 +202,7 @@ const Navbar = () => {
                             goTo("/dashboard");
                             setIsProfileDropdownOpen(false);
                           }}
-                          className="w-full text-left px-4 py-2 text-white text-[16px] font-light font-[Merriweather Sans] transition-all duration-300 hover:text-[#00FFAF] hover:bg-[rgba(0,43,70,0.5)]"
+                          className={`w-full text-left px-4 py-2 ${themeMode === "dark" ? "text-white" : "text-[#002b46]"} text-[16px] font-light font-[Merriweather Sans] transition-all duration-300 hover:text-[#00FFAF] hover:bg-[rgba(0,43,70,0.5)]`}
                         >
                           Dashboard
                         </button>
@@ -204,7 +211,7 @@ const Navbar = () => {
                             goTo("/my-registrations");
                             setIsProfileDropdownOpen(false);
                           }}
-                          className="w-full text-left px-4 py-2 text-white text-[16px] font-light font-[Merriweather Sans] transition-all duration-300 hover:text-[#00FFAF] hover:bg-[rgba(0,43,70,0.5)]"
+                          className={`w-full text-left px-4 py-2 ${themeMode === "dark" ? "text-white" : "text-[#002b46]"} text-[16px] font-light font-[Merriweather Sans] transition-all duration-300 hover:text-[#00FFAF] hover:bg-[rgba(0,43,70,0.5)]`}
                         >
                           My Registrations
                         </button>
@@ -213,7 +220,7 @@ const Navbar = () => {
                             goTo("/event-history");
                             setIsProfileDropdownOpen(false);
                           }}
-                          className="w-full text-left px-4 py-2 text-white text-[16px] font-light font-[Merriweather Sans] transition-all duration-300 hover:text-[#00FFAF] hover:bg-[rgba(0,43,70,0.5)]"
+                          className={`w-full text-left px-4 py-2 ${themeMode === "dark" ? "text-white" : "text-[#002b46]"} text-[16px] font-light font-[Merriweather Sans] transition-all duration-300 hover:text-[#00FFAF] hover:bg-[rgba(0,43,70,0.5)]`}
                         >
                           Event History
                         </button>
@@ -230,7 +237,12 @@ const Navbar = () => {
                   <img 
                     src={logoutIcon} 
                     alt="Logout" 
-                    className="h-5 w-5 filter brightness-0 invert hover:brightness-0 hover:sepia hover:saturate-200 hover:hue-rotate-90 transition-all duration-300" 
+                    className={`h-5 w-5 filter transition-all duration-300 ${
+                      themeMode === "dark" 
+                        ? "brightness-0 invert hover:brightness-0 hover:sepia hover:saturate-200 hover:hue-rotate-90" 
+                        : "hover:brightness-0 hover:sepia hover:saturate-200 hover:hue-rotate-90"
+                    }`}
+                    style={themeMode === "light" ? { filter: 'brightness(0) saturate(100%) invert(16%) sepia(28%) saturate(2049%) hue-rotate(185deg) brightness(91%) contrast(101%)' } : {}}
                   />
 
                   {/* Logout Card */}
@@ -331,7 +343,7 @@ const Navbar = () => {
                         setIsProfileDropdownOpen(false);
                         setIsOpen(false);
                       }}
-                      className="w-full text-left px-4 py-2 text-white text-[16px] font-light font-[Merriweather Sans] transition-all duration-300 hover:text-[#00FFAF] hover:bg-[rgba(0,43,70,0.5)]"
+                      className={`w-full text-left px-4 py-2 ${themeMode === "dark" ? "text-white" : "text-[#002b46]"} text-[16px] font-light font-[Merriweather Sans] transition-all duration-300 hover:text-[#00FFAF] hover:bg-[rgba(0,43,70,0.5)]`}
                     >
                       My Profile
                     </button>
@@ -341,7 +353,7 @@ const Navbar = () => {
                         setIsProfileDropdownOpen(false);
                         setIsOpen(false);
                       }}
-                      className="w-full text-left px-4 py-2 text-white text-[16px] font-light font-[Merriweather Sans] transition-all duration-300 hover:text-[#00FFAF] hover:bg-[rgba(0,43,70,0.5)]"
+                      className={`w-full text-left px-4 py-2 ${themeMode === "dark" ? "text-white" : "text-[#002b46]"} text-[16px] font-light font-[Merriweather Sans] transition-all duration-300 hover:text-[#00FFAF] hover:bg-[rgba(0,43,70,0.5)]`}
                     >
                       Dashboard
                     </button>
@@ -351,7 +363,7 @@ const Navbar = () => {
                         setIsProfileDropdownOpen(false);
                         setIsOpen(false);
                       }}
-                      className="w-full text-left px-4 py-2 text-white text-[16px] font-light font-[Merriweather Sans] transition-all duration-300 hover:text-[#00FFAF] hover:bg-[rgba(0,43,70,0.5)]"
+                      className={`w-full text-left px-4 py-2 ${themeMode === "dark" ? "text-white" : "text-[#002b46]"} text-[16px] font-light font-[Merriweather Sans] transition-all duration-300 hover:text-[#00FFAF] hover:bg-[rgba(0,43,70,0.5)]`}
                     >
                       My Registrations
                     </button>
@@ -361,7 +373,7 @@ const Navbar = () => {
                         setIsProfileDropdownOpen(false);
                         setIsOpen(false);
                       }}
-                      className="w-full text-left px-4 py-2 text-white text-[16px] font-light font-[Merriweather Sans] transition-all duration-300 hover:text-[#00FFAF] hover:bg-[rgba(0,43,70,0.5)]"
+                      className={`w-full text-left px-4 py-2 ${themeMode === "dark" ? "text-white" : "text-[#002b46]"} text-[16px] font-light font-[Merriweather Sans] transition-all duration-300 hover:text-[#00FFAF] hover:bg-[rgba(0,43,70,0.5)]`}
                     >
                       Event History
                     </button>
@@ -383,7 +395,12 @@ const Navbar = () => {
               <img 
                 src={logoutIcon} 
                 alt="Logout" 
-                className="h-5 w-5 filter brightness-0 invert hover:brightness-0 hover:sepia hover:saturate-200 hover:hue-rotate-90 transition-all duration-300" 
+                className={`h-5 w-5 filter transition-all duration-300 ${
+                  themeMode === "dark" 
+                    ? "brightness-0 invert hover:brightness-0 hover:sepia hover:saturate-200 hover:hue-rotate-90" 
+                    : "hover:brightness-0 hover:sepia hover:saturate-200 hover:hue-rotate-90"
+                }`}
+                style={themeMode === "light" ? { filter: 'brightness(0) saturate(100%) invert(16%) sepia(28%) saturate(2049%) hue-rotate(185deg) brightness(91%) contrast(101%)' } : {}}
               />
 
               {/* Mobile Logout Card */}
