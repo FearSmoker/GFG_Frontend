@@ -126,13 +126,13 @@ const Navbar = () => {
             <a href="/">
               {themeMode === "dark" ? (
                 <img
-                  src="/src/assets/NewLogoDark.png"
+                  src="/public/assets/NewLogoDark.png"
                   alt="Logo"
                   className="h-10 md:h-20"
                 />
               ) : (
                 <img
-                  src="/src/assets/NewLogoLight.png"
+                  src="/public/assets/NewLogoLight.png"
                   alt="Logo"
                   className="h-10 md:h-20"
                 />
@@ -330,13 +330,13 @@ const Navbar = () => {
               <a href="/" onClick={() => setIsOpen(false)}>
                 {themeMode === "dark" ? (
                   <img
-                    src="/src/assets/NewLogoDark.png"
+                    src="/public/assets/NewLogoDark.png"
                     alt="Logo"
                     className="h-10"
                   />
                 ) : (
                   <img
-                    src="/src/assets/NewLogoLight.png"
+                    src="/public/assets/NewLogoLight.png"
                     alt="Logo"
                     className="h-10"
                   />

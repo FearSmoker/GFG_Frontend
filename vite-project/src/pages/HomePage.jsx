@@ -95,7 +95,7 @@ const HomePage = () => {
         {/* Logo Card */}
         <div className="bg-white/20 backdrop-blur-md border-4 border-green-400 rounded-2xl pt-6 md:pt-10 px-6 md:px-10 pb-2 md:pb-3 shadow-lg transition-all duration-500 hover:scale-105">
           <img
-            src="/src/assets/NewLogoLight.png"
+            src="/public/assets/NewLogoLight.png"
             alt="Campus Body"
             className="h-40 md:h-48 mx-auto mb-4"
           />
