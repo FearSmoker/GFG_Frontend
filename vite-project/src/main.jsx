@@ -8,6 +8,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import AuthProvider from "./context/AuthProvider.jsx";
 import { Toaster } from 'react-hot-toast';
 import { VisitorProvider } from "./context/VisitorProvider.jsx";
+import ScrollToTop from "./components/ScrollToTop.jsx";
 
 const GOOGLE_CLIENT_ID = "1077674981172-i6ucmablvvtkoe9fdjm0jb7cdbu8kuir.apps.googleusercontent.com";
 
@@ -15,6 +16,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
     <AuthProvider>
       <BrowserRouter>
+        <ScrollToTop /> 
         <ThemeProvider>
           <Toaster position="top-center" />
           <VisitorProvider>
