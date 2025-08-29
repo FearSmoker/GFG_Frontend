@@ -10,6 +10,8 @@ import useTheme from "../context/ThemeContext.jsx";
 import NavbarBgDark from "../Elements/NavbarBgDark.jsx";
 import NavbarLink from "./NavbarLink.jsx";
 import LogoutCard from "./LogoutCard.jsx";
+import NewLogoDark from "../assets/NewLogoDark.png";
+import NewLogoLight from "../assets/NewLogoLight.png";
 
 const Navbar = () => {
   const { goTo } = useNavigation();
@@ -126,13 +128,13 @@ const Navbar = () => {
             <a href="/">
               {themeMode === "dark" ? (
                 <img
-                  src="/public/assets/NewLogoDark.png"
+                  src={NewLogoDark}
                   alt="Logo"
                   className="h-10 md:h-20"
                 />
               ) : (
                 <img
-                  src="/public/assets/NewLogoLight.png"
+                  src={NewLogoLight}
                   alt="Logo"
                   className="h-10 md:h-20"
                 />
@@ -330,13 +332,13 @@ const Navbar = () => {
               <a href="/" onClick={() => setIsOpen(false)}>
                 {themeMode === "dark" ? (
                   <img
-                    src="/public/assets/NewLogoDark.png"
+                    src={NewLogoDark}
                     alt="Logo"
                     className="h-10"
                   />
                 ) : (
                   <img
-                    src="/public/assets/NewLogoLight.png"
+                    src={NewLogoLight}
                     alt="Logo"
                     className="h-10"
                   />
