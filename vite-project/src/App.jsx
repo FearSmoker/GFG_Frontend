@@ -24,12 +24,14 @@ import EventHistory from "./pages/EventHistory.jsx";
 import AddEvents from "./pages/AddEvents.jsx";
 import AdminRegistrationDashboard from "./pages/AdminRegistrationDashboard.jsx";
 import PageNotFound from "./pages/PageNotFound.jsx";
+import ScrollToTop from "./components/ScrollToTop.jsx";
 
 
 
 function App() {
   return (
       <NavigationProvider>
+       <ScrollToTop />
         <Navbar />
         <Routes>
           <Route path="/" element={<HomePage />} />
