@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:8000/api/v1/events";
+const BASE_URL = "https://gfg-backend-rjtn.onrender.com/api/v1/events";
 
 // Helper function to get auth headers with proper token validation
 const getAuthHeaders = () => {

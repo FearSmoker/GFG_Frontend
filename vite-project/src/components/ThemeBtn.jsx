@@ -23,7 +23,10 @@ function ThemeBtn() {
       checked={themeMode === 'dark'}
       style={{ display: 'none' }}
     />
-    <i className={`bi ${themeMode === 'dark' ? 'bi-moon-fill' : 'bi-brightness-high-fill'}`}></i>
+    <i 
+      className={`bi ${themeMode === 'dark' ? 'bi-moon-fill' : 'bi-brightness-high-fill'}`}
+      style={{ color: themeMode === 'dark' ? 'white' : '#002b46' }}
+    ></i>
   </label>
 );
 }

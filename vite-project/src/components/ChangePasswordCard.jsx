@@ -1,4 +1,5 @@
 import React from "react";
+import useTheme from "../context/ThemeContext.jsx";
 
 const ChangePasswordCard = ({
   formData,
@@ -6,13 +7,22 @@ const ChangePasswordCard = ({
   handleChange,
   handleSubmit,
 }) => {
+  const { themeMode } = useTheme();
+  
+  const textColor = themeMode === "dark" ? "text-white" : "text-[#002b46]";
+  const placeholderColor = themeMode === "dark" ? "placeholder-white/50" : "placeholder-[#002b46]/50";
+  const borderColor = themeMode === "dark" ? "border-white" : "border-[#002b46]";
+  const cardBorderColor = themeMode === "dark" ? "border-white/20" : "border-[#002b46]/20";
+  
   return (
-    <div className="w-full max-w-md p-8 rounded-[45px] shadow-2xl border border-white/20 backdrop-blur-[28px] bg-white/5">
+    <div className={`w-full max-w-md p-8 rounded-[45px] shadow-2xl border ${cardBorderColor} backdrop-blur-[28px] bg-white/5`}>
       <form onSubmit={handleSubmit} className="space-y-6">
+        <h2 className="text-2xl mb-4 text-green-400 text-center">Change Password</h2>
+        
         <div>
-          <label className="block text-white text-sm mb-2">Current Password</label>
+          <label className={`block ${textColor} text-sm mb-2`}>Current Password</label>
           <input
-            className="w-full p-3 rounded-lg bg-transparent border-b border-white text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-green-400"
+            className={`w-full p-3 rounded-lg bg-transparent border-b ${borderColor} ${textColor} ${placeholderColor} focus:outline-none focus:ring-2 focus:ring-green-400`}
             placeholder="Enter your current password"
             name="currentPassword"
             type="password"
@@ -23,9 +33,9 @@ const ChangePasswordCard = ({
         </div>
 
         <div>
-          <label className="block text-white text-sm mb-2">New Password</label>
+          <label className={`block ${textColor} text-sm mb-2`}>New Password</label>
           <input
-            className="w-full p-3 rounded-lg bg-transparent border-b border-white text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-green-400"
+            className={`w-full p-3 rounded-lg bg-transparent border-b ${borderColor} ${textColor} ${placeholderColor} focus:outline-none focus:ring-2 focus:ring-green-400`}
             placeholder="Enter your new password"
             name="newPassword"
             type="password"
@@ -36,9 +46,9 @@ const ChangePasswordCard = ({
         </div>
 
         <div>
-          <label className="block text-white text-sm mb-2">Confirm New Password</label>
+          <label className={`block ${textColor} text-sm mb-2`}>Confirm New Password</label>
           <input
-            className="w-full p-3 rounded-lg bg-transparent border-b border-white text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-green-400"
+            className={`w-full p-3 rounded-lg bg-transparent border-b ${borderColor} ${textColor} ${placeholderColor} focus:outline-none focus:ring-2 focus:ring-green-400`}
             placeholder="Confirm your new password"
             name="confirmNewPassword"
             type="password"

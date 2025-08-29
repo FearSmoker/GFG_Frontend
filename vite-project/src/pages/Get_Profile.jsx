@@ -1,13 +1,15 @@
 import { useState, useEffect } from "react";
-import { Camera } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { updateAccountDetails, updateUserAvatar } from "../api/User_api";
 import useAuth from "../context/AuthContext.jsx";
 import OtherPage3 from "../components/OtherPage3.jsx";
+import ProfileCard from "../components/ProfileCard.jsx";
+import UpdateProfileCard from "../components/UpdateProfileCard.jsx";
+import UpdateAvatarCard from "../components/UpdateAvatarCard.jsx";
 import "../css/OtherPage3.css";
 
-export default function UserProfileScreen() {
+export default function GetProfile() {
   const navigate = useNavigate();
   const { user, loading, isAuthenticated, fetchAndUpdateUserData } = useAuth();
 
@@ -19,6 +21,7 @@ export default function UserProfileScreen() {
   const [successMessage, setSuccessMessage] = useState(false);
   const [profileModalVisible, setProfileModalVisible] = useState(false);
   const [avatarModalVisible, setAvatarModalVisible] = useState(false);
+  const [imageZoomVisible, setImageZoomVisible] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -69,7 +72,9 @@ export default function UserProfileScreen() {
       }
       setAvatarModalVisible(false);
     } catch (error) {
-      toast.error("Failed to update avatar: " + (error.message || "Unknown error"));
+      toast.error(
+        "Failed to update avatar: " + (error.message || "Unknown error")
+      );
     }
   };
 
@@ -82,13 +87,41 @@ export default function UserProfileScreen() {
       showSuccessMessage();
       setProfileModalVisible(false);
     } catch (error) {
-      toast.error("Failed to update profile: " + (error.message || "Unknown error"));
+      toast.error(
+        "Failed to update profile: " + (error.message || "Unknown error")
+      );
     }
   };
 
   const showSuccessMessage = () => {
     setSuccessMessage(true);
     setTimeout(() => setSuccessMessage(false), 3000);
+  };
+
+  const handleUpdateProfile = () => {
+    setTempUserData({ ...userData });
+    setProfileModalVisible(true);
+  };
+
+  const handleChangePassword = () => {
+    navigate("/change-password");
+  };
+
+  const handleUpdateAvatar = () => {
+    setTempAvatar(null);
+    setAvatarModalVisible(true);
+  };
+
+  const handleAvatarClick = () => {
+    setImageZoomVisible(true);
+  };
+
+  const handleProfileChange = (e) => {
+    const { name, value } = e.target;
+    setTempUserData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
   const LoginPrompt = () => (
@@ -114,7 +147,11 @@ export default function UserProfileScreen() {
       <>
         <OtherPage3 />
         <div className="min-h-screen flex items-center justify-center text-green-500">
-          <svg className="animate-spin h-10 w-10" fill="none" viewBox="0 0 24 24">
+          <svg
+            className="animate-spin h-10 w-10"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
             <circle
               className="opacity-25"
               cx="12"
@@ -146,144 +183,65 @@ export default function UserProfileScreen() {
   return (
     <>
       <OtherPage3 />
-      <div className="otherpage3-content min-h-screen text-white">
+      <div className="otherpage3-content min-h-screen flex items-center justify-center p-4 pt-32 pb-16">
         {successMessage && (
           <div className="fixed top-16 left-4 right-4 z-50 bg-green-800 p-4 rounded text-center">
             Profile updated successfully!
           </div>
         )}
 
-        <div className="flex justify-between items-center p-4 border-b border-gray-800 bg-black bg-opacity-70 backdrop-blur-sm mt-24">
-          <h1 className="text-2xl font-bold text-green-500">My Profile</h1>
-          <div className="flex gap-2">
-            <button
-              className="bg-green-600 hover:bg-green-700 px-4 py-2 rounded"
-              onClick={() => {
-                setTempUserData({ ...userData });
-                setProfileModalVisible(true);
-              }}
-            >
-              Update Profile
-            </button>
-            <button
-              className="bg-gray-700 hover:bg-gray-600 px-4 py-2 rounded"
-              onClick={() => navigate("/change-password")}
-            >
-              Change Password
-            </button>
-          </div>
-        </div>
+        <ProfileCard
+          userData={userData}
+          avatar={avatar}
+          onUpdateProfile={handleUpdateProfile}
+          onChangePassword={handleChangePassword}
+          onUpdateAvatar={handleUpdateAvatar}
+          onAvatarClick={handleAvatarClick}
+        />
 
-        <div className="p-4 pt-12">
-          <div className="flex flex-col items-center mb-6">
-            <div className="relative mb-4">
+        {/* Image Zoom Modal */}
+        {imageZoomVisible && (
+          <div
+            className="fixed inset-0 backdrop-blur-md flex items-center justify-center z-50 p-4"
+            onClick={() => setImageZoomVisible(false)}
+          >
+            <div className="relative max-w-2xl max-h-2xl">
               <img
                 src={avatar}
                 alt="Avatar"
-                className="w-36 h-36 rounded-full border-4 border-green-600 object-cover"
+                className="max-w-full max-h-full rounded-lg shadow-2xl"
               />
               <button
-                className="absolute bottom-0 right-0 bg-green-600 hover:bg-green-700 w-10 h-10 rounded-full flex items-center justify-center"
-                onClick={() => {
-                  setTempAvatar(null);
-                  setAvatarModalVisible(true);
-                }}
+                onClick={() => setImageZoomVisible(false)}
+                className="absolute -top-3 -right-3 bg-black bg-opacity-70 text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-opacity-90 shadow-lg"
               >
-                <Camera size={20} />
+                ×
               </button>
-            </div>
-            <h2 className="text-2xl font-bold mb-1">{userData.fullName}</h2>
-            <p className="text-gray-400">@{userData.username}</p>
-          </div>
-
-          {/* Display profile details */}
-          {["username", "fullName", "email", "mobileNo"].map((field) => (
-            <div key={field} className="mb-4">
-              <p className="text-sm text-gray-400 mb-1">
-                {field.replace(/([A-Z])/g, " $1")}
-              </p>
-              <div className={`bg-black bg-opacity-80 p-3 rounded border border-gray-800 flex items-center ${field === 'mobileNo' ? 'min-h-[44px]' : 'min-h-[52px]'}`}>
-                <p className="text-white">{userData[field] || ""}</p>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Avatar Modal */}
-        {avatarModalVisible && (
-          <div className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-            <div className="bg-gray-900 p-6 rounded-lg shadow-lg border border-gray-800">
-              <h3 className="text-xl mb-4">Update Avatar</h3>
-              {tempAvatar?.previewUrl ? (
-                <img
-                  src={tempAvatar.previewUrl}
-                  className="w-24 h-24 rounded-full mb-4"
-                />
-              ) : (
-                <p className="text-gray-400 mb-4">No image selected</p>
-              )}
-              <div className="flex gap-2">
-                <button
-                  onClick={pickImage}
-                  className="bg-green-600 px-4 py-2 rounded"
-                >
-                  Choose Image
-                </button>
-                <button
-                  onClick={saveAvatarChanges}
-                  className="bg-blue-600 px-4 py-2 rounded"
-                >
-                  Save
-                </button>
-                <button
-                  onClick={() => setAvatarModalVisible(false)}
-                  className="bg-red-600 px-4 py-2 rounded"
-                >
-                  Cancel
-                </button>
-              </div>
             </div>
           </div>
         )}
 
-        {/* Profile Edit Modal */}
+        {/* Update Profile Modal */}
         {profileModalVisible && (
-          <div className="fixed inset-0 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-            <div className="bg-gray-900 p-6 rounded-lg shadow-lg border border-gray-800 w-full max-w-md">
-              <h3 className="text-xl mb-4">Edit Profile</h3>
-              {["username", "fullName", "email", "mobileNo"].map((field) => (
-                <div key={field} className="mb-4">
-                  <label className="block text-sm text-gray-400 mb-1 capitalize">
-                    {field}
-                  </label>
-                  <input
-                    type="text"
-                    value={tempUserData[field]}
-                    onChange={(e) =>
-                      setTempUserData((prev) => ({
-                        ...prev,
-                        [field]: e.target.value,
-                      }))
-                    }
-                    className="w-full p-2 rounded bg-gray-800 text-white border border-gray-700"
-                  />
-                </div>
-              ))}
-              <div className="flex gap-2 justify-end mt-4">
-                <button
-                  onClick={() => setProfileModalVisible(false)}
-                  className="bg-red-600 px-4 py-2 rounded"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={saveProfileChanges}
-                  className="bg-green-600 px-4 py-2 rounded"
-                >
-                  Save
-                </button>
-              </div>
-            </div>
+          <div className="fixed inset-0 backdrop-blur-md flex items-center justify-center z-50 p-4 pt-32 pb-16">
+            <UpdateProfileCard
+              tempUserData={tempUserData}
+              onCancel={() => setProfileModalVisible(false)}
+              onSave={saveProfileChanges}
+              onChange={handleProfileChange}
+            />
+          </div>
+        )}
+
+        {/* Update Avatar Modal */}
+        {avatarModalVisible && (
+          <div className="fixed inset-0 backdrop-blur-md flex items-center justify-center z-50 p-4 py-16">
+            <UpdateAvatarCard
+              tempAvatar={tempAvatar}
+              onCancel={() => setAvatarModalVisible(false)}
+              onSave={saveAvatarChanges}
+              onChooseImage={pickImage}
+            />
           </div>
         )}
       </div>

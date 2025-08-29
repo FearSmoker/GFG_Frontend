@@ -19,7 +19,9 @@ const LogoutCard = ({ onConfirm, onCancel }) => {
       
       {/* Content */}
       <div className="relative z-10 py-3 px-4">
-        <div className="text-white text-[16px] font-light font-[Merriweather Sans] text-center mb-3">
+        <div className={`text-[16px] font-light font-[Merriweather Sans] text-center mb-3 ${
+          themeMode === "dark" ? "text-white" : "text-[#002b46]"
+        }`}>
           Are you sure you want to log out?
         </div>
         
@@ -27,13 +29,17 @@ const LogoutCard = ({ onConfirm, onCancel }) => {
         <div className="flex gap-3 justify-center">
           <button
             onClick={onConfirm}
-            className="px-6 py-2 text-red-400 text-[16px] font-light font-[Merriweather Sans] transition-all duration-300 hover:text-red-500 hover:bg-red-500/20 rounded-md border border-red-400/30 hover:border-red-500/50"
+            className="px-6 py-2 text-red-400 text-[16px] font-light font-[Merriweather Sans] transition-all duration-300 hover:text-red-600 hover:bg-red-600/20 rounded-md border border-red-400/30 hover:border-red-600/50"
           >
             Yes, Logout
           </button>
           <button
             onClick={onCancel}
-            className="px-6 py-2 text-white text-[16px] font-light font-[Merriweather Sans] transition-all duration-300 hover:text-[#00FFAF] hover:bg-[rgba(0,43,70,0.5)] rounded-md border border-white/30 hover:border-[#00FFAF]/50"
+            className={`px-6 py-2 text-[16px] font-light font-[Merriweather Sans] transition-all duration-300 rounded-md border hover:border-[#00FFAF]/50 ${
+              themeMode === "dark" 
+                ? "text-white hover:text-[#00FFAF] hover:bg-[rgba(0,43,70,0.5)] border-white/30" 
+                : "text-[#002b46] hover:text-[#00FFAF] hover:bg-[rgba(0,43,70,0.5)] border-[#002b46]/30"
+            }`}
           >
             Cancel
           </button>

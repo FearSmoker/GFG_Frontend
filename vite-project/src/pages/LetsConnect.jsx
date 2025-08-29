@@ -13,11 +13,21 @@ const LetsConnect = () => {
           </span>
         </h1>
         <div className="mt-10 grid grid-cols-2 gap-6 place-items-center sm:w-[90%] mx-auto">
-          <a href="https://instagram.com" className="neon-button">Instagram</a>
-          <a href="https://linkedin.com" className="neon-button">LinkedIn</a>
-          <a href="https://twitter.com" className="neon-button col-span-2">X</a>
-          <a href="https://discord.com" className="neon-button">Discord</a>
-          <a href="https://facebook.com" className="neon-button">Facebook</a>
+          <a href="https://instagram.com" className="neon-button">
+            Instagram
+          </a>
+          <a href="https://linkedin.com" className="neon-button">
+            LinkedIn
+          </a>
+          <a href="https://twitter.com" className="neon-button col-span-2">
+            X
+          </a>
+          <a href="https://discord.com" className="neon-button">
+            Discord
+          </a>
+          <a href="https://facebook.com" className="neon-button">
+            Facebook
+          </a>
         </div>
       </div>
 

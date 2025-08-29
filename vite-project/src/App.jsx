@@ -20,9 +20,12 @@ import EventDetails from "./pages/EventDetails";
 import EventRegistration from "./pages/EventRegistration";
 import Dashboard from "./pages/Dashboard";
 import MyRegistrations from "./pages/MyRegistrations";
-import RegistrationHistory from "./pages/RegistrationHistory";
 import EventHistory from "./pages/EventHistory.jsx";
 import AddEvents from "./pages/AddEvents.jsx";
+import AdminRegistrationDashboard from "./pages/AdminRegistrationDashboard.jsx";
+import PageNotFound from "./pages/PageNotFound.jsx";
+
+
 
 function App() {
   return (
@@ -47,10 +50,10 @@ function App() {
           <Route path="/events/:eventId" element={<EventDetails />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/my-registrations" element={<MyRegistrations />} />
-          <Route path="/registration-history" element={<RegistrationHistory />} />
           <Route path="/event-history" element={<EventHistory />} />
+          <Route path="/admin/registrations" element={<AdminRegistrationDashboard />} />
           
-          <Route path="*" element={<div className="text-white text-center mt-10">404 - Page Not Found</div>} />
+          <Route path="*" element={<PageNotFound />} />
         </Routes>
         <Footer />
       </NavigationProvider>

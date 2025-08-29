@@ -18,24 +18,45 @@ const Navbar = () => {
   const [showLogoutCard, setShowLogoutCard] = useState(false);
   const { isAuthenticated, user, logout } = useAuth();
   const { themeMode } = useTheme();
-  
+
   const dropdownTimeoutRef = React.useRef(null);
 
   React.useEffect(() => {
     const handleClickOutside = (event) => {
-      if (isProfileDropdownOpen && !event.target.closest('.profile-dropdown-container')) {
+      if (
+        isProfileDropdownOpen &&
+        !event.target.closest(".profile-dropdown-container")
+      ) {
         setIsProfileDropdownOpen(false);
       }
-      if (showLogoutCard && !event.target.closest('.logout-card-container')) {
+      if (showLogoutCard && !event.target.closest(".logout-card-container")) {
         setShowLogoutCard(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isProfileDropdownOpen, showLogoutCard]);
+
+  React.useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+    } else {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.width = '';
+    };
+  }, [isOpen]);
 
   React.useEffect(() => {
     return () => {
@@ -46,7 +67,6 @@ const Navbar = () => {
   }, []);
 
   const handleMouseEnter = () => {
-
     if (dropdownTimeoutRef.current) {
       clearTimeout(dropdownTimeoutRef.current);
       dropdownTimeoutRef.current = null;
@@ -55,7 +75,6 @@ const Navbar = () => {
   };
 
   const handleMouseLeave = () => {
-
     dropdownTimeoutRef.current = setTimeout(() => {
       setIsProfileDropdownOpen(false);
       dropdownTimeoutRef.current = null;
@@ -70,18 +89,16 @@ const Navbar = () => {
     goTo("/get-profile");
   };
 
-
   const handleLogoutConfirm = async () => {
     setShowLogoutCard(false);
-    
-    try {
 
+    try {
       await logout();
-      
+
       goTo("/Logout");
     } catch (error) {
       console.error("Error during logout:", error);
-      
+
       goTo("/Logout");
     }
   };
@@ -95,7 +112,6 @@ const Navbar = () => {
   return (
     <div className="fixed top-0 left-0 right-0 z-50 w-full">
       <nav className="w-full relative px-6 md:px-12 shadow-lg bg-transparent">
-
         <div className="absolute inset-0 w-full h-full -z-10">
           {themeMode === "dark" ? (
             <NavbarBgDark className="w-full h-full object-cover" />
@@ -109,16 +125,17 @@ const Navbar = () => {
           <div className="flex items-center space-x-3">
             <a href="/">
               {themeMode === "dark" ? (
-              <img
-                src="/src/assets/NewLogoDark.png"
-                alt="Logo"
-                className="h-10 md:h-20"
-              /> ) : (
                 <img
-                src="/src/assets/NewLogoLight.png"
-                alt="Logo"
-                className="h-10 md:h-20"
-              />
+                  src="/src/assets/NewLogoDark.png"
+                  alt="Logo"
+                  className="h-10 md:h-20"
+                />
+              ) : (
+                <img
+                  src="/src/assets/NewLogoLight.png"
+                  alt="Logo"
+                  className="h-10 md:h-20"
+                />
               )}
             </a>
           </div>
@@ -132,7 +149,7 @@ const Navbar = () => {
                 active={currentPath === "/signin"}
               />
             ) : (
-              <div className="text-black-800 font-bold">
+              <div className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 font-bold italic text-xl tracking-wide drop-shadow-sm font-[Poppins]">
                 {user ? `Hi, ${user.username}` : "Loading user..."}
               </div>
             )}
@@ -161,7 +178,7 @@ const Navbar = () => {
             {/* Profile avatar + logout */}
             {isAuthenticated && user && (
               <div className="flex items-center space-x-3">
-                <div 
+                <div
                   className="relative profile-dropdown-container"
                   onMouseEnter={handleMouseEnter}
                   onMouseLeave={handleMouseLeave}
@@ -185,7 +202,7 @@ const Navbar = () => {
                           <NavbarBg className="w-full h-full object-cover" />
                         )}
                       </div>
-                      
+
                       {/* Content */}
                       <div className="relative z-10 py-2">
                         <button
@@ -193,7 +210,11 @@ const Navbar = () => {
                             goToProfile();
                             setIsProfileDropdownOpen(false);
                           }}
-                          className={`w-full text-left px-4 py-2 ${themeMode === "dark" ? "text-white" : "text-[#002b46]"} text-[16px] font-light font-[Merriweather Sans] transition-all duration-300 hover:text-[#00FFAF] hover:bg-[rgba(0,43,70,0.5)]`}
+                          className={`w-full text-left px-4 py-2 ${
+                            themeMode === "dark"
+                              ? "text-white"
+                              : "text-[#002b46]"
+                          } text-[16px] font-light font-[Merriweather Sans] transition-all duration-300 hover:text-[#00FFAF] hover:bg-[rgba(0,43,70,0.5)]`}
                         >
                           My Profile
                         </button>
@@ -202,7 +223,11 @@ const Navbar = () => {
                             goTo("/dashboard");
                             setIsProfileDropdownOpen(false);
                           }}
-                          className={`w-full text-left px-4 py-2 ${themeMode === "dark" ? "text-white" : "text-[#002b46]"} text-[16px] font-light font-[Merriweather Sans] transition-all duration-300 hover:text-[#00FFAF] hover:bg-[rgba(0,43,70,0.5)]`}
+                          className={`w-full text-left px-4 py-2 ${
+                            themeMode === "dark"
+                              ? "text-white"
+                              : "text-[#002b46]"
+                          } text-[16px] font-light font-[Merriweather Sans] transition-all duration-300 hover:text-[#00FFAF] hover:bg-[rgba(0,43,70,0.5)]`}
                         >
                           Dashboard
                         </button>
@@ -211,7 +236,11 @@ const Navbar = () => {
                             goTo("/my-registrations");
                             setIsProfileDropdownOpen(false);
                           }}
-                          className={`w-full text-left px-4 py-2 ${themeMode === "dark" ? "text-white" : "text-[#002b46]"} text-[16px] font-light font-[Merriweather Sans] transition-all duration-300 hover:text-[#00FFAF] hover:bg-[rgba(0,43,70,0.5)]`}
+                          className={`w-full text-left px-4 py-2 ${
+                            themeMode === "dark"
+                              ? "text-white"
+                              : "text-[#002b46]"
+                          } text-[16px] font-light font-[Merriweather Sans] transition-all duration-300 hover:text-[#00FFAF] hover:bg-[rgba(0,43,70,0.5)]`}
                         >
                           My Registrations
                         </button>
@@ -220,7 +249,11 @@ const Navbar = () => {
                             goTo("/event-history");
                             setIsProfileDropdownOpen(false);
                           }}
-                          className={`w-full text-left px-4 py-2 ${themeMode === "dark" ? "text-white" : "text-[#002b46]"} text-[16px] font-light font-[Merriweather Sans] transition-all duration-300 hover:text-[#00FFAF] hover:bg-[rgba(0,43,70,0.5)]`}
+                          className={`w-full text-left px-4 py-2 ${
+                            themeMode === "dark"
+                              ? "text-white"
+                              : "text-[#002b46]"
+                          } text-[16px] font-light font-[Merriweather Sans] transition-all duration-300 hover:text-[#00FFAF] hover:bg-[rgba(0,43,70,0.5)]`}
                         >
                           Event History
                         </button>
@@ -234,15 +267,22 @@ const Navbar = () => {
                   className="relative flex items-center justify-center p-2 rounded-lg border transition-all duration-300 bg-transparent border-transparent hover:border-[#004C7C] hover:bg-[rgba(0,43,70,0.32)]"
                   aria-label="Logout"
                 >
-                  <img 
-                    src={logoutIcon} 
-                    alt="Logout" 
+                  <img
+                    src={logoutIcon}
+                    alt="Logout"
                     className={`h-5 w-5 filter transition-all duration-300 ${
-                      themeMode === "dark" 
-                        ? "brightness-0 invert hover:brightness-0 hover:sepia hover:saturate-200 hover:hue-rotate-90" 
+                      themeMode === "dark"
+                        ? "brightness-0 invert hover:brightness-0 hover:sepia hover:saturate-200 hover:hue-rotate-90"
                         : "hover:brightness-0 hover:sepia hover:saturate-200 hover:hue-rotate-90"
                     }`}
-                    style={themeMode === "light" ? { filter: 'brightness(0) saturate(100%) invert(16%) sepia(28%) saturate(2049%) hue-rotate(185deg) brightness(91%) contrast(101%)' } : {}}
+                    style={
+                      themeMode === "light"
+                        ? {
+                            filter:
+                              "brightness(0) saturate(100%) invert(16%) sepia(28%) saturate(2049%) hue-rotate(185deg) brightness(91%) contrast(101%)",
+                          }
+                        : {}
+                    }
                   />
 
                   {/* Logout Card */}
@@ -264,7 +304,9 @@ const Navbar = () => {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden text-gray-700 focus:outline-none"
+            className={`md:hidden focus:outline-none z-20 ${
+              themeMode === "dark" ? "text-white" : "text-gray-700"
+            }`}
             aria-label="Toggle menu"
           >
             {isOpen ? <X size={30} /> : <Menu size={30} />}
@@ -272,150 +314,234 @@ const Navbar = () => {
         </div>
       </nav>
 
-      {/* Mobile Menu */}
+      {/* Mobile Menu - Improved Layout */}
       {isOpen && (
-        <div className="flex flex-col md:hidden bg-gradient-to-r from-emerald-500 to-black backdrop-blur-md py-6 space-y-4 text-center shadow-md items-center">
-          {!isAuthenticated ? (
-            <button
-              onClick={() => {
-                goTo("/signin");
-                setIsOpen(false);
-              }}
-              className="text-white text-lg hover:text-green-300 border w-fit rounded-lg px-4 py-2"
-            >
-              Sign In
-            </button>
-          ) : (
-            <div className="text-black-800 font-bold">
-              {user ? `Hi, ${user.username}` : "Loading user..."}
+        <div className="md:hidden fixed inset-0 top-0 z-40">
+          {/* Background with theme colors */}
+          <div className={`absolute inset-0 ${
+            themeMode === "dark" 
+              ? "bg-gradient-to-br from-emerald-900 via-green-900 to-gray-900" 
+              : "bg-gradient-to-br from-green-50 via-emerald-100 to-teal-100"
+          }`} />
+          
+          {/* Mobile Menu Header with Close Button - Fixed */}
+          <div className="relative z-20 flex justify-between items-center px-6 py-4 pt-6">
+            <div className="flex items-center space-x-3">
+              <a href="/" onClick={() => setIsOpen(false)}>
+                {themeMode === "dark" ? (
+                  <img
+                    src="/src/assets/NewLogoDark.png"
+                    alt="Logo"
+                    className="h-10"
+                  />
+                ) : (
+                  <img
+                    src="/src/assets/NewLogoLight.png"
+                    alt="Logo"
+                    className="h-10"
+                  />
+                )}
+              </a>
             </div>
-          )}
-
-          {[
-            { label: "Meet Our Geeks", path: "/meet-our-geeks" },
-            { label: "Events", path: "/events" },
-            { label: "About Us", path: "/about-us" },
-            { label: "POTD", path: "/potd" },
-          ].map(({ label, path }) => (
+            
+            {/* Close Button (X) */}
             <button
-              key={path}
-              onClick={() => {
-                goTo(path);
-                setIsOpen(false);
-              }}
-              className="text-white text-lg hover:text-green-300 border w-fit rounded-lg px-4 py-2"
+              onClick={() => setIsOpen(false)}
+              className={`focus:outline-none ${
+                themeMode === "dark" ? "text-white" : "text-emerald-800"
+              }`}
+              aria-label="Close menu"
             >
-              {label}
+              <X size={30} />
             </button>
-          ))}
+          </div>
+          
+          {/* Scrollable Content */}
+          <div className="relative z-10 overflow-y-auto" style={{ height: 'calc(100vh - 80px)' }}>
+            <div className="px-6 py-4">
+              {/* User Section */}
+              {isAuthenticated && user ? (
+                <div className={`flex flex-col items-center mb-8 pb-6 border-b ${
+                  themeMode === "dark" ? "border-emerald-600" : "border-emerald-300"
+                }`}>
+                  <div className="w-16 h-16 bg-blue-700 rounded-full mb-4 overflow-hidden flex items-center justify-center shadow-lg">
+                    <img
+                      src={user.avatar}
+                      alt="User Avatar"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 font-bold italic text-xl tracking-wide drop-shadow-sm font-[Poppins]">
+                    {user ? `Hi, ${user.username}` : "Loading user..."}
+                  </div>
+                  <div className={`text-sm text-center mt-2 ${
+                    themeMode === "dark" ? "text-emerald-300" : "text-emerald-600"
+                  }`}>Welcome back</div>
+                </div>
+              ) : (
+                <div className={`flex justify-center mb-8 pb-6 border-b ${
+                  themeMode === "dark" ? "border-emerald-600" : "border-emerald-300"
+                }`}>
+                  <button
+                    onClick={() => {
+                      goTo("/signin");
+                      setIsOpen(false);
+                    }}
+                    className={`text-lg font-medium px-8 py-3 rounded-full border transition-all duration-300 shadow-lg ${
+                      themeMode === "dark"
+                        ? "bg-emerald-800 text-white border-emerald-600 hover:bg-emerald-700"
+                        : "bg-white text-emerald-800 border-emerald-300 hover:bg-emerald-50"
+                    }`}
+                  >
+                    Sign In
+                  </button>
+                </div>
+              )}
 
-          {isAuthenticated && user && (
-            <div 
-              className="relative profile-dropdown-container"
-              onMouseEnter={handleMouseEnter}
-              onMouseLeave={handleMouseLeave}
-            >
-              <div className="w-9 h-9 bg-blue-700 rounded-full cursor-pointer overflow-hidden flex items-center justify-center">
-                <img
-                  src={user.avatar}
-                  alt="User Avatar"
-                  className="w-full h-full object-cover"
-                />
+              {/* Navigation Links */}
+              <div className="flex flex-col space-y-3 mb-8">
+                {[
+                  { label: "Meet Our Geeks", path: "/meet-our-geeks", icon: "👥" },
+                  { label: "Events", path: "/events", icon: "🎯" },
+                  { label: "About Us", path: "/about-us", icon: "ℹ️" },
+                  { label: "POTD", path: "/potd", icon: "💡" },
+                ].map(({ label, path, icon }) => (
+                  <button
+                    key={path}
+                    onClick={() => {
+                      goTo(path);
+                      setIsOpen(false);
+                    }}
+                    className={`flex items-center justify-center text-base font-medium px-5 py-3 rounded-lg border transition-all duration-300 shadow-md hover:scale-105 active:scale-95 ${
+                      themeMode === "dark"
+                        ? "bg-emerald-800 text-white border-emerald-600 hover:bg-emerald-700"
+                        : "bg-white text-emerald-800 border-emerald-300 hover:bg-emerald-50"
+                    }`}
+                  >
+                    <span className="mr-3 text-lg">{icon}</span>
+                    {label}
+                  </button>
+                ))}
               </div>
 
-              {/* Mobile Profile Dropdown */}
-              {isProfileDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-48 rounded-lg shadow-lg z-50 overflow-hidden">
-                  {/* Background SVG */}
-                  <div className="absolute inset-0 w-full h-full">
-                    {themeMode === "dark" ? (
-                      <NavbarBgDark className="w-full h-full object-cover" />
-                    ) : (
-                      <NavbarBg className="w-full h-full object-cover" />
-                    )}
+              {/* Profile Actions for Authenticated Users */}
+              {isAuthenticated && user && (
+                <div className="mb-8">
+                  <div className={`text-sm font-medium mb-4 text-center uppercase tracking-wider ${
+                    themeMode === "dark" ? "text-emerald-300" : "text-emerald-600"
+                  }`}>
+                    Profile Actions
                   </div>
-                  
-                  {/* Content */}
-                  <div className="relative z-10 py-2">
+                  <div className="grid grid-cols-2 gap-3 mb-6">
                     <button
                       onClick={() => {
                         goToProfile();
-                        setIsProfileDropdownOpen(false);
                         setIsOpen(false);
                       }}
-                      className={`w-full text-left px-4 py-2 ${themeMode === "dark" ? "text-white" : "text-[#002b46]"} text-[16px] font-light font-[Merriweather Sans] transition-all duration-300 hover:text-[#00FFAF] hover:bg-[rgba(0,43,70,0.5)]`}
+                      className={`text-sm font-medium px-4 py-3 rounded-lg border transition-all duration-300 text-center ${
+                        themeMode === "dark"
+                          ? "bg-emerald-800 text-white border-emerald-600 hover:bg-emerald-700"
+                          : "bg-white text-emerald-800 border-emerald-300 hover:bg-emerald-50"
+                      }`}
                     >
                       My Profile
                     </button>
                     <button
                       onClick={() => {
                         goTo("/dashboard");
-                        setIsProfileDropdownOpen(false);
                         setIsOpen(false);
                       }}
-                      className={`w-full text-left px-4 py-2 ${themeMode === "dark" ? "text-white" : "text-[#002b46]"} text-[16px] font-light font-[Merriweather Sans] transition-all duration-300 hover:text-[#00FFAF] hover:bg-[rgba(0,43,70,0.5)]`}
+                      className={`text-sm font-medium px-4 py-3 rounded-lg border transition-all duration-300 text-center ${
+                        themeMode === "dark"
+                          ? "bg-emerald-800 text-white border-emerald-600 hover:bg-emerald-700"
+                          : "bg-white text-emerald-800 border-emerald-300 hover:bg-emerald-50"
+                      }`}
                     >
                       Dashboard
                     </button>
                     <button
                       onClick={() => {
                         goTo("/my-registrations");
-                        setIsProfileDropdownOpen(false);
                         setIsOpen(false);
                       }}
-                      className={`w-full text-left px-4 py-2 ${themeMode === "dark" ? "text-white" : "text-[#002b46]"} text-[16px] font-light font-[Merriweather Sans] transition-all duration-300 hover:text-[#00FFAF] hover:bg-[rgba(0,43,70,0.5)]`}
+                      className={`text-sm font-medium px-4 py-3 rounded-lg border transition-all duration-300 text-center ${
+                        themeMode === "dark"
+                          ? "bg-emerald-800 text-white border-emerald-600 hover:bg-emerald-700"
+                          : "bg-white text-emerald-800 border-emerald-300 hover:bg-emerald-50"
+                      }`}
                     >
-                      My Registrations
+                      Registrations
                     </button>
                     <button
                       onClick={() => {
                         goTo("/event-history");
-                        setIsProfileDropdownOpen(false);
                         setIsOpen(false);
                       }}
-                      className={`w-full text-left px-4 py-2 ${themeMode === "dark" ? "text-white" : "text-[#002b46]"} text-[16px] font-light font-[Merriweather Sans] transition-all duration-300 hover:text-[#00FFAF] hover:bg-[rgba(0,43,70,0.5)]`}
+                      className={`text-sm font-medium px-4 py-3 rounded-lg border transition-all duration-300 text-center ${
+                        themeMode === "dark"
+                          ? "bg-emerald-800 text-white border-emerald-600 hover:bg-emerald-700"
+                          : "bg-white text-emerald-800 border-emerald-300 hover:bg-emerald-50"
+                      }`}
                     >
-                      Event History
+                      History
                     </button>
+                  </div>
+
+                  {/* Mobile Logout Button - Properly positioned */}
+                  <div className="flex justify-center">
+                    <div className="relative logout-card-container">
+                      <button
+                        onClick={() => setShowLogoutCard(true)}
+                        className="relative flex items-center justify-center p-2 rounded-lg border transition-all duration-300 bg-transparent border-transparent hover:border-[#004C7C] hover:bg-[rgba(0,43,70,0.32)]"
+                        aria-label="Logout"
+                      >
+                        <img
+                          src={logoutIcon}
+                          alt="Logout"
+                          className={`h-5 w-5 filter transition-all duration-300 ${
+                            themeMode === "dark"
+                              ? "brightness-0 invert hover:brightness-0 hover:sepia hover:saturate-200 hover:hue-rotate-90"
+                              : "hover:brightness-0 hover:sepia hover:saturate-200 hover:hue-rotate-90"
+                          }`}
+                          style={
+                            themeMode === "light"
+                              ? {
+                                  filter:
+                                    "brightness(0) saturate(100%) invert(16%) sepia(28%) saturate(2049%) hue-rotate(185deg) brightness(91%) contrast(101%)",
+                                }
+                              : {}
+                          }
+                        />
+                      </button>
+
+                      {/* Mobile Logout Card - Positioned below the button and centered */}
+                      {showLogoutCard && (
+                        <div className="absolute -top-4 left-0 right-0 flex justify-center -translate-y-full z-50">
+                          <div className="scale-75">
+                            <LogoutCard
+                              onConfirm={handleLogoutConfirm}
+                              onCancel={handleLogoutCancel}
+                            />
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               )}
-            </div>
-          )}
 
-          {isAuthenticated && (
-            <button
-              onClick={() => {
-                setShowLogoutCard(true);
-                setIsOpen(false);
-              }}
-              className="relative flex items-center justify-center p-2 rounded-lg border transition-all duration-300 bg-transparent border-transparent hover:border-[#004C7C] hover:bg-[rgba(0,43,70,0.32)]"
-              aria-label="Logout"
-            >
-              <img 
-                src={logoutIcon} 
-                alt="Logout" 
-                className={`h-5 w-5 filter transition-all duration-300 ${
-                  themeMode === "dark" 
-                    ? "brightness-0 invert hover:brightness-0 hover:sepia hover:saturate-200 hover:hue-rotate-90" 
-                    : "hover:brightness-0 hover:sepia hover:saturate-200 hover:hue-rotate-90"
-                }`}
-                style={themeMode === "light" ? { filter: 'brightness(0) saturate(100%) invert(16%) sepia(28%) saturate(2049%) hue-rotate(185deg) brightness(91%) contrast(101%)' } : {}}
-              />
-
-              {/* Mobile Logout Card */}
-              {showLogoutCard && (
-                <div className="logout-card-container absolute right-0 mt-10 z-50">
-                  <LogoutCard
-                    onConfirm={handleLogoutConfirm}
-                    onCancel={handleLogoutCancel}
-                  />
+              {/* Bottom Actions */}
+              <div className={`flex items-center justify-center space-x-4 pt-6 pb-8 border-t ${
+                themeMode === "dark" ? "border-emerald-600" : "border-emerald-300"
+              }`}>
+                <div className={`rounded-full p-1 ${
+                  themeMode === "dark" ? "bg-emerald-800" : "bg-white shadow-md"
+                }`}>
+                  <ThemeBtn />
                 </div>
-              )}
-            </button>
-          )}
-
-          <ThemeBtn />
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </div>

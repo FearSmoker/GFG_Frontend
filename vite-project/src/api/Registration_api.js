@@ -1,4 +1,4 @@
-const REGISTRATION_BASE_URL = "http://localhost:8000/api/v1/registrations";
+const REGISTRATION_BASE_URL = "https://gfg-backend-rjtn.onrender.com/api/v1/registrations";
 
 // Helper function to get auth headers with proper token validation
 const getRegistrationAuthHeaders = () => {
@@ -47,6 +47,13 @@ export async function registerForEvent(eventId) {
       throw new Error(data.message || "Failed to register for event");
     }
     
+    // Log the registration ID (MongoDB _id) for tracking
+    if (data.registration && data.registration._id) {
+      console.log('Registration successful with ID:', data.registration._id);
+    } else if (data.registrationId) {
+      console.log('Registration successful with ID:', data.registrationId);
+    }
+    
     console.log('Registration successful:', data);
     return data;
   } catch (error) {
@@ -61,9 +68,11 @@ export async function registerForEvent(eventId) {
   }
 }
 
-// Cancel registration
+// Cancel registration using MongoDB _id
 export async function cancelRegistration(registrationId) {
   try {
+    console.log('Attempting to cancel registration with ID:', registrationId);
+    
     const headers = getRegistrationAuthHeaders();
     
     const res = await fetch(`${REGISTRATION_BASE_URL}/cancel/${registrationId}`, {
@@ -74,9 +83,11 @@ export async function cancelRegistration(registrationId) {
     const data = await res.json();
     
     if (!res.ok) {
+      console.error('Cancel registration failed:', data);
       throw new Error(data.message || "Failed to cancel registration");
     }
     
+    console.log('Registration cancelled successfully:', registrationId);
     return data;
   } catch (error) {
     console.error("Cancel registration error:", error);
@@ -93,6 +104,8 @@ export async function cancelRegistration(registrationId) {
 // Get user's registrations
 export async function getUserRegistrations(params = {}) {
   try {
+    console.log('Fetching user registrations with params:', params);
+    
     const headers = getRegistrationAuthHeaders();
     const queryParams = new URLSearchParams(params).toString();
     const url = queryParams ? `${REGISTRATION_BASE_URL}/my-registrations?${queryParams}` : `${REGISTRATION_BASE_URL}/my-registrations`;
@@ -105,7 +118,14 @@ export async function getUserRegistrations(params = {}) {
     const data = await res.json();
     
     if (!res.ok) {
+      console.error('Fetch registrations failed:', data);
       throw new Error(data.message || "Failed to fetch registrations");
+    }
+    
+    // Log registration IDs for tracking
+    if (data.registrations && Array.isArray(data.registrations)) {
+      const registrationIds = data.registrations.map(reg => reg._id).filter(Boolean);
+      console.log('Fetched registrations with IDs:', registrationIds);
     }
     
     return data;
@@ -121,9 +141,11 @@ export async function getUserRegistrations(params = {}) {
   }
 }
 
-// Get registration details
+// Get registration details using MongoDB _id
 export async function getRegistrationDetails(registrationId) {
   try {
+    console.log('Fetching registration details for ID:', registrationId);
+    
     const headers = getRegistrationAuthHeaders();
     
     const res = await fetch(`${REGISTRATION_BASE_URL}/details/${registrationId}`, {
@@ -134,9 +156,11 @@ export async function getRegistrationDetails(registrationId) {
     const data = await res.json();
     
     if (!res.ok) {
+      console.error('Fetch registration details failed:', data);
       throw new Error(data.message || "Failed to fetch registration details");
     }
     
+    console.log('Registration details fetched successfully for ID:', registrationId);
     return data;
   } catch (error) {
     console.error("Fetch registration details error:", error);

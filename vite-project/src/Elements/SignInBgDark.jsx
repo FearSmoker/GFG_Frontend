@@ -1,5 +1,5 @@
 import * as React from "react";
-const SignInBgDarkSVGComponent = (props) => (
+const OtherPageBg1DarkSVGComponent = (props) => (
   <svg
     width="100%"
     height="100%"
@@ -67,4 +67,4 @@ const SignInBgDarkSVGComponent = (props) => (
     </defs>
   </svg>
 );
-export default SignInBgDarkSVGComponent;
+export default OtherPageBg1DarkSVGComponent;

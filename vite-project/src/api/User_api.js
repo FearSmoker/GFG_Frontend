@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:8000/api/v1/users";
+const BASE_URL = "https://gfg-backend-rjtn.onrender.com/api/v1/users";
 
 // Register user
 export const registerUser = async (formData) => {
@@ -18,8 +18,55 @@ export const registerUser = async (formData) => {
     throw error;
   }
 
-  const { fullName, email, username, avatar } = data.data;
-  return { fullName, email, username, avatar };
+  return data;
+};
+
+// Verify email OTP
+export const verifyEmailOTP = async (email, otp) => {
+  const response = await fetch(`${BASE_URL}/verify-email-otp`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email, otp }),
+  });
+  
+  const data = await response.json();
+  
+  if (!response.ok) {
+    const error = new Error(data.message || 'OTP verification failed');
+    error.response = {
+      status: response.status,
+      data: data
+    };
+    throw error;
+  }
+
+  return data;
+};
+
+// Resend OTP
+export const resendOTP = async (email) => {
+  const response = await fetch(`${BASE_URL}/resend-otp`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ email }),
+  });
+  
+  const data = await response.json();
+  
+  if (!response.ok) {
+    const error = new Error(data.message || 'Failed to resend OTP');
+    error.response = {
+      status: response.status,
+      data: data
+    };
+    throw error;
+  }
+
+  return data;
 };
 
 // Login user
@@ -256,4 +303,141 @@ export const updateUserAvatar = async (formData) => {
     credentials: "include",
   });
   return response.json();
+};
+
+// Helper function to get auth headers with proper token validation for admin routes
+const getAdminAuthHeaders = () => {
+  const token = localStorage.getItem('access_token');
+  
+  if (!token) {
+    throw new Error('Authentication required');
+  }
+  
+  const cleanToken = token.replace(/^["']|["']$/g, '').trim();
+  
+  return {
+    'Authorization': `Bearer ${cleanToken}`,
+    'Content-Type': 'application/json'
+  };
+};
+
+// Get pending registrations (Admin only)
+export const getPendingRegistrations = async (params = {}) => {
+  try {
+    const headers = getAdminAuthHeaders();
+    const queryParams = new URLSearchParams(params).toString();
+    const url = queryParams ? `${BASE_URL}/admin/pending-registrations?${queryParams}` : `${BASE_URL}/admin/pending-registrations`;
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers
+    });
+
+    const data = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(data.message || "Failed to fetch pending registrations");
+    }
+    
+    return data;
+  } catch (error) {
+    console.error("Fetch pending registrations error:", error);
+    throw error;
+  }
+};
+
+// Get all registrations with status (Admin only)
+export const getAllRegistrationsWithStatus = async (params = {}) => {
+  try {
+    const headers = getAdminAuthHeaders();
+    const queryParams = new URLSearchParams(params).toString();
+    const url = queryParams ? `${BASE_URL}/admin/all-registrations?${queryParams}` : `${BASE_URL}/admin/all-registrations`;
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers
+    });
+
+    const data = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(data.message || "Failed to fetch registrations");
+    }
+    
+    return data;
+  } catch (error) {
+    console.error("Fetch all registrations error:", error);
+    throw error;
+  }
+};
+
+// Approve registration (Admin only)
+export const approveRegistration = async (registrationId, approvalNotes = '') => {
+  try {
+    const headers = getAdminAuthHeaders();
+    
+    const response = await fetch(`${BASE_URL}/admin/approve/${registrationId}`, {
+      method: "PATCH",
+      headers,
+      body: JSON.stringify({ approvalNotes })
+    });
+
+    const data = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(data.message || "Failed to approve registration");
+    }
+    
+    return data;
+  } catch (error) {
+    console.error("Approve registration error:", error);
+    throw error;
+  }
+};
+
+// Deny registration (Admin only)
+export const denyRegistration = async (registrationId, approvalNotes = '') => {
+  try {
+    const headers = getAdminAuthHeaders();
+    
+    const response = await fetch(`${BASE_URL}/admin/deny/${registrationId}`, {
+      method: "PATCH",
+      headers,
+      body: JSON.stringify({ approvalNotes })
+    });
+
+    const data = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(data.message || "Failed to deny registration");
+    }
+    
+    return data;
+  } catch (error) {
+    console.error("Deny registration error:", error);
+    throw error;
+  }
+};
+
+// Get registration statistics (Admin only)
+export const getRegistrationStats = async () => {
+  try {
+    const headers = getAdminAuthHeaders();
+    
+    const response = await fetch(`${BASE_URL}/admin/registration-stats`, {
+      method: "GET",
+      headers
+    });
+
+    const data = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(data.message || "Failed to fetch registration statistics");
+    }
+    
+    return data;
+  } catch (error) {
+    console.error("Fetch registration stats error:", error);
+    throw error;
+  }
 };

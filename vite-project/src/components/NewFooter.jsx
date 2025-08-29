@@ -355,7 +355,7 @@ const Footer = () => {
         }}
         className="pt-6 pb-6 text-center px-4 text-xl"
       >
-        © 2025 GeeksForGeeks Student Chapter, MITS Gwalior. All rights reserved.
+        © 2025 GeeksForGeeks Campus Body, MITS-DU Gwalior. All rights reserved.
       </div>
     </div>
   );

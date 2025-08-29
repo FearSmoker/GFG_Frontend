@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { addEvent } from "../api/Events_api.js";
@@ -12,38 +12,57 @@ import "../css/EventBgDark.css";
 
 const AddEvents = () => {
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, isAuthenticated, loading: authLoading } = useAuth();
   const { themeMode } = useTheme();
   const [newEvent, setNewEvent] = useState({
     title: "",
     description: "",
     imageFile: null,
-    eventType: "Competition", 
+    eventType: "Competition",
     eventPrize: "Certificates",
     registrationFee: 0,
     maxParticipants: null,
     registrationDeadline: null,
-    eventStatus: "upcoming"
+    eventStatus: "upcoming",
+    paymentFormLink: "",
   });
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [initialAuthCheck, setInitialAuthCheck] = useState(false);
 
   const isAdmin = user?.type === "admin";
 
   const overlayHeight = 1500;
 
-  React.useEffect(() => {
-    if (!isAdmin) {
-      navigate("/events");
+  useEffect(() => {
+    if (!authLoading && !initialAuthCheck) {
+      setInitialAuthCheck(true);
+
+      if (!isAuthenticated || !isAdmin) {
+        toast.error("Access denied. Admin privileges required.");
+        navigate("/");
+      }
     }
-  }, [isAdmin, navigate]);
+  }, [isAuthenticated, authLoading, isAdmin, navigate, initialAuthCheck]);
 
   const handleAddEvent = async () => {
     if (isLoading) return;
 
-    if (!newEvent.title || !newEvent.description || !newEvent.imageFile || !newEvent.eventType) {
-      toast.error("Please fill all required fields: Title, Description, Event Type, and Image.");
+    if (
+      !newEvent.title ||
+      !newEvent.description ||
+      !newEvent.imageFile ||
+      !newEvent.eventType
+    ) {
+      toast.error(
+        "Please fill all required fields: Title, Description, Event Type, and Image."
+      );
+      return;
+    }
+
+    if (parseFloat(newEvent.registrationFee) > 0 && !newEvent.paymentFormLink) {
+      toast.error("Payment form link is required for paid events.");
       return;
     }
 
@@ -54,18 +73,31 @@ const AddEvents = () => {
       formData.append("description", newEvent.description);
       formData.append("date", selectedDate.toISOString());
       formData.append("image", newEvent.imageFile);
-      
+
       formData.append("eventType", newEvent.eventType);
       formData.append("eventPrize", newEvent.eventPrize);
       formData.append("registrationFee", newEvent.registrationFee.toString());
       formData.append("eventStatus", newEvent.eventStatus);
-      
-      if (newEvent.maxParticipants !== null && newEvent.maxParticipants !== "") {
+
+      if (
+        parseFloat(newEvent.registrationFee) > 0 &&
+        newEvent.paymentFormLink
+      ) {
+        formData.append("paymentFormLink", newEvent.paymentFormLink);
+      }
+
+      if (
+        newEvent.maxParticipants !== null &&
+        newEvent.maxParticipants !== ""
+      ) {
         formData.append("maxParticipants", newEvent.maxParticipants.toString());
       }
-      
+
       if (newEvent.registrationDeadline) {
-        formData.append("registrationDeadline", new Date(newEvent.registrationDeadline).toISOString());
+        formData.append(
+          "registrationDeadline",
+          new Date(newEvent.registrationDeadline).toISOString()
+        );
       }
 
       const savedEvent = await addEvent(formData);
@@ -80,7 +112,8 @@ const AddEvents = () => {
           registrationFee: 0,
           maxParticipants: null,
           registrationDeadline: null,
-          eventStatus: "upcoming"
+          eventStatus: "upcoming",
+          paymentFormLink: "",
         });
         setSelectedDate(new Date());
         setShowSuccess(true);
@@ -102,14 +135,26 @@ const AddEvents = () => {
     navigate("/events");
   };
 
-  if (!isAdmin) {
+  const BackgroundComponent =
+    themeMode === "dark" ? EventsBg1DarkComponent : EventsBg1Component;
+
+  if (authLoading) {
+    return (
+      <BackgroundComponent
+        className="text-white overflow-hidden flex items-center justify-center"
+        overlayHeight={800}
+      >
+        <div className="text-xl">Loading...</div>
+      </BackgroundComponent>
+    );
+  }
+
+  if (!isAuthenticated || !isAdmin) {
     return null;
   }
 
-  const BackgroundComponent = themeMode === "dark" ? EventsBg1DarkComponent : EventsBg1Component;
-
   return (
-    <BackgroundComponent 
+    <BackgroundComponent
       className="text-white overflow-hidden"
       overlayHeight={overlayHeight}
     >
@@ -141,7 +186,9 @@ const AddEvents = () => {
                 d="M5 13l4 4L19 7"
               ></path>
             </svg>
-            <p className="font-semibold">Event added successfully! Redirecting...</p>
+            <p className="font-semibold">
+              Event added successfully! Redirecting...
+            </p>
           </div>
         </div>
       )}
@@ -232,20 +279,27 @@ const AddEvents = () => {
       <div className="flex justify-center px-8 pb-24 -mt-16">
         <div className="max-w-4xl text-center">
           <div className="bg-gray-800 bg-opacity-50 p-6 rounded-lg">
-            <h3 className="text-xl font-bold mb-4 text-green-400">Instructions</h3>
+            <h3 className="text-xl font-bold mb-4 text-green-400">
+              Instructions
+            </h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
               <div>
-                <h4 className="font-semibold text-white mb-2">Required Fields:</h4>
+                <h4 className="font-semibold text-white mb-2">
+                  Required Fields:
+                </h4>
                 <ul className="space-y-1 text-gray-300 text-sm">
                   <li>• Event Title</li>
                   <li>• Event Description</li>
                   <li>• Event Type (Competition/Workshop/Seminar)</li>
                   <li>• Event Date</li>
                   <li>• Event Image</li>
+                  <li>• Payment Form Link (for paid events)</li>
                 </ul>
               </div>
               <div>
-                <h4 className="font-semibold text-white mb-2">Optional Fields:</h4>
+                <h4 className="font-semibold text-white mb-2">
+                  Optional Fields:
+                </h4>
                 <ul className="space-y-1 text-gray-300 text-sm">
                   <li>• Event Prize (default: Certificates)</li>
                   <li>• Registration Fee (default: Free)</li>
@@ -255,7 +309,14 @@ const AddEvents = () => {
               </div>
             </div>
             <div className="mt-4 text-sm text-gray-400">
-              <p>Make sure to select the correct event type for proper categorization in the events page.</p>
+              <p>
+                Make sure to select the correct event type for proper
+                categorization in the events page.
+              </p>
+              <p className="mt-1 text-yellow-400">
+                <strong>Note:</strong> For paid events, provide a Google Form
+                link containing QR code for payment and proof submission.
+              </p>
             </div>
           </div>
         </div>

@@ -18,14 +18,16 @@ const Events = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { themeMode } = useTheme();
+  const isLightTheme = themeMode === "light";
   const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedEventType, setSelectedEventType] = useState("All");
   const [eventDates, setEventDates] = useState([]);
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [password, setPassword] = useState("");
   const [onPasswordSuccess, setOnPasswordSuccess] = useState(() => () => {});
-  
+
   const [currentPage, setCurrentPage] = useState(1);
   const eventsPerPage = 24;
   const eventsPerRow = 4;
@@ -38,55 +40,62 @@ const Events = () => {
 
   useEffect(() => {
     async function loadEvents() {
-      const backendEvents = await fetchEvents();
-      const formattedEvents = backendEvents.map((e) => ({
-        id: e._id || e.id,
-        title: e.title,
-        description: e.description,
-        image: e.image,
-        date: new Date(e.date).toDateString(),
-        eventType: e.eventType,
-        eventPrize: e.eventPrize,
-        registrationFee: e.registrationFee,
-        maxParticipants: e.maxParticipants,
-        currentParticipants: e.currentParticipants,
-        registrationDeadline: e.registrationDeadline,
-        eventStatus: e.eventStatus,
-        _id: e._id,
-      }));
-      setEvents(formattedEvents);
-      const uniqueDates = [
-        ...new Set(formattedEvents.map((event) => event.date)),
-      ];
-      setEventDates(uniqueDates);
+      try {
+        setLoading(true);
+        const backendEvents = await fetchEvents();
+        const formattedEvents = backendEvents.map((e) => ({
+          id: e._id || e.id,
+          title: e.title,
+          description: e.description,
+          image: e.image,
+          date: new Date(e.date).toDateString(),
+          eventType: e.eventType,
+          eventPrize: e.eventPrize,
+          registrationFee: e.registrationFee,
+          maxParticipants: e.maxParticipants,
+          currentParticipants: e.currentParticipants,
+          registrationDeadline: e.registrationDeadline,
+          eventStatus: e.eventStatus,
+          _id: e._id,
+        }));
+        setEvents(formattedEvents);
+        const uniqueDates = [
+          ...new Set(formattedEvents.map((event) => event.date)),
+        ];
+        setEventDates(uniqueDates);
+      } catch (error) {
+        console.error("Failed to fetch events:", error);
+      } finally {
+        setLoading(false);
+      }
     }
     loadEvents();
   }, []);
 
   const handleDateChange = (date) => setSelectedDate(date);
 
-const filteredEvents = selectedEventType === "All" 
-  ? events 
-  : events.filter(event => {
+  const filteredEvents =
+    selectedEventType === "All"
+      ? events
+      : events.filter((event) => {
+          if (!event.eventType || event.eventType.trim() === "") {
+            return false;
+          }
 
-      if (!event.eventType || event.eventType.trim() === "") {
-        return false;
-      }
-      
-      const eventType = event.eventType.trim(); 
-      const selectedType = selectedEventType;
-      
-      switch (selectedType) {
-        case "Competitions":
-          return eventType === "Competition";
-        case "Workshops":
-          return eventType === "Workshop";
-        case "Seminars":
-          return eventType === "Seminar";
-        default:
-          return eventType === selectedType;
-      }
-    });
+          const eventType = event.eventType.trim();
+          const selectedType = selectedEventType;
+
+          switch (selectedType) {
+            case "Competitions":
+              return eventType === "Competition";
+            case "Workshops":
+              return eventType === "Workshop";
+            case "Seminars":
+              return eventType === "Seminar";
+            default:
+              return eventType === selectedType;
+          }
+        });
 
   useEffect(() => {
     setCurrentPage(1);
@@ -100,13 +109,13 @@ const filteredEvents = selectedEventType === "All"
   const calculateBottomMargin = () => {
     const numberOfEvents = currentEvents.length;
     const numberOfRows = Math.ceil(numberOfEvents / eventsPerRow);
-    
+
     const baseMargin = 64;
     const isIncompleteRow = numberOfEvents % eventsPerRow !== 0;
     const additionalMargin = isIncompleteRow ? 32 : 0;
-    
+
     const rowSpacing = numberOfRows > 1 ? (numberOfRows - 1) * 16 : 0;
-    
+
     return baseMargin + additionalMargin + rowSpacing;
   };
 
@@ -137,18 +146,38 @@ const filteredEvents = selectedEventType === "All"
     });
   };
 
-  const handlePageChange = (page) => {
-    setCurrentPage(page);
-    document.querySelector('.event-tabs-section')?.scrollIntoView({ 
-      behavior: 'smooth',
-      block: 'start'
+  const handlePaymentApprovalsButtonClick = () => {
+    triggerPasswordModal(() => {
+      navigate("/admin/registrations");
     });
   };
 
-  const BackgroundComponent = themeMode === "dark" ? EventsBg1DarkComponent : EventsBg1Component;
+  const handlePageChange = (page) => {
+    setCurrentPage(page);
+    document.querySelector(".event-tabs-section")?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
+
+  const BackgroundComponent =
+    themeMode === "dark" ? EventsBg1DarkComponent : EventsBg1Component;
+
+  if (loading) {
+    return (
+      <BackgroundComponent
+        className="text-white overflow-hidden"
+        overlayHeight={overlayHeight}
+      >
+        <div className="min-h-screen flex items-center justify-center">
+          <div className="text-white text-xl">Loading events...</div>
+        </div>
+      </BackgroundComponent>
+    );
+  }
 
   return (
-    <BackgroundComponent 
+    <BackgroundComponent
       className="text-white overflow-hidden"
       overlayHeight={overlayHeight}
     >
@@ -185,48 +214,32 @@ const filteredEvents = selectedEventType === "All"
       {/* Content */}
       <div className="p-8 flex flex-col items-center">
         {/* Heading */}
-        <div
+        <h1
           style={{
             marginTop: "5rem",
             marginBottom: "2rem",
             userSelect: "none",
+            fontFamily: "Cabin, sans-serif",
           }}
+          className="text-center text-4xl md:text-[3rem] mb-4"
         >
           <span
-            style={{
-              color: "#0E86D2",
-              fontSize: "48px",
-              fontFamily: "Cabin, sans-serif",
-              fontWeight: 700,
-              wordWrap: "break-word",
-            }}
+            className={`${isLightTheme ? "text-[#2195DE]" : "text-[#0065A5]"}`}
           >
-            &lt;
+            &lt;{" "}
           </span>
           <span
-            style={{
-              color: "#00FFAF",
-              fontSize: "48px",
-              fontFamily: "Cabin, sans-serif",
-              fontWeight: 700,
-              wordWrap: "break-word",
-            }}
+            className={`${isLightTheme ? "text-[#0A7956]" : "text-[#00FFAF]"}`}
           >
             {" "}
             Upcoming Events{" "}
           </span>
           <span
-            style={{
-              color: "#0E86D2",
-              fontSize: "48px",
-              fontFamily: "Cabin, sans-serif",
-              fontWeight: 700,
-              wordWrap: "break-word",
-            }}
+            className={`${isLightTheme ? "text-[#2195DE]" : "text-[#0065A5]"}`}
           >
             &gt;
           </span>
-        </div>
+        </h1>
 
         {/* Carousel and Calendar Section */}
         <div className="flex flex-col lg:flex-row gap-12 items-center justify-center w-full max-w-7xl mb-12">
@@ -245,22 +258,33 @@ const filteredEvents = selectedEventType === "All"
           <div className="w-full lg:w-1/3 flex flex-col justify-center lg:justify-end lg:pl-8">
             {/* Admin Action Buttons - Above Calendar */}
             {isAdmin && (
-              <div className="flex gap-3 mb-6 w-full max-w-sm">
+              <div className="flex flex-col gap-3 mb-6 w-full max-w-sm">
+                {/* Manage Events Button - Full Width */}
                 <button
-                  onClick={handleDeleteButtonClick}
-                  className="bg-red-600 hover:bg-red-700 px-4 py-3 rounded-md text-white font-bold flex-1"
+                  onClick={handlePaymentApprovalsButtonClick}
+                  className="bg-sky-600 hover:bg-sky-700 px-4 py-3 rounded-md text-white font-bold w-full"
                 >
-                  Delete Events
+                  Payment Approvals
                 </button>
-                <button
-                  onClick={handleAddEventButtonClick}
-                  className="bg-green-600 hover:bg-green-700 px-4 py-3 rounded-md text-white font-bold flex-1"
-                >
-                  Add Event
-                </button>
+
+                {/* Delete and Add Events Buttons Row */}
+                <div className="flex gap-3">
+                  <button
+                    onClick={handleDeleteButtonClick}
+                    className="bg-red-600 hover:bg-red-700 px-4 py-3 rounded-md text-white font-bold flex-1"
+                  >
+                    Delete Events
+                  </button>
+                  <button
+                    onClick={handleAddEventButtonClick}
+                    className="bg-green-600 hover:bg-green-700 px-4 py-3 rounded-md text-white font-bold flex-1"
+                  >
+                    Add Event
+                  </button>
+                </div>
               </div>
             )}
-            
+
             <div className="w-full max-w-sm">
               <EventCalendar
                 selectedDate={selectedDate}
@@ -273,7 +297,7 @@ const filteredEvents = selectedEventType === "All"
 
         {/* Event Tabs - Moved down a bit */}
         <div className="mb-10 mt-8 event-tabs-section">
-          <EventTabs 
+          <EventTabs
             selectedEventType={selectedEventType}
             onEventTypeChange={setSelectedEventType}
           />
@@ -283,13 +307,15 @@ const filteredEvents = selectedEventType === "All"
         {filteredEvents.length > 0 && (
           <div className="mb-6 text-center">
             <span className="text-gray-300 text-sm">
-              Showing {startIndex + 1}-{Math.min(endIndex, filteredEvents.length)} of {filteredEvents.length} events
+              Showing {startIndex + 1}-
+              {Math.min(endIndex, filteredEvents.length)} of{" "}
+              {filteredEvents.length} events
             </span>
           </div>
         )}
 
         {/* Event Mini Cards Section with Dynamic Bottom Margin */}
-        <div 
+        <div
           className="w-full max-w-7xl"
           style={{ marginBottom: `${calculateBottomMargin()}px` }}
         >
@@ -312,8 +338,8 @@ const filteredEvents = selectedEventType === "All"
               disabled={currentPage === 1}
               className={`px-4 py-2 rounded-md font-medium transition-colors ${
                 currentPage === 1
-                  ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                  : 'bg-blue-600 hover:bg-blue-700 text-white'
+                  ? "bg-gray-600 text-gray-400 cursor-not-allowed"
+                  : "bg-blue-600 hover:bg-blue-700 text-white"
               }`}
             >
               Previous
@@ -321,13 +347,12 @@ const filteredEvents = selectedEventType === "All"
 
             {/* Page Numbers */}
             {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => {
-              const showPage = 
-                page === 1 || 
-                page === totalPages || 
+              const showPage =
+                page === 1 ||
+                page === totalPages ||
                 (page >= currentPage - 2 && page <= currentPage + 2);
-              
+
               if (!showPage) {
-                // Show ellipsis for gaps
                 if (page === currentPage - 3 || page === currentPage + 3) {
                   return (
                     <span key={page} className="px-2 py-2 text-gray-400">
@@ -344,8 +369,8 @@ const filteredEvents = selectedEventType === "All"
                   onClick={() => handlePageChange(page)}
                   className={`px-4 py-2 rounded-md font-medium transition-colors ${
                     currentPage === page
-                      ? 'bg-green-600 text-white'
-                      : 'bg-gray-700 hover:bg-gray-600 text-white'
+                      ? "bg-green-600 text-white"
+                      : "bg-gray-700 hover:bg-gray-600 text-white"
                   }`}
                 >
                   {page}
@@ -359,8 +384,8 @@ const filteredEvents = selectedEventType === "All"
               disabled={currentPage === totalPages}
               className={`px-4 py-2 rounded-md font-medium transition-colors ${
                 currentPage === totalPages
-                  ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                  : 'bg-blue-600 hover:bg-blue-700 text-white'
+                  ? "bg-gray-600 text-gray-400 cursor-not-allowed"
+                  : "bg-blue-600 hover:bg-blue-700 text-white"
               }`}
             >
               Next

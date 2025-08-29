@@ -4,8 +4,8 @@ import { toast } from "react-hot-toast";
 import { changePassword } from "../api/User_api";
 import useAuth from "../context/AuthContext.jsx";
 import ChangePasswordCard from "../components/ChangePasswordCard.jsx";
-import ChangePasswordPageDark from "../components/ChangePasswordPage.jsx";
-import "../css/ChangePasswordPage.css";
+import OtherPage3 from "../components/OtherPage3.jsx";
+import "../css/OtherPage3.css";
 
 const ChangePassword = () => {
   const navigate = useNavigate();
@@ -74,7 +74,8 @@ const ChangePassword = () => {
         confirmPassword: formData.confirmNewPassword,
       });
 
-      const successMessage = response.message || "Password changed successfully!";
+      const successMessage =
+        response.message || "Password changed successfully!";
       toast.success(successMessage);
 
       setFormData({
@@ -87,7 +88,9 @@ const ChangePassword = () => {
         navigate("/get-profile");
       }, 1500);
     } catch (error) {
-      toast.error(error.message || "Failed to change password. Please try again.");
+      toast.error(
+        error.message || "Failed to change password. Please try again."
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -98,37 +101,17 @@ const ChangePassword = () => {
   }
 
   return (
-    <ChangePasswordPageDark>
-      <div className="flex flex-col items-center justify-center space-y-8">
-        {/* Page Title */}
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-white mb-4">
-            Change Password
-          </h1>
-          <p className="text-white/70 text-lg">
-            Update your account password securely
-          </p>
-        </div>
-
-        {/* Change Password Card */}
+    <>
+      <OtherPage3 />
+      <div className="otherpage3-content min-h-screen flex items-center justify-center p-4 pt-32 pb-16">
         <ChangePasswordCard
           formData={formData}
           changingPassword={isSubmitting}
           handleChange={handleChange}
           handleSubmit={handleSubmit}
         />
-
-        {/* Back to Profile Link */}
-        <div className="text-center">
-          <button
-            onClick={() => navigate("/get-profile")}
-            className="text-green-400 hover:text-green-300 transition-colors duration-200 underline"
-          >
-            Back to Profile
-          </button>
-        </div>
       </div>
-    </ChangePasswordPageDark>
+    </>
   );
 };
 

@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { fetchEvents } from "../api/Events_api.js";
-import { EventCalendar, EventCarousel, Timeline } from "../components/EventComponents.jsx";
+import {
+  EventCalendar,
+  EventCarousel,
+  Timeline,
+} from "../components/EventComponents.jsx";
 import GradientBackground from "../components/GradientBackground.jsx";
 import GradientBackgroundDark from "../components/GradientBackgroundDark.jsx";
 import useTheme from "../context/ThemeContext.jsx";
@@ -14,25 +18,24 @@ const HomePage = () => {
 
   const { themeMode } = useTheme();
 
-  
   const getEventStatus = (event) => {
-    if (!event || !event.date) return 'upcoming';
-    
+    if (!event || !event.date) return "upcoming";
+
     const currentDate = new Date();
     const eventDate = new Date(event.date);
-    
+
     currentDate.setHours(0, 0, 0, 0);
     eventDate.setHours(0, 0, 0, 0);
-    
-    if (event.eventStatus === 'cancelled') {
-      return 'cancelled';
+
+    if (event.eventStatus === "cancelled") {
+      return "cancelled";
     }
-    
+
     if (eventDate < currentDate) {
-      return 'completed';
+      return "completed";
     }
-    
-    return 'upcoming';
+
+    return "upcoming";
   };
 
   useEffect(() => {
@@ -40,15 +43,14 @@ const HomePage = () => {
       setIsLoading(true);
       try {
         const backendEvents = await fetchEvents();
-        
-        
-        const processedEvents = backendEvents.map(event => ({
+
+        const processedEvents = backendEvents.map((event) => ({
           ...event,
-          eventStatus: getEventStatus(event)
+          eventStatus: getEventStatus(event),
         }));
-        
+
         setRawEvents(processedEvents);
-        
+
         const formattedEvents = backendEvents.map((e) => ({
           id: e._id || e.id,
           title: e.title,
@@ -61,7 +63,9 @@ const HomePage = () => {
 
         setEvents(formattedEvents);
 
-        const uniqueDates = [...new Set(formattedEvents.map(event => event.date))];
+        const uniqueDates = [
+          ...new Set(formattedEvents.map((event) => event.date)),
+        ];
         setEventDates(uniqueDates);
       } catch (error) {
         console.error("Error loading events:", error);
@@ -80,26 +84,31 @@ const HomePage = () => {
 
   return (
     <div className="min-h-screen flex flex-col text-white relative">
-      {themeMode === "dark" ? <GradientBackgroundDark /> : <GradientBackground />}
+      {themeMode === "dark" ? (
+        <GradientBackgroundDark />
+      ) : (
+        <GradientBackground />
+      )}
 
       {/* Hero Section */}
-      <div className="flex flex-col items-center justify-center flex-grow px-4 md:px-8 text-center h-[42rem]">
+      <div className="flex flex-col items-center justify-center flex-grow px-4 md:px-8 text-center min-h-screen">
         {/* Logo Card */}
-        <div className="bg-white/20 backdrop-blur-md border-4 border-green-400 rounded-2xl p-6 md:p-10 shadow-lg transition-all duration-500 hover:scale-105">
+        <div className="bg-white/20 backdrop-blur-md border-4 border-green-400 rounded-2xl pt-6 md:pt-10 px-6 md:px-10 pb-2 md:pb-3 shadow-lg transition-all duration-500 hover:scale-105">
           <img
-            src="/src/assets/logo.png"
-            alt="Student Chapter"
-            className="h-24 md:h-32 mx-auto mb-4"
+            src="/src/assets/NewLogoLight.png"
+            alt="Campus Body"
+            className="h-40 md:h-48 mx-auto mb-4"
           />
         </div>
         {/* Paragraph */}
         <p className="mt-10 max-w-3xl text-white text-md md:text-xl leading-relaxed font-semibold">
-          We are a student-driven community dedicated to fostering a passion for coding,{" "}
-          problem-solving, and technology at Madhav Institute of Technology and Science.{" "}
-          Our mission is to empower students with the skills and knowledge needed for success{" "}
-          in competitive programming, technical interviews, and beyond. Join us for workshops,{" "}
-          coding challenges, and collaborative learning as we grow together in the world of{" "}
-          computer science.
+          We are a student-driven community dedicated to fostering a passion for
+          coding, problem-solving, and technology at Madhav Institute of
+          Technology and Science. Our mission is to empower students with the
+          skills and knowledge needed for success in competitive programming,
+          technical interviews, and beyond. Join us for workshops, coding
+          challenges, and collaborative learning as we grow together in the
+          world of computer science.
         </p>
       </div>
 
@@ -117,31 +126,31 @@ const HomePage = () => {
             {/* Main Events Carousel */}
             <div className="w-full lg:w-1/3 max-w-md order-2 lg:order-1">
               <div className="bg-black/30 backdrop-blur-sm p-6 rounded-lg border border-green-400/30">
-                <EventCarousel 
-                  events={events} 
+                <EventCarousel
+                  events={events}
                   isLoading={isLoading}
                   title="Featured Events"
                   enableImageClick={true}
                 />
               </div>
             </div>
-            
+
             {/* Calendar Section */}
             <div className="w-full lg:w-1/3 order-1 lg:order-2 flex flex-col items-center">
               <div className="calendar-container bg-black/30 backdrop-blur-sm p-6 rounded-lg border border-green-400/30">
-                <EventCalendar 
+                <EventCalendar
                   selectedDate={selectedDate}
                   handleDateChange={handleDateChange}
                   eventDates={eventDates}
                 />
               </div>
             </div>
-            
+
             {/* Timeline for Selected Date */}
             <div className="w-full lg:w-1/3 max-w-md order-3">
               <div className="bg-black/30 backdrop-blur-sm p-6 rounded-lg border border-green-400/30">
-                <EventCarousel 
-                  events={eventsForDay} 
+                <EventCarousel
+                  events={eventsForDay}
                   isLoading={isLoading}
                   title={`Events on ${selectedDate.toDateString()}`}
                   enableImageClick={true}
@@ -164,8 +173,8 @@ const HomePage = () => {
 
           <div className="max-w-4xl mx-auto">
             <div className="bg-black/30 backdrop-blur-sm p-6 rounded-lg border border-green-400/30">
-              <Timeline 
-                events={rawEvents} 
+              <Timeline
+                events={rawEvents}
                 isLoading={isLoading}
                 title=""
                 maxItems={5}

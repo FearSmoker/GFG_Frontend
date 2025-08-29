@@ -8,7 +8,7 @@ const GradientBoxx = ({ text }) => {
           "linear-gradient(black, black), linear-gradient(to right, #22c55e, #2563eb)",
         backgroundOrigin: "border-box",
         backgroundClip: "content-box, border-box",
-        height: "16rem", // Similar height to your image (about 384px)
+        height: "16rem", 
         overflowY: "auto",
       }}
     >

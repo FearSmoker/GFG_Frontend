@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:8000/api/v1/problems/potd"; 
+const BASE_URL = "https://gfg-backend-rjtn.onrender.com/api/v1/problems/potd"; 
 
 // Function to fetch (POTD)
 export const getTodayProblem = async () => {

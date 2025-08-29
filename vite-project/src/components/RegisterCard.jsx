@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import useTheme from "../context/ThemeContext.jsx";
 
 const RegisterCard = ({
   formData,
@@ -9,8 +10,15 @@ const RegisterCard = ({
   handleChange,
   handleSubmit,
 }) => {
+  const { themeMode } = useTheme();
+  
+  const textColor = themeMode === "dark" ? "text-white" : "text-[#002b46]";
+  const placeholderColor = themeMode === "dark" ? "placeholder-white/50" : "placeholder-[#002b46]/50";
+  const borderColor = themeMode === "dark" ? "border-white" : "border-[#002b46]";
+  const cardBorderColor = themeMode === "dark" ? "border-white/20" : "border-[#002b46]/20";
+  
   return (
-    <div className="w-full max-w-md p-8 rounded-[45px] shadow-2xl border border-white/20 backdrop-blur-[28px] bg-white/5">
+    <div className={`w-full max-w-md p-8 rounded-[45px] shadow-2xl border ${cardBorderColor} backdrop-blur-[28px] bg-white/5`}>
       <form onSubmit={handleSubmit} className="space-y-6">
         <h2 className="text-2xl mb-4 text-green-400 text-center">Register</h2>
         
@@ -27,7 +35,7 @@ const RegisterCard = ({
               {avatarPreview ? (
                 <img src={avatarPreview} alt="Avatar" className="w-full h-full object-cover" />
               ) : (
-                <div className="w-full h-full bg-transparent border-2 border-dashed border-white/30 flex items-center justify-center text-white/50 text-sm">Upload</div>
+                <div className={`w-full h-full bg-transparent border-2 border-dashed border-white/30 flex items-center justify-center ${themeMode === "dark" ? "text-white/50" : "text-[#002b46]/50"} text-sm`}>Upload</div>
               )}
             </div>
             <input 
@@ -42,9 +50,9 @@ const RegisterCard = ({
         </div>
 
         <div>
-          <label className="block text-white text-sm mb-2">Full Name</label>
+          <label className={`block ${textColor} text-sm mb-2`}>Full Name</label>
           <input
-            className="w-full p-3 rounded-lg bg-transparent border-b border-white text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-green-400"
+            className={`w-full p-3 rounded-lg bg-transparent border-b ${borderColor} ${textColor} ${placeholderColor} focus:outline-none focus:ring-2 focus:ring-green-400`}
             placeholder="Enter your full name"
             name="fullName"
             type="text"
@@ -55,9 +63,9 @@ const RegisterCard = ({
         </div>
 
         <div>
-          <label className="block text-white text-sm mb-2">Email</label>
+          <label className={`block ${textColor} text-sm mb-2`}>Email</label>
           <input
-            className="w-full p-3 rounded-lg bg-transparent border-b border-white text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-green-400"
+            className={`w-full p-3 rounded-lg bg-transparent border-b ${borderColor} ${textColor} ${placeholderColor} focus:outline-none focus:ring-2 focus:ring-green-400`}
             placeholder="Enter your email"
             name="email"
             type="email"
@@ -68,9 +76,9 @@ const RegisterCard = ({
         </div>
 
         <div>
-          <label className="block text-white text-sm mb-2">Username</label>
+          <label className={`block ${textColor} text-sm mb-2`}>Username</label>
           <input
-            className="w-full p-3 rounded-lg bg-transparent border-b border-white text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-green-400"
+            className={`w-full p-3 rounded-lg bg-transparent border-b ${borderColor} ${textColor} ${placeholderColor} focus:outline-none focus:ring-2 focus:ring-green-400`}
             placeholder="Enter your username"
             name="username"
             type="text"
@@ -81,9 +89,9 @@ const RegisterCard = ({
         </div>
 
         <div>
-          <label className="block text-white text-sm mb-2">Password</label>
+          <label className={`block ${textColor} text-sm mb-2`}>Password</label>
           <input
-            className="w-full p-3 rounded-lg bg-transparent border-b border-white text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-green-400"
+            className={`w-full p-3 rounded-lg bg-transparent border-b ${borderColor} ${textColor} ${placeholderColor} focus:outline-none focus:ring-2 focus:ring-green-400`}
             placeholder="Enter your password"
             name="password"
             type="password"
@@ -94,9 +102,9 @@ const RegisterCard = ({
         </div>
 
         <div>
-          <label className="block text-white text-sm mb-2">Mobile No.</label>
+          <label className={`block ${textColor} text-sm mb-2`}>Mobile No.</label>
           <input
-            className="w-full p-3 rounded-lg bg-transparent border-b border-white text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-green-400"
+            className={`w-full p-3 rounded-lg bg-transparent border-b ${borderColor} ${textColor} ${placeholderColor} focus:outline-none focus:ring-2 focus:ring-green-400`}
             placeholder="Enter your mobile number"
             name="mobileNo"
             type="tel"

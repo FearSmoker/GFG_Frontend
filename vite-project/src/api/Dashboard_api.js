@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:8000/api/v1/dashboard";
+const BASE_URL = "https://gfg-backend-rjtn.onrender.com/api/v1/dashboard";
 
 // Helper function to get auth headers
 const getAuthHeaders = () => {

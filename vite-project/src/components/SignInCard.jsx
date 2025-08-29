@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { GoogleLogin } from "@react-oauth/google";
 import { toast } from "react-hot-toast";
+import useTheme from "../context/ThemeContext.jsx";
 
 const SignInCard = ({
   formData,
@@ -10,13 +11,20 @@ const SignInCard = ({
   handleSubmit,
   handleGoogleSuccess,
 }) => {
+  const { themeMode } = useTheme();
+  
+  const textColor = themeMode === "dark" ? "text-white" : "text-[#002b46]";
+  const placeholderColor = themeMode === "dark" ? "placeholder-white/50" : "placeholder-[#002b46]/50";
+  const borderColor = themeMode === "dark" ? "border-white" : "border-[#002b46]";
+  const cardBorderColor = themeMode === "dark" ? "border-white/20" : "border-[#002b46]/20";
+  
   return (
-    <div className="w-full max-w-md p-8 rounded-[45px] shadow-2xl border border-white/20 backdrop-blur-[28px] bg-white/5">
+    <div className={`w-full max-w-md p-8 rounded-[45px] shadow-2xl border ${cardBorderColor} backdrop-blur-[28px] bg-white/5`}>
       <form onSubmit={handleSubmit} className="space-y-6">
         <div>
-          <label className="block text-white text-sm mb-2">Email</label>
+          <label className={`block ${textColor} text-sm mb-2`}>Email</label>
           <input
-            className="w-full p-3 rounded-lg bg-transparent border-b border-white text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-green-400"
+            className={`w-full p-3 rounded-lg bg-transparent border-b ${borderColor} ${textColor} ${placeholderColor} focus:outline-none focus:ring-2 focus:ring-green-400`}
             placeholder="Enter your email"
             name="email"
             type="email"
@@ -27,9 +35,9 @@ const SignInCard = ({
         </div>
 
         <div>
-          <label className="block text-white text-sm mb-2">Password</label>
+          <label className={`block ${textColor} text-sm mb-2`}>Password</label>
           <input
-            className="w-full p-3 rounded-lg bg-transparent border-b border-white text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-green-400"
+            className={`w-full p-3 rounded-lg bg-transparent border-b ${borderColor} ${textColor} ${placeholderColor} focus:outline-none focus:ring-2 focus:ring-green-400`}
             placeholder="Enter your password"
             name="password"
             type="password"

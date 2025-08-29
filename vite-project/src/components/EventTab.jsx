@@ -1,8 +1,11 @@
 import React from "react";
+import useTheme from "../context/ThemeContext.jsx";
 
 const tabs = ["All", "Competitions", "Workshops", "Seminars"];
 
 const EventTabs = ({ selectedEventType, onEventTypeChange }) => {
+  const { themeMode } = useTheme();
+
   return (
     <div
       style={{
@@ -26,8 +29,12 @@ const EventTabs = ({ selectedEventType, onEventTypeChange }) => {
               cursor: "pointer",
               borderRadius: "100px",
               border: `3px solid #00FFAF`,
-              backgroundColor: isSelected ? "#00FFAF" : "transparent",
-              color: isSelected ? "black" : "white",
+              backgroundColor: isSelected 
+                ? "#00FFAF" 
+                : "transparent",
+              color: isSelected 
+                ? "#002b46"
+                : (themeMode === "dark" ? "white" : "#002b46"),
               fontSize: "16px",
               fontFamily: "Cabin, sans-serif",
               fontWeight: 400,
@@ -37,10 +44,16 @@ const EventTabs = ({ selectedEventType, onEventTypeChange }) => {
               outline: "none",
             }}
             onMouseEnter={(e) => {
-              if (!isSelected) e.currentTarget.style.backgroundColor = "#00FFAF33";
+              if (!isSelected) {
+                e.currentTarget.style.backgroundColor = themeMode === "dark" 
+                  ? "#00FFAF55" 
+                  : "#00FFAF44";
+              }
             }}
             onMouseLeave={(e) => {
-              if (!isSelected) e.currentTarget.style.backgroundColor = "transparent";
+              if (!isSelected) {
+                e.currentTarget.style.backgroundColor = "transparent";
+              }
             }}
           >
             {tab}
