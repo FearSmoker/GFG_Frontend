@@ -16,6 +16,10 @@ const SignIn = () => {
   const { login, isAuthenticated, loading } = useAuth();
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  useEffect(() => {
     if (!loading && isAuthenticated && !isLoggingIn.current) {
       toast.error("User already signed in");
       navigate("/");

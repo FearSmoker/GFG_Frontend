@@ -6,8 +6,26 @@ import useTheme from "../context/ThemeContext.jsx";
 const LogoutCard = ({ onConfirm, onCancel }) => {
   const { themeMode } = useTheme();
 
+  // Prevent event bubbling
+  const handleCardClick = (e) => {
+    e.stopPropagation();
+  };
+
+  const handleConfirm = (e) => {
+    e.stopPropagation();
+    onConfirm();
+  };
+
+  const handleCancel = (e) => {
+    e.stopPropagation();
+    onCancel();
+  };
+
   return (
-    <div className="absolute right-0 mt-2 w-80 rounded-lg shadow-lg z-50 overflow-hidden">
+    <div 
+      className="absolute right-0 mt-2 w-80 rounded-lg shadow-lg z-50 overflow-hidden"
+      onClick={handleCardClick}
+    >
       {/* Background SVG */}
       <div className="absolute inset-0 w-full h-full">
         {themeMode === "dark" ? (
@@ -28,13 +46,13 @@ const LogoutCard = ({ onConfirm, onCancel }) => {
         {/* Horizontal Button Container */}
         <div className="flex gap-3 justify-center">
           <button
-            onClick={onConfirm}
+            onClick={handleConfirm}
             className="px-6 py-2 text-red-400 text-[16px] font-light font-[Merriweather Sans] transition-all duration-300 hover:text-red-600 hover:bg-red-600/20 rounded-md border border-red-400/30 hover:border-red-600/50"
           >
             Yes, Logout
           </button>
           <button
-            onClick={onCancel}
+            onClick={handleCancel}
             className={`px-6 py-2 text-[16px] font-light font-[Merriweather Sans] transition-all duration-300 rounded-md border hover:border-[#00FFAF]/50 ${
               themeMode === "dark" 
                 ? "text-white hover:text-[#00FFAF] hover:bg-[rgba(0,43,70,0.5)] border-white/30" 
