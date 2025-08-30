@@ -222,6 +222,15 @@ const EventRegistration = () => {
         );
       }
 
+      // Add email notification messages after the success message
+      setTimeout(() => {
+        toast.success("Registration confirmation mail sent to your inbox.");
+      }, 1500);
+      
+      setTimeout(() => {
+        toast.success("You will be notified of confirmation via email.");
+      }, 3000);
+
       setShowRegistrationModal(false);
       setSelectedEvent(null);
       setRegistrationNotes("");
