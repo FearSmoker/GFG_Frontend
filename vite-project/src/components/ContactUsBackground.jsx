@@ -215,8 +215,8 @@ const ContactUsComponent = ({
                 <div className={`space-y-2 font-mono text-lg ${
                   isDark ? "text-white" : "text-black"
                 }`}>
-                  <p>GeeksForGeeks Student Chapter</p>
-                  <p>Madhav Institute of Technology & Science</p>
+                  <p>GeeksForGeeks Campus Body</p>
+                  <p>Madhav Institute of Technology & Science - DU</p>
                   <p>Gwalior - 474003</p>
                 </div>
               </div>
