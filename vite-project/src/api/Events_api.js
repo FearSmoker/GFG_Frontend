@@ -4,8 +4,6 @@ const BASE_URL = "https://gfg-backend-rjtn.onrender.com/api/v1/events";
 const getAuthHeaders = () => {
   const token = localStorage.getItem('access_token');
   
-  console.log('Token from localStorage:', token);
-  
   if (!token) {
     console.error('No access token found');
     throw new Error('Authentication required');
