@@ -106,10 +106,10 @@ const HomePage = () => {
         }}
       >
         <span className="mx-8 text-lg font-semibold tracking-wide">
-               GFG Campus Body Recruitments Open! 🎉 | Join the Core Team Today! 🌟|  <Link to="/nation-skill-up" className="text-blue-700 underline"> Apply Now!</Link>🚀
+               GFG Campus Body Recruitments Open! 🎉 |  <Link to="/nation-skill-up" className="text-blue-700 underline"> Apply Now!</Link> 🚀 | Join the Core Team Today! 🌟|  
         </span>
         <span className="mx-8 text-lg font-semibold tracking-wide">
-               GFG Campus Body Recruitments Open! 🎉 | Join the Core Team Today! 🌟|  <Link to="/nation-skill-up" className="text-blue-700 underline"> Apply Now!</Link>🚀
+               GFG Campus Body Recruitments Open! 🎉 |  <Link to="/nation-skill-up" className="text-blue-700 underline"> Apply Now!</Link> 🚀 | Join the Core Team Today! 🌟|  
         </span>
       </motion.div>
     </div>
