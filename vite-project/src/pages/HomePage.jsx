@@ -97,7 +97,7 @@ const HomePage = () => {
       <section>
         <div className="w-full bg-gradient-to-l from-emerald-500 via-emerald-500 to-emerald-700 text-white overflow-hidden mt-10">
       <motion.div
-        className="flex whitespace-nowrap "
+        className="flex whitespace-nowrap pt-1"
         animate={{ x: ["100%", "-100%"] }}
         transition={{
           repeat: Infinity,
@@ -106,10 +106,10 @@ const HomePage = () => {
         }}
       >
         <span className="mx-8 text-lg font-semibold tracking-wide">
-           <Link to="/nation-skill-up" className="text-sky-200 underline">Nation Skill Up 2025!</Link>   🚀 | Register Now! 🎉 | Stay tuned for more events with GFG MITS 🌟
+               GFG Campus Body Recruitments Open! 🎉 | Join the Core Team Today! 🌟|  <Link to="/nation-skill-up" className="text-blue-700 underline"> Apply Now!</Link>🚀
         </span>
         <span className="mx-8 text-lg font-semibold tracking-wide">
-          <Link to="/nation-skill-up" className="text-sky-200 underline">Nation Skill Up 2025!</Link>  🚀 | Register Now! 🎉 | Stay tuned for more events with GFG MITS 🌟
+               GFG Campus Body Recruitments Open! 🎉 | Join the Core Team Today! 🌟|  <Link to="/nation-skill-up" className="text-blue-700 underline"> Apply Now!</Link>🚀
         </span>
       </motion.div>
     </div>

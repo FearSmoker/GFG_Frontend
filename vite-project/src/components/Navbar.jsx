@@ -175,6 +175,11 @@ const Navbar = () => {
               active={currentPath === "/about-us"}
             />
             <NavbarLink
+              label="Nation Skill Up!"
+              onClick={() => goTo("/nation-skill-up")}
+              active={currentPath === "//nation-skill-up"}
+            />
+            <NavbarLink
               label="POTD"
               onClick={() => goTo("/potd")}
               active={currentPath === "/potd"}
@@ -408,7 +413,7 @@ const Navbar = () => {
                 {[
                   { label: "Meet Our Geeks", path: "/meet-our-geeks", icon: "👥" },
                   { label: "Events", path: "/events", icon: "🎯" },
-                  
+                  { label: "Nation Skill Up!", path: "/nation-skill-up", icon: "🚀" },
                   { label: "About Us", path: "/about-us", icon: "ℹ️" },
                   { label: "POTD", path: "/potd", icon: "💡" },
                 ].map(({ label, path, icon }) => (
