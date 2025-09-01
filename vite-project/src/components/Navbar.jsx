@@ -25,6 +25,11 @@ const Navbar = () => {
 
   React.useEffect(() => {
     const handleClickOutside = (event) => {
+      
+      if (event.target.closest('button') && event.target.closest('.logout-card-container')) {
+        return;
+      }
+      
       if (
         isProfileDropdownOpen &&
         !event.target.closest(".profile-dropdown-container")
@@ -96,11 +101,9 @@ const Navbar = () => {
 
     try {
       await logout();
-
       goTo("/Logout");
     } catch (error) {
       console.error("Error during logout:", error);
-
       goTo("/Logout");
     }
   };
@@ -264,39 +267,39 @@ const Navbar = () => {
                   )}
                 </div>
 
-                <button
-                  onClick={() => setShowLogoutCard(true)}
-                  className="relative flex items-center justify-center p-2 rounded-lg border transition-all duration-300 bg-transparent border-transparent hover:border-[#004C7C] hover:bg-[rgba(0,43,70,0.32)]"
-                  aria-label="Logout"
-                >
-                  <img
-                    src={logoutIcon}
-                    alt="Logout"
-                    className={`h-5 w-5 filter transition-all duration-300 ${
-                      themeMode === "dark"
-                        ? "brightness-0 invert hover:brightness-0 hover:sepia hover:saturate-200 hover:hue-rotate-90"
-                        : "hover:brightness-0 hover:sepia hover:saturate-200 hover:hue-rotate-90"
-                    }`}
-                    style={
-                      themeMode === "light"
-                        ? {
-                            filter:
-                              "brightness(0) saturate(100%) invert(16%) sepia(28%) saturate(2049%) hue-rotate(185deg) brightness(91%) contrast(101%)",
-                          }
-                        : {}
-                    }
-                  />
+                <div className="relative logout-card-container">
+                  <button
+                    onClick={() => setShowLogoutCard(true)}
+                    className="relative flex items-center justify-center p-2 rounded-lg border transition-all duration-300 bg-transparent border-transparent hover:border-[#004C7C] hover:bg-[rgba(0,43,70,0.32)]"
+                    aria-label="Logout"
+                  >
+                    <img
+                      src={logoutIcon}
+                      alt="Logout"
+                      className={`h-5 w-5 filter transition-all duration-300 ${
+                        themeMode === "dark"
+                          ? "brightness-0 invert hover:brightness-0 hover:sepia hover:saturate-200 hover:hue-rotate-90"
+                          : "hover:brightness-0 hover:sepia hover:saturate-200 hover:hue-rotate-90"
+                      }`}
+                      style={
+                        themeMode === "light"
+                          ? {
+                              filter:
+                                "brightness(0) saturate(100%) invert(16%) sepia(28%) saturate(2049%) hue-rotate(185deg) brightness(91%) contrast(101%)",
+                            }
+                          : {}
+                      }
+                    />
+                  </button>
 
-                  {/* Logout Card */}
+                  {/* Desktop Logout Card */}
                   {showLogoutCard && (
-                    <div className="logout-card-container absolute right-0 mt-10 z-50">
-                      <LogoutCard
-                        onConfirm={handleLogoutConfirm}
-                        onCancel={handleLogoutCancel}
-                      />
-                    </div>
+                    <LogoutCard
+                      onConfirm={handleLogoutConfirm}
+                      onCancel={handleLogoutCancel}
+                    />
                   )}
-                </button>
+                </div>
               </div>
             )}
 
@@ -490,7 +493,7 @@ const Navbar = () => {
                     </button>
                   </div>
 
-                  {/* Mobile Logout Button - Properly positioned */}
+                  {/* Mobile Logout Button - Fixed with Modal Overlay */}
                   <div className="flex justify-center">
                     <div className="relative logout-card-container">
                       <button
@@ -545,6 +548,18 @@ const Navbar = () => {
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Mobile Logout Card Modal - Fixed Overlay */}
+      {showLogoutCard && isOpen && (
+        <div className="fixed inset-0 flex items-center justify-center z-[60] bg-black/50 logout-card-container">
+          <div className="relative mx-4">
+            <LogoutCard
+              onConfirm={handleLogoutConfirm}
+              onCancel={handleLogoutCancel}
+            />
           </div>
         </div>
       )}

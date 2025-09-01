@@ -85,7 +85,6 @@ export const loginUser = async (data) => {
       let errorMessage = "Login failed";
       try {
         const errorData = await response.json();
-        console.log("Error response body:", errorData);
         errorMessage =
           errorData.message ||
           errorData.error ||
@@ -98,7 +97,6 @@ export const loginUser = async (data) => {
     }
 
     const responseData = await response.json();
-    console.log("Response Data:", responseData);
 
     const { user, accessToken, refreshToken } = responseData.data;
 
@@ -141,8 +139,6 @@ export const logoutUser = async () => {
 
     if (!response.ok) {
       console.error("Logout failed:", data);
-    } else {
-      console.log("Logout successful:", data);
     }
 
     localStorage.removeItem("access_token");

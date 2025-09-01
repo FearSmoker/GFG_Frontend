@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import ContactUsComponent from "../components/ContactUsBackground.jsx";
+import { submitContactForm } from "../api/Contact_api.js";
 
 const ContactUs = () => {
   const [formData, setFormData] = useState({
@@ -20,7 +21,7 @@ const ContactUs = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (
@@ -37,43 +38,22 @@ const ContactUs = () => {
     setIsSubmitting(true);
     setSubmitMessage("");
 
-    const form = document.createElement("form");
-    form.action =
-      "https://docs.google.com/forms/d/e/1FAIpQLSfmPUIo9414HCOxThoFRXl8XeLz0yOBAtwXMaVRoktkJCsK8Q/formResponse";
-    form.method = "POST";
-    form.target = "hidden_iframe";
+    try {
+      const result = await submitContactForm(formData);
 
-    const addField = (name, value) => {
-      const input = document.createElement("input");
-      input.type = "hidden";
-      input.name = name;
-      input.value = value;
-      form.appendChild(input);
-    };
-
-    addField("entry.2005620554", formData.name);
-    addField("entry.1045781291", formData.email);
-    addField("entry.1166974658", formData.phone);
-    addField("entry.839337160", formData.message);
-
-    const submitBtn = document.createElement("button");
-    submitBtn.type = "submit";
-    submitBtn.style.display = "none";
-    form.appendChild(submitBtn);
-
-    document.body.appendChild(form);
-    submitBtn.click();
-    document.body.removeChild(form);
-
-    setTimeout(() => {
-      setSubmitMessage(
-        "Message sent successfully! We'll get back to you soon."
-      );
-      setFormData({ name: "", email: "", phone: "", message: "" });
+      if (result.success) {
+        setSubmitMessage(result.message);
+        setFormData({ name: "", email: "", phone: "", message: "" });
+      } else {
+        setSubmitMessage(result.message);
+      }
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      setSubmitMessage("An unexpected error occurred. Please try again.");
+    } finally {
       setIsSubmitting(false);
-    }, 1000);
-
-    setTimeout(() => setSubmitMessage(""), 8000);
+      setTimeout(() => setSubmitMessage(""), 8000);
+    }
   };
 
   return (
@@ -84,13 +64,6 @@ const ContactUs = () => {
         handleSubmit={handleSubmit}
         isSubmitting={isSubmitting}
         submitMessage={submitMessage}
-      />
-
-      {/* Hidden iframe for Google Form submission */}
-      <iframe
-        name="hidden_iframe"
-        id="hidden_iframe"
-        style={{ display: "none" }}
       />
     </>
   );
