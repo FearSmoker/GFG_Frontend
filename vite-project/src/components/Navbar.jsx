@@ -551,18 +551,7 @@ const Navbar = () => {
           </div>
         </div>
       )}
-
-      {/* Mobile Logout Card Modal - Fixed Overlay */}
-      {showLogoutCard && isOpen && (
-        <div className="fixed inset-0 flex items-center justify-center z-[60] bg-black/50 logout-card-container">
-          <div className="relative mx-4">
-            <LogoutCard
-              onConfirm={handleLogoutConfirm}
-              onCancel={handleLogoutCancel}
-            />
-          </div>
-        </div>
-      )}
+      
     </div>
   );
 };
