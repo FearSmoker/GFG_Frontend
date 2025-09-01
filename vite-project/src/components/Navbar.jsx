@@ -306,7 +306,7 @@ const Navbar = () => {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className={`md:hidden focus:outline-none z-20 ${
+            className={`md:hidden focus:outline-none z-20  ${
               themeMode === "dark" ? "text-white" : "text-gray-700"
             }`}
             aria-label="Toggle menu"
@@ -349,7 +349,7 @@ const Navbar = () => {
             {/* Close Button (X) */}
             <button
               onClick={() => setIsOpen(false)}
-              className={`focus:outline-none ${
+              className={`focus:outline-none  ${
                 themeMode === "dark" ? "text-white" : "text-emerald-800"
               }`}
               aria-label="Close menu"
@@ -405,6 +405,7 @@ const Navbar = () => {
                 {[
                   { label: "Meet Our Geeks", path: "/meet-our-geeks", icon: "👥" },
                   { label: "Events", path: "/events", icon: "🎯" },
+                  
                   { label: "About Us", path: "/about-us", icon: "ℹ️" },
                   { label: "POTD", path: "/potd", icon: "💡" },
                 ].map(({ label, path, icon }) => (
@@ -518,14 +519,15 @@ const Navbar = () => {
 
                       {/* Mobile Logout Card - Positioned below the button and centered */}
                       {showLogoutCard && (
-                        <div className="absolute -top-4 left-0 right-0 flex justify-center -translate-y-full z-50">
-                          <div className="scale-75">
+                        
+                          <div className="scale-75 z-50 transform translate-x-26 translate-y-2 ">
+                            
                             <LogoutCard
                               onConfirm={handleLogoutConfirm}
                               onCancel={handleLogoutCancel}
                             />
                           </div>
-                        </div>
+                        
                       )}
                     </div>
                   </div>

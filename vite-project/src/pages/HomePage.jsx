@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { motion } from "framer-motion";
 import { fetchEvents } from "../api/Events_api.js";
 import {
   EventCalendar,
@@ -9,6 +10,8 @@ import GradientBackground from "../components/GradientBackground.jsx";
 import GradientBackgroundDark from "../components/GradientBackgroundDark.jsx";
 import useTheme from "../context/ThemeContext.jsx";
 import NewLogoLight from "../assets/NewLogoLight.png";
+import { Link } from "react-router-dom";
+import NationPopup from "../components/NationPopup.jsx";
 
 const HomePage = () => {
   const [events, setEvents] = useState([]);
@@ -84,17 +87,40 @@ const HomePage = () => {
   );
 
   return (
-    <div className="min-h-screen flex flex-col text-white relative">
+    <div className="min-h-screen flex flex-col text-white relative mt-13">
       {themeMode === "dark" ? (
         <GradientBackgroundDark />
       ) : (
         <GradientBackground />
       )}
-
+      
+      <section>
+        <div className="w-full bg-gradient-to-l from-emerald-500 via-emerald-500 to-emerald-700 text-white overflow-hidden mt-10">
+      <motion.div
+        className="flex whitespace-nowrap "
+        animate={{ x: ["100%", "-100%"] }}
+        transition={{
+          repeat: Infinity,
+          duration: 20,
+          ease: "linear",
+        }}
+      >
+        <span className="mx-8 text-lg font-semibold tracking-wide">
+           <Link to="/nation-skill-up" className="text-sky-200 underline">Nation Skill Up 2025!</Link>   🚀 | Register Now! 🎉 | Stay tuned for more events with GFG MITS 🌟
+        </span>
+        <span className="mx-8 text-lg font-semibold tracking-wide">
+          <Link to="/nation-skill-up" className="text-sky-200 underline">Nation Skill Up 2025!</Link>  🚀 | Register Now! 🎉 | Stay tuned for more events with GFG MITS 🌟
+        </span>
+      </motion.div>
+    </div>
+      </section>
+      
+      <NationPopup/>
+      
       {/* Hero Section */}
       <div className="flex flex-col items-center justify-center flex-grow px-4 md:px-8 text-center min-h-screen">
         {/* Logo Card */}
-        <div className="bg-white/20 backdrop-blur-md border-4 border-green-400 rounded-2xl pt-6 md:pt-10 px-6 md:px-10 pb-2 md:pb-3 shadow-lg transition-all duration-500 hover:scale-105">
+        <div className=  "mt-[-3rem] bg-white/20 backdrop-blur-md border-4 border-green-400 rounded-2xl pt-6 md:pt-10 px-6 md:px-10 pb-2 md:pb-3 shadow-lg transition-all duration-500 hover:scale-105">
           <img
             src={NewLogoLight}
             alt="Campus Body"
@@ -115,8 +141,8 @@ const HomePage = () => {
 
       {/* Timeline Section */}
       <div className="w-full">
-        <div className="container mx-auto px-4 py-16">
-          <h2 className="text-4xl font-bold mb-12 text-center relative inline-block">
+        <div className="container mx-auto px-4 sm:py-10  sm:mt-0 text-center lg:text-left">
+          <h2 className="md:ml-8 text-4xl font-bold mb-12 text-center relative inline-block">
             <span className="bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent">
               UPCOMING EVENTS
             </span>
@@ -163,9 +189,9 @@ const HomePage = () => {
       </div>
 
       {/* Timeline Section */}
-      <div className="w-full">
+      <div className="w-full text-center lg:text-left">
         <div className="container mx-auto px-4 py-16">
-          <h2 className="text-4xl font-bold mb-12 text-center relative inline-block">
+          <h2 className="md:ml-8 text-4xl font-bold mb-12 text-center relative inline-block">
             <span className="bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent">
               EVENT TIMELINE
             </span>

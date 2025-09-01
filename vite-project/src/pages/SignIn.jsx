@@ -76,7 +76,7 @@ const SignIn = () => {
   return (
     <>
       <OtherPage1 />
-      <div className="otherpage1-content min-h-screen flex items-center justify-center p-4">
+      <div className="mt-10 otherpage1-content min-h-screen flex items-center justify-center p-4">
         <SignInCard
           formData={formData}
           handleChange={handleChange}

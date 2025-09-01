@@ -25,6 +25,7 @@ import AddEvents from "./pages/AddEvents.jsx";
 import AdminRegistrationDashboard from "./pages/AdminRegistrationDashboard.jsx";
 import PageNotFound from "./pages/PageNotFound.jsx";
 import ScrollToTop from "./components/ScrollToTop.jsx";
+import NationSkillUpPage from "./pages/NationSkillUp.jsx";
 
 
 
@@ -35,6 +36,7 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/nation-skill-up" element={<NationSkillUpPage />} />
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/events" element={<Events />} />
           <Route path="/event-registration" element={<EventRegistration />} />

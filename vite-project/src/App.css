@@ -1,6 +1,9 @@
 body {
   font-family: 'Kode Mono', monospace;
 }
+html {
+  scroll-behavior: smooth;
+}
 
 
 /* Flicker Animation */
