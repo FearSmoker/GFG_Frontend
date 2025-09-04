@@ -8,7 +8,7 @@ export function handleRateLimitError(response) {
 
   const now = Date.now();
   const retryAfter = response.retryAfter || "some time";
-  
+
   let message = "";
 
   switch (response.code) {
