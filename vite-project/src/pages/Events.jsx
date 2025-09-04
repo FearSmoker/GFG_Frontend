@@ -229,7 +229,7 @@ const Events = () => {
             &lt;{" "}
           </span>
           <span
-            className={`${isLightTheme ? "text-[#0A7956]" : "text-[#00FFAF]"}`}
+            className={`${isLightTheme ? "text-[#0A7956]" : "text-[#00FFAF]"} text-3xl sm:text-5xl`}
           >
             {" "}
             Upcoming Events{" "}
@@ -297,7 +297,7 @@ const Events = () => {
 
         {/* Event Tabs - Moved down a bit */}
         <div className="mb-10 mt-8 event-tabs-section">
-          <EventTabs
+          <EventTabs 
             selectedEventType={selectedEventType}
             onEventTypeChange={setSelectedEventType}
           />

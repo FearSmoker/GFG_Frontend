@@ -23,6 +23,7 @@ const EventTabs = ({ selectedEventType, onEventTypeChange }) => {
         const isSelected = selectedEventType === tab;
         return (
           <button
+          className="text-[10px] sm:text-base "
             key={tab}
             onClick={() => onEventTypeChange(tab)}
             style={{
@@ -35,7 +36,7 @@ const EventTabs = ({ selectedEventType, onEventTypeChange }) => {
               color: isSelected 
                 ? "#002b46"
                 : (themeMode === "dark" ? "white" : "#002b46"),
-              fontSize: "16px",
+              
               fontFamily: "Cabin, sans-serif",
               fontWeight: 400,
               padding: "6px 18px",
