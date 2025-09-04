@@ -1,55 +1,67 @@
 import { toast } from "react-hot-toast";
 
+let lastToastTime = 0;
+let lastToastMessage = "";
+
 export function handleRateLimitError(response) {
   if (!response) return;
 
-  const retryAfter = response.retryAfter;
-  const dynamicMessage = retryAfter ? `Please try again after ${retryAfter}.` : "Please try again later.";
+  const now = Date.now();
+  const retryAfter = response.retryAfter || "some time";
+  
+  let message = "";
 
   switch (response.code) {
     case "RATE_LIMIT_OTP":
-      toast.error(response.message || `Daily OTP request limit reached. ${dynamicMessage}`);
+      message = `OTP request limit reached. Please try again after ${retryAfter}.`;
       break;
 
     case "RATE_LIMIT_REGISTRATION":
-      toast.error(response.message || `Daily registration limit reached. ${dynamicMessage}`);
+      message = `Registration limit reached. Please try again after ${retryAfter}.`;
       break;
 
     case "RATE_LIMIT_CONTACT_FORM":
-      toast.error(response.message || `Daily contact form limit reached. ${dynamicMessage}`);
+      message = `Contact form limit reached. Please try again after ${retryAfter}.`;
       break;
 
     case "RATE_LIMIT_OTP_RESEND":
-      toast.error(response.message || `OTP resend limit reached. ${dynamicMessage}`);
+      message = `OTP resend limit reached. Please try again after ${retryAfter}.`;
       break;
 
     case "RATE_LIMIT_REGISTRATION_HOURLY":
-      toast.error(response.message || `Too many registration attempts. ${dynamicMessage}`);
+      message = `Registration limit reached. Please try again after ${retryAfter}.`;
       break;
 
     case "RATE_LIMIT_CONTACT_FORM_HOURLY":
-      toast.error(response.message || `Contact form submitted too frequently. ${dynamicMessage}`);
+      message = `Contact form limit reached. Please try again after ${retryAfter}.`;
       break;
 
     case "RATE_LIMIT_OTP_HOURLY":
-      toast.error(response.message || `Too many OTP requests. ${dynamicMessage}`);
+      message = `OTP request limit reached. Please try again after ${retryAfter}.`;
       break;
 
     case "RATE_LIMIT_OTP_VERIFY":
-      toast.error(response.message || `Too many OTP verification attempts. ${dynamicMessage}`);
+      message = `OTP verification limit reached. Please try again after ${retryAfter}.`;
       break;
 
-    // Global and other limits
     case "RATE_LIMIT_GLOBAL":
-      toast.error(response.message || `Too many requests. ${dynamicMessage}`);
+      message = `Too many requests. Please try again after ${retryAfter}.`;
       break;
 
     case "RATE_LIMIT_LOGIN":
-      toast.error(response.message || `Too many login attempts. ${dynamicMessage}`);
+      message = `Login attempt limit reached. Please try again after ${retryAfter}.`;
       break;
 
     default:
-      toast.error(response.message || `You are being rate-limited. ${dynamicMessage}`);
+      message = `Rate limit reached. Please try again after ${retryAfter}.`;
       break;
   }
+
+  if (now - lastToastTime < 2000 && lastToastMessage === message) {
+    return;
+  }
+
+  lastToastTime = now;
+  lastToastMessage = message;
+  toast.error(message);
 }
