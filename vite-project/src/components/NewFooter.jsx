@@ -1,6 +1,4 @@
-import React from "react";
 import { Linkedin, Instagram, Globe } from "lucide-react";
-import GradientBox from "./GradientBox.jsx";
 import VisitorCountDisplay from "./VisitorCountDisplay.jsx";
 import { useNavigation } from "../context/NavigationContext.jsx";
 import useTheme from "../context/ThemeContext.jsx";
@@ -83,7 +81,7 @@ const Footer = () => {
             className="space-y-4 text-xl"
           >
             <div
-              onClick={() => goTo("/contact-us")}
+              onClick={() => goTo("")}
               style={{
                 cursor: "pointer",
                 transition: "color 0.3s",
@@ -92,7 +90,7 @@ const Footer = () => {
               onMouseEnter={(e) => (e.target.style.color = textColorHeading)}
               onMouseLeave={(e) => (e.target.style.color = textColorBody)}
             >
-              Contact us
+              Home
             </div>
             <div
               style={{
@@ -103,7 +101,7 @@ const Footer = () => {
               onMouseEnter={(e) => (e.target.style.color = textColorHeading)}
               onMouseLeave={(e) => (e.target.style.color = textColorBody)}
             >
-              Projects
+              <a target="_blank" href="https://www.geeksforgeeks.org/">www.geeksforgeeks.org</a>
             </div>
             <div
               style={{
@@ -114,7 +112,7 @@ const Footer = () => {
               onMouseEnter={(e) => (e.target.style.color = textColorHeading)}
               onMouseLeave={(e) => (e.target.style.color = textColorBody)}
             >
-              Blog
+              <a target="_blank" href="https://web.mitsgwalior.in/">web.mitsgwalior.in</a>
             </div>
           </div>
         </div>
@@ -143,24 +141,41 @@ const Footer = () => {
             }}
             className="space-y-4 text-xl"
           >
+            <div
+            onClick={()=>{goTo("/contact-Us")}}
+              
+              className="text-blue-500  hover:cursor-pointer"
+            >
+              Get In Touch
+            </div>
             <div>geeksforgeekmits@gmail.com</div>
-            <div>Madhav Institute of Technology & Science</div>
-            <div>Gwalior - 474003</div>
+            <div
+            
+              style={{
+                cursor: "pointer",
+                transition: "color 0.3s",
+                
+              }}
+              onMouseEnter={(e) => (e.target.style.color = textColorHeading)}
+              onMouseLeave={(e) => (e.target.style.color = textColorBody)}
+            >
+              <a className="text-red-600" target="_blank" href="https://www.google.co.uk/search?q=madhav+institute+of+technology+and+science&gs_ssp=eJzj4tLP1TcwKqwoji8wYPTSyk1MyUgsU8jMKy7JLCktSVXIT1MoSU3OyMvPyU-vVEjMS1EoTs5MzUtOBQAn4xQq">Reach Us</a>
+            </div>
           </div>
         </div>
 
-        {/* Connect */}
+        {/* Find us Online */}
         <div>
           <h4
             style={{
               fontSize: "30px",
               fontWeight: 700,
-              color: textColorHeading,
+              
               marginBottom: "24px",
             }}
-            className="text-3xl font-bold mb-6"
+            className="text-3xl font-bold mb-6 text-orange-500"
           >
-            Connect
+            Find us Online
           </h4>
           <div
             style={{
@@ -171,7 +186,7 @@ const Footer = () => {
             className="flex space-x-4 mb-6"
           >
             <a
-              href="https://www.linkedin.com/in/geeksforgeeks-mits-student-chapter-5b2986293"
+              href="https://www.linkedin.com/in/GeeksforGeeks-mits-student-chapter-5b2986293"
               target="_blank"
               rel="noopener noreferrer"
               style={{
@@ -192,7 +207,7 @@ const Footer = () => {
               <Linkedin style={{ width: "20px", height: "20px" }} className="w-5 h-5" />
             </a>
             <a
-              href="https://www.instagram.com/geeksforgeeks_mits/"
+              href="https://www.instagram.com/GeeksforGeeks_mits/"
               target="_blank"
               rel="noopener noreferrer"
               style={{
@@ -213,7 +228,7 @@ const Footer = () => {
               <Instagram style={{ width: "20px", height: "20px" }} className="w-5 h-5" />
             </a>
             <a
-              href="https://www.geeksforgeeks.org"
+              href="https://www.GeeksforGeeks.org"
               target="_blank"
               rel="noopener noreferrer"
               style={{
@@ -355,7 +370,7 @@ const Footer = () => {
         }}
         className="pt-6 pb-6 text-center px-4 text-xl"
       >
-        © 2025 GeeksForGeeks Campus Body, MITS-DU Gwalior. All rights reserved.
+        © 2025 GeeksforGeeks Campus Body, MITS-DU Gwalior. All rights reserved.
       </div>
     </div>
   );

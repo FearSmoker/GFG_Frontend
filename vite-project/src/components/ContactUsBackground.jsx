@@ -215,7 +215,7 @@ const ContactUsComponent = ({
                 <div className={`space-y-2 font-mono text-lg ${
                   isDark ? "text-white" : "text-black"
                 }`}>
-                  <p>GeeksForGeeks Campus Body</p>
+                  <p>GeeksforGeeks Campus Body</p>
                   <p>Madhav Institute of Technology & Science - DU</p>
                   <p>Gwalior - 474003</p>
                 </div>
@@ -267,7 +267,7 @@ const ContactUsComponent = ({
                 </div>
                 <div className="flex space-x-4">
                   <a
-                    href="https://www.linkedin.com/in/geeksforgeeks-mits-student-chapter-5b2986293"
+                    href="https://www.linkedin.com/in/GeeksforGeeks-mits-student-chapter-5b2986293"
                     target="_blank"
                     rel="noopener noreferrer"
                     className={`w-10 h-10 rounded-full transition-colors cursor-pointer flex items-center justify-center ${
@@ -281,7 +281,7 @@ const ContactUsComponent = ({
                     }`} />
                   </a>
                   <a
-                    href="https://www.instagram.com/geeksforgeeks_mits/"
+                    href="https://www.instagram.com/GeeksforGeeks_mits/"
                     target="_blank"
                     rel="noopener noreferrer"
                     className={`w-10 h-10 rounded-full transition-colors cursor-pointer flex items-center justify-center ${
@@ -295,7 +295,7 @@ const ContactUsComponent = ({
                     }`} />
                   </a>
                   <a
-                    href="https://www.geeksforgeeks.org"
+                    href="https://www.GeeksforGeeks.org"
                     target="_blank"
                     rel="noopener noreferrer"
                     className={`w-10 h-10 rounded-full transition-colors cursor-pointer flex items-center justify-center ${

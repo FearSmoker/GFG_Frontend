@@ -19,7 +19,7 @@ const EventsBg1Component = ({
       </div>
       
       {/* Light gradient overlay with customizable height */}
-      <div className="absolute top-0 left-0 w-full h-[1260px] sm:h-[500px] md:h-[700px] lg:h-[890px]" >
+      <div className="absolute top-0 left-0 w-full h-[1205px] sm:h-[500px] md:h-[700px] lg:h-[830px]" >
         <EventBg2SVGComponent />
       </div>
       

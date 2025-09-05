@@ -125,7 +125,7 @@ const POTD = () => {
             </div>
             <div className="flex justify-center">
               <a
-                href="https://www.geeksforgeeks.org/problem-of-the-day"
+                href="https://www.GeeksforGeeks.org/problem-of-the-day"
                 target="_blank"
                 rel="noopener noreferrer"
               >

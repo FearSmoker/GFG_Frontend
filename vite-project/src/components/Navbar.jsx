@@ -326,7 +326,7 @@ const Navbar = () => {
 
       {/* Mobile Menu - Improved Layout */}
       {isOpen && (
-        <div className="md:hidden fixed inset-0 top-0 z-40">
+        <div className="md:hidden fixed inset-0 top-0 z-100">
           {/* Background with theme colors */}
           <div className={`absolute inset-0 ${
             themeMode === "dark" 

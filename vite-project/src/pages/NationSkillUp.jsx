@@ -120,7 +120,7 @@ export default function NationSkillUpPage() {
               className="flex justify-center md:justify-end"
             >
               <img
-                src="https://media.geeksforgeeks.org/auth-dashboard-uploads/Frame-7686.svg"
+                src="https://media.GeeksforGeeks.org/auth-dashboard-uploads/Frame-7686.svg"
                 alt="Event Banner"
                 className="rounded-2xl shadow-lg w-3/4 sm:w-2/3 md:w-full h-auto"
               />

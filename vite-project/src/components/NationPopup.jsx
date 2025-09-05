@@ -14,12 +14,12 @@ export default function Nationpopup() {
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: 200, opacity: 0 }}
           transition={{ duration: 0.5 }}
-          className="fixed top-36 md:w-80 right-6 z-50 flex items-center gap-4 bg-gradient-to-r  from-emerald-700   text-white p-4 sm:p-5 rounded-2xl shadow-xl max-w-xs sm:max-w-sm md:max-w-md"
+          className="z-20 fixed top-36 md:w-80 right-6  flex items-center gap-4 bg-gradient-to-r  from-emerald-700   text-white p-4 sm:p-5 rounded-2xl shadow-xl max-w-xs sm:max-w-sm md:max-w-md"
         >
           {/* Illustration */}
           <div className="flex-shrink-0">
             <img
-              src="https://media.geeksforgeeks.org/auth-dashboard-uploads/Frame-7686.svg"
+              src="https://media.GeeksforGeeks.org/auth-dashboard-uploads/Frame-7686.svg"
               alt="nation"
               className="w-16 h-16 sm:w-20 sm:h-20 object-contain rounded-lg shadow-md"
             />
