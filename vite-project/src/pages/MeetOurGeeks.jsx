@@ -4,6 +4,9 @@ import Nikita from "../assets/Nikita.png";
 import Kunal from "../assets/Kunal.png";
 import Mukul from "../assets/Mukul.png";
 import Harsh from "../assets/Harsh.png";
+import MirSir from "../assets/MirSir.png";
+import KuldeepSir from "../assets/KuldeepSir.png";
+import MitsLogo from "../assets/MitsLogo.png"
 import useTheme from "../context/ThemeContext";
 
 const CAMPUS_MANTRI = [
@@ -66,6 +69,27 @@ const LEADS = [
   },
 ];
 
+const TEACHERS = [
+  {
+    name: "Dr. Mir Shahnawaz Ahmad",
+    role: "Teacher",
+    img: MirSir,
+    social: {
+      linkedin: "https://www.linkedin.com/in/dr-mir-shahnawaz-ahmad-7b024a11b/?originalSubdomain=in",
+      mits: "https://web.mitsgwalior.in/faculty-profiles-cai/mir-shahnawaz-ahmad-2",
+    },
+  },
+  {
+    name: "Dr. Kuldeep Narayan Tripathi",
+    role: "Teacher",
+    img: KuldeepSir,
+    social: {
+      linkedin: "https://www.linkedin.com/in/dr-kuldeep-narayan-tripathi-a5543332/?originalSubdomain=in",
+      mits: "https://web.mitsgwalior.in/faculty-profiles-cse-2/dr-kuldeep-narayan-tripathi",
+    },
+  },
+];
+
 const LinkedInIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
     <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z" />
@@ -80,6 +104,7 @@ const InstagramIcon = () => (
 
 const ProfileCard = ({ person, isLightTheme }) => {
   const firstName = person.name.split(" ")[0];
+  const isTeacher = person.role === "Teacher";
 
   return (
     <div className="group w-80 h-60 [perspective:1200px]">
@@ -94,14 +119,24 @@ const ProfileCard = ({ person, isLightTheme }) => {
           }
         `}
         >
-          <img
-            src={person.img}
-            alt={person.name}
-            className="w-20 h-20 rounded-full border-4 border-white mb-3"
-          />
-          <h2 className="text-lg font-bold">{person.name}</h2>
+          {person.img ? (
+            <img
+              src={person.img}
+              alt={person.name}
+              className="w-32 h-32 rounded-full border-4 border-white mb-3 object-cover object-center"
+              style={{
+                imageRendering: 'crisp-edges',
+                WebkitImageRendering: '-webkit-optimize-contrast',
+              }}
+            />
+          ) : (
+            <div className="w-32 h-32 rounded-full border-4 border-white mb-3 bg-gray-300 flex items-center justify-center text-gray-600 text-lg font-bold">
+              {person.name.split(' ').map(n => n[0]).join('')}
+            </div>
+          )}
+          <h2 className="text-xl font-bold">{person.name}</h2>
           <p
-            className={`text-sm font-semibold ${
+            className={`text-base font-semibold ${
               isLightTheme ? "text-blue-600" : "text-[#00FFAF]"
             }`}
           >
@@ -128,15 +163,31 @@ const ProfileCard = ({ person, isLightTheme }) => {
               >
                 <LinkedInIcon />
               </a>
-              {/* Instagram */}
-              <a
-                href={person.social.instagram}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-gradient-to-r from-[#833ab4] via-[#fd1d1d] to-[#fcb045] text-white p-2 rounded-lg transition transform hover:scale-110"
-              >
-                <InstagramIcon />
-              </a>
+              {/* Instagram for non-teachers, MITS logo for teachers */}
+              {isTeacher ? (
+                <a
+                  href={person.social.mits}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-gradient-to-r from-[#FF6B35] to-[#FF8E53] text-white p-2 rounded-lg transition transform hover:scale-110 flex items-center justify-center"
+                  title="MITS Gwalior Profile"
+                >
+                  <img 
+                    src={MitsLogo} 
+                    alt="MITS Logo" 
+                    className="w-6 h-6 object-contain"
+                  />
+                </a>
+              ) : (
+                <a
+                  href={person.social.instagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-gradient-to-r from-[#833ab4] via-[#fd1d1d] to-[#fcb045] text-white p-2 rounded-lg transition transform hover:scale-110"
+                >
+                  <InstagramIcon />
+                </a>
+              )}
             </div>
           </div>
         </div>
@@ -177,6 +228,13 @@ const MeetOurGeeks = () => {
       </p>
 
       {/* Campus Mantri Section */}
+      <p
+        className={`flex justify-center text-4xl mb-10 ${
+          isLightTheme ? "text-[#7D7D7D]" : "text-white"
+        }`}
+      >
+        Campus Mantri
+      </p>
       <div className="flex flex-wrap justify-center gap-14 mb-10">
         {CAMPUS_MANTRI.map((person, index) => (
           <ProfileCard
@@ -195,8 +253,26 @@ const MeetOurGeeks = () => {
       >
         Leads
       </p>
-      <div className="flex flex-wrap justify-center gap-14">
+      <div className="flex flex-wrap justify-center gap-14 mb-10">
         {LEADS.map((person, index) => (
+          <ProfileCard
+            key={index}
+            person={person}
+            isLightTheme={isLightTheme}
+          />
+        ))}
+      </div>
+
+      {/* Teachers Section */}
+      <p
+        className={`flex justify-center text-4xl mb-10 ${
+          isLightTheme ? "text-[#7D7D7D]" : "text-white"
+        }`}
+      >
+        Teachers
+      </p>
+      <div className="flex flex-wrap justify-center gap-14">
+        {TEACHERS.map((person, index) => (
           <ProfileCard
             key={index}
             person={person}
