@@ -13,31 +13,23 @@ export function handleRateLimitError(response) {
 
   switch (response.code) {
     case "RATE_LIMIT_OTP":
+    case "RATE_LIMIT_OTP_HOURLY":
       message = `OTP request limit reached. Please try again after ${retryAfter}.`;
       break;
 
     case "RATE_LIMIT_REGISTRATION":
-      message = `Registration limit reached. Please try again after ${retryAfter}.`;
-      break;
-
-    case "RATE_LIMIT_CONTACT_FORM":
-      message = `Contact form limit reached. Please try again after ${retryAfter}.`;
-      break;
-
-    case "RATE_LIMIT_OTP_RESEND":
-      message = `OTP resend limit reached. Please try again after ${retryAfter}.`;
-      break;
-
     case "RATE_LIMIT_REGISTRATION_HOURLY":
       message = `Registration limit reached. Please try again after ${retryAfter}.`;
       break;
 
+    case "RATE_LIMIT_CONTACT_FORM":
     case "RATE_LIMIT_CONTACT_FORM_HOURLY":
       message = `Contact form limit reached. Please try again after ${retryAfter}.`;
       break;
 
-    case "RATE_LIMIT_OTP_HOURLY":
-      message = `OTP request limit reached. Please try again after ${retryAfter}.`;
+    case "RATE_LIMIT_OTP_RESEND":
+    case "RATE_LIMIT_OTP_RESEND_HOURLY":
+      message = `OTP resend limit reached. Please try again after ${retryAfter}.`;
       break;
 
     case "RATE_LIMIT_OTP_VERIFY":
