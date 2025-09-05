@@ -93,27 +93,7 @@ const HomePage = () => {
       ) : (
         <GradientBackground />
       )}
-      
-      <section>
-        <div className="w-full bg-gradient-to-l from-emerald-500 via-emerald-500 to-emerald-700 text-white overflow-hidden mt-10">
-      <motion.div
-        className="flex whitespace-nowrap pt-1"
-        animate={{ x: ["100%", "-100%"] }}
-        transition={{
-          repeat: Infinity,
-          duration: 20,
-          ease: "linear",
-        }}
-      >
-        <span className="mx-8 text-lg font-semibold tracking-wide">
-               GFG Campus Body Recruitments Open! 🎉 |  <Link to="/recruitment" className="text-blue-700 underline"> Apply Now!</Link> 🚀 | Join the Core Team Today! 🌟|  
-        </span>
-        <span className="mx-8 text-lg font-semibold tracking-wide">
-               GFG Campus Body Recruitments Open! 🎉 |  <Link to="/recruitment" className="text-blue-700 underline"> Apply Now!</Link> 🚀 | Join the Core Team Today! 🌟|  
-        </span>
-      </motion.div>
-    </div>
-      </section>
+
       
       <NationPopup/>
       

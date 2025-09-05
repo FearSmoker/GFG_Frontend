@@ -26,7 +26,6 @@ import AdminRegistrationDashboard from "./pages/AdminRegistrationDashboard.jsx";
 import PageNotFound from "./pages/PageNotFound.jsx";
 import ScrollToTop from "./components/ScrollToTop.jsx";
 import NationSkillUpPage from "./pages/NationSkillUp.jsx";
-import Recruitment from "./pages/Recruitment.jsx";
 
 
 
@@ -37,7 +36,6 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/recruitment" element={<Recruitment />} />
           <Route path="/nation-skill-up" element={<NationSkillUpPage />} />
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/events" element={<Events />} />

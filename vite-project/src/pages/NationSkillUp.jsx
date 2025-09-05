@@ -103,7 +103,7 @@ export default function NationSkillUpPage() {
               <h2
                 className={`${
                   isLightTheme ? "text-[#0A7956]" : "text-[#00FFAF]"
-                }  text-3xl sm:text-4xl font-bold mb-4 sm:mt-[-8rem] sm:mt-0 text-center sm:text-left`}
+                }  text-3xl sm:text-4xl font-bold mb-4 sm:mt-[-8rem]  text-center sm:text-left`}
               >
                 About the Event
               </h2>

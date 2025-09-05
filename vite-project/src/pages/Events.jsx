@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchEvents } from "../api/Events_api.js";
 import {
@@ -163,6 +163,8 @@ const Events = () => {
   const BackgroundComponent =
     themeMode === "dark" ? EventsBg1DarkComponent : EventsBg1Component;
 
+
+    
   if (loading) {
     return (
       <BackgroundComponent
@@ -175,10 +177,10 @@ const Events = () => {
       </BackgroundComponent>
     );
   }
-
+  
   return (
     <BackgroundComponent
-      className="text-white overflow-hidden"
+      className="text-white overflow-hidden "
       overlayHeight={overlayHeight}
     >
       {/* Password Modal */}
@@ -296,7 +298,7 @@ const Events = () => {
         </div>
 
         {/* Event Tabs - Moved down a bit */}
-        <div className="mb-10 mt-8 event-tabs-section">
+        <div className="mb-12  mt-6 event-tabs-section">
           <EventTabs 
             selectedEventType={selectedEventType}
             onEventTypeChange={setSelectedEventType}

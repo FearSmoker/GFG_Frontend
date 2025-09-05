@@ -19,7 +19,7 @@ const EventsBg1DarkComponent = ({
       </div>
       
       {/* Light gradient overlay with customizable height */}
-      <div className="absolute top-0 left-0 w-full" style={{ height: overlayHeight }}>
+      <div className="absolute top-0 left-0 w-full  h-[1260px] sm:h-[500px] md:h-[700px] lg:h-[890px]" >
         <EventBg2DarkSVGComponent />
       </div>
       
