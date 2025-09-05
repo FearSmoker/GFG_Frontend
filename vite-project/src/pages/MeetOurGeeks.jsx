@@ -42,7 +42,7 @@ const LEADS = [
     role: "Outreach Head",
     img: Mukul,
     social: {
-      linkedin: "https://linkedin.com/in/mukul-sharma",
+      linkedin: "https://linkedin.com/in",
       instagram: "https://www.instagram.com/_.im._.sharma._?utm_source=qr&igsh=MnR0eXZsc3Qybjc0",
     },
   },
@@ -51,8 +51,8 @@ const LEADS = [
     role: "Creative Head",
     img: Kunal,
     social: {
-      linkedin: "https://linkedin.com/in/kunal-barange",
-      instagram: "https://instagram.com/kunalbarange",
+      linkedin: "https://linkedin.com/in",
+      instagram: "https://instagram.com/in",
     },
   },
   {
@@ -60,8 +60,8 @@ const LEADS = [
     role: "Promotions Head",
     img: Harsh,
     social: {
-      linkedin: "https://linkedin.com/in/harsh-yadav",
-      instagram: "https://instagram.com/harshyadav",
+      linkedin: "https://linkedin.com/in",
+      instagram: "https://instagram.com/in",
     },
   },
 ];
