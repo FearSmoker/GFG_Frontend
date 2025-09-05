@@ -7,7 +7,7 @@ const VisitorCountDisplay = () => {
   return (
     <div style={{ padding: "1rem", fontSize: "1.1rem", color: "#fff" }}>
       {visitorCount !== null ? (
-        <p>👋 Total Visitors: <strong>{visitorCount}</strong></p>
+        <p style={{ color: "#6b7280" }}>👋🏻 Total Visitors: <strong>{visitorCount}</strong></p>
       ) : (
         <p>Loading visitor count...</p>
       )}
