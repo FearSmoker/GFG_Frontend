@@ -1,14 +1,19 @@
-import pic from "../assets/pic.jpg";
+import Aryan from "../assets/Aryan.png";
+import Parthivendra from "../assets/Parthivendra.png";
+import Nikita from "../assets/Nikita.png";
+import Kunal from "../assets/Kunal.png";
+import Mukul from "../assets/Mukul.png";
+import Harsh from "../assets/Harsh.png";
 import useTheme from "../context/ThemeContext";
 
 const CAMPUS_MANTRI = [
   {
     name: "Parthivendra Singh",
     role: "Campus Mantri",
-    img: pic,
+    img: Parthivendra,
     social: {
-      linkedin: "https://linkedin.com/in/parthivendra-singh",
-      instagram: "https://instagram.com/parthivendra",
+      linkedin: "https://www.linkedin.com/in/parthivendra-singh-1b0475285?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app",
+      instagram: "https://www.instagram.com/parthivendra_singh_?igsh=MThqOGpseXNvdGt0OA==",
       github: "https://github.com/parthivendra",
     },
   },
@@ -18,37 +23,37 @@ const LEADS = [
   {
     name: "Aryan Saxena",
     role: "Tech Head",
-    img: pic,
+    img: Aryan,
     social: {
-      linkedin: "https://linkedin.com/in/aryan-saxena",
-      instagram: "https://instagram.com/aryansaxena",
+      linkedin: "www.linkedin.com/in/aryan-saxena-91616a202",
+      instagram: "https://www.instagram.com/aryan_saxena90/",
       github: "https://github.com/aryansaxena",
     },
   },
   {
     name: "Nikita Jain",
     role: "Event Head",
-    img: pic,
+    img: Nikita,
     social: {
-      linkedin: "https://linkedin.com/in/nikita-jain",
-      instagram: "https://instagram.com/nikitajain",
+      linkedin: "https://www.linkedin.com/in/nikita-jain-636aa9330?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app",
+      instagram: "https://www.instagram.com/jnikki543?igsh=MWNvYmpxOGMxOTJuMg%3D%3D&utm_source=qr",
       github: "https://github.com/nikitajain",
     },
   },
   {
     name: "Mukul Sharma",
     role: "Outreach Head",
-    img: pic,
+    img: Mukul,
     social: {
       linkedin: "https://linkedin.com/in/mukul-sharma",
-      instagram: "https://instagram.com/mukulsharma",
+      instagram: "https://www.instagram.com/_.im._.sharma._?utm_source=qr&igsh=MnR0eXZsc3Qybjc0",
       github: "https://github.com/mukulsharma",
     },
   },
   {
     name: "Kunal Barange",
     role: "Creative Head",
-    img: pic,
+    img: Kunal,
     social: {
       linkedin: "https://linkedin.com/in/kunal-barange",
       instagram: "https://instagram.com/kunalbarange",
@@ -58,7 +63,7 @@ const LEADS = [
   {
     name: "Harsh Yadav",
     role: "Promotions Head",
-    img: pic,
+    img: Harsh,
     social: {
       linkedin: "https://linkedin.com/in/harsh-yadav",
       instagram: "https://instagram.com/harshyadav",
