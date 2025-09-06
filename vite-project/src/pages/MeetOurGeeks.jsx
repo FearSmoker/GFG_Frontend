@@ -74,6 +74,7 @@ const TEACHERS = [
     name: "Dr. Mir Shahnawaz Ahmad",
     role: "Teacher",
     img: MirSir,
+    displayName: "Mir Sir",
     social: {
       linkedin: "https://www.linkedin.com/in/dr-mir-shahnawaz-ahmad-7b024a11b/?originalSubdomain=in",
       mits: "https://web.mitsgwalior.in/faculty-profiles-cai/mir-shahnawaz-ahmad-2",
@@ -83,6 +84,7 @@ const TEACHERS = [
     name: "Dr. Kuldeep Narayan Tripathi",
     role: "Teacher",
     img: KuldeepSir,
+    displayName: "Kuldeep Sir",
     social: {
       linkedin: "https://www.linkedin.com/in/dr-kuldeep-narayan-tripathi-a5543332/?originalSubdomain=in",
       mits: "https://web.mitsgwalior.in/faculty-profiles-cse-2/dr-kuldeep-narayan-tripathi",
@@ -103,7 +105,7 @@ const InstagramIcon = () => (
 );
 
 const ProfileCard = ({ person, isLightTheme }) => {
-  const firstName = person.name.split(" ")[0];
+  const firstName = person.displayName || person.name.split(" ")[0];
   const isTeacher = person.role === "Teacher";
 
   return (
@@ -251,7 +253,7 @@ const MeetOurGeeks = () => {
           isLightTheme ? "text-[#7D7D7D]" : "text-white"
         }`}
       >
-        Leads
+        Heads
       </p>
       <div className="flex flex-wrap justify-center gap-14 mb-10">
         {LEADS.map((person, index) => (
@@ -263,13 +265,13 @@ const MeetOurGeeks = () => {
         ))}
       </div>
 
-      {/* Teachers Section */}
+      {/* Faculty Coordinators Section */}
       <p
         className={`flex justify-center text-4xl mb-10 ${
           isLightTheme ? "text-[#7D7D7D]" : "text-white"
         }`}
       >
-        Teachers
+        Faculty Coordinators
       </p>
       <div className="flex flex-wrap justify-center gap-14">
         {TEACHERS.map((person, index) => (

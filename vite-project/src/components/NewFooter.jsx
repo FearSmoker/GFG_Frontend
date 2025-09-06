@@ -1,7 +1,10 @@
+import React from "react";
 import { Linkedin, Instagram, Globe } from "lucide-react";
+import GradientBox from "./GradientBox.jsx";
 import VisitorCountDisplay from "./VisitorCountDisplay.jsx";
 import { useNavigation } from "../context/NavigationContext.jsx";
 import useTheme from "../context/ThemeContext.jsx";
+import HorizontalLightGFGLogo from "../assets/HorizontalLightGFGLogo.png";
 
 const Footer = () => {
   const { goTo } = useNavigation();
@@ -53,17 +56,21 @@ const Footer = () => {
           margin: "0 auto",
           padding: "24px 16px 0",
           gap: "3rem",
+          alignItems: "start",
         }}
         className="md:grid-cols-3"
       >
         {/* Quick Links */}
-        <div>
+        <div
+          style={{ display: "flex", flexDirection: "column", height: "100%" }}
+        >
           <h4
             style={{
               fontSize: "30px",
               fontWeight: 700,
               color: textColorHeading,
               marginBottom: "24px",
+              lineHeight: "1.2",
             }}
             className="text-3xl font-bold mb-6"
           >
@@ -77,54 +84,56 @@ const Footer = () => {
               fontSize: "20px",
               color: textColorBody,
               fontWeight: 400,
+              flex: 1,
             }}
             className="space-y-4 text-xl"
           >
-            <div
-              onClick={() => goTo("")}
+            <a
+              href="https://www.geeksforgeeks.org"
+              target="_blank"
+              rel="noopener noreferrer"
               style={{
                 cursor: "pointer",
                 transition: "color 0.3s",
                 color: textColorBody,
+                textDecoration: "none",
+                lineHeight: "1.5",
               }}
               onMouseEnter={(e) => (e.target.style.color = textColorHeading)}
               onMouseLeave={(e) => (e.target.style.color = textColorBody)}
             >
-              Home
-            </div>
-            <div
+              GeeksforGeeks
+            </a>
+            <a
+              href="https://web.mitsgwalior.in"
+              target="_blank"
+              rel="noopener noreferrer"
               style={{
                 cursor: "pointer",
                 transition: "color 0.3s",
                 color: textColorBody,
+                textDecoration: "none",
+                lineHeight: "1.5",
               }}
               onMouseEnter={(e) => (e.target.style.color = textColorHeading)}
               onMouseLeave={(e) => (e.target.style.color = textColorBody)}
             >
-              <a target="_blank" href="https://www.geeksforgeeks.org/">www.geeksforgeeks.org</a>
-            </div>
-            <div
-              style={{
-                cursor: "pointer",
-                transition: "color 0.3s",
-                color: textColorBody,
-              }}
-              onMouseEnter={(e) => (e.target.style.color = textColorHeading)}
-              onMouseLeave={(e) => (e.target.style.color = textColorBody)}
-            >
-              <a target="_blank" href="https://web.mitsgwalior.in/">web.mitsgwalior.in</a>
-            </div>
+              MITS - DU
+            </a>
           </div>
         </div>
 
-        {/* Contact us */}
-        <div>
+        {/* Contact us and Email */}
+        <div
+          style={{ display: "flex", flexDirection: "column", height: "100%" }}
+        >
           <h4
             style={{
               fontSize: "30px",
               fontWeight: 700,
               color: textColorHeading,
               marginBottom: "24px",
+              lineHeight: "1.2",
             }}
             className="text-3xl font-bold mb-6"
           >
@@ -138,131 +147,168 @@ const Footer = () => {
               fontSize: "20px",
               color: textColorBody,
               fontWeight: 400,
+              flex: 1,
             }}
             className="space-y-4 text-xl"
           >
             <div
-            onClick={()=>{goTo("/contact-Us")}}
-              
-              className="text-blue-500  hover:cursor-pointer"
-            >
-              Get In Touch
-            </div>
-            <div>geeksforgeekmits@gmail.com</div>
-            <div
-            
+              onClick={() => goTo("/contact-us")}
               style={{
                 cursor: "pointer",
                 transition: "color 0.3s",
-                
+                color: textColorBody,
+                lineHeight: "1.5",
               }}
               onMouseEnter={(e) => (e.target.style.color = textColorHeading)}
               onMouseLeave={(e) => (e.target.style.color = textColorBody)}
             >
-              <a className="text-red-600" target="_blank" href="https://www.google.co.uk/search?q=madhav+institute+of+technology+and+science&gs_ssp=eJzj4tLP1TcwKqwoji8wYPTSyk1MyUgsU8jMKy7JLCktSVXIT1MoSU3OyMvPyU-vVEjMS1EoTs5MzUtOBQAn4xQq">Reach Us</a>
+              Contact us
             </div>
+            <a
+              href="mailto:geeksforgeekmits@gmail.com"
+              style={{
+                cursor: "pointer",
+                transition: "color 0.3s",
+                color: textColorBody,
+                textDecoration: "none",
+                lineHeight: "1.5",
+              }}
+              onMouseEnter={(e) => (e.target.style.color = textColorHeading)}
+              onMouseLeave={(e) => (e.target.style.color = textColorBody)}
+            >
+              geeksforgeekmits@gmail.com
+            </a>
           </div>
         </div>
 
-        {/* Find us Online */}
-        <div>
+        {/* Connect */}
+        <div
+          style={{ display: "flex", flexDirection: "column", height: "100%" }}
+        >
           <h4
             style={{
               fontSize: "30px",
               fontWeight: 700,
-              
+              color: textColorHeading,
               marginBottom: "24px",
+              lineHeight: "1.2",
             }}
-            className="text-3xl font-bold mb-6 text-orange-500"
+            className="text-3xl font-bold mb-6"
           >
-            Find us Online
+            Connect
           </h4>
-          <div
-            style={{
-              display: "flex",
-              gap: "16px",
-              marginBottom: "24px",
-            }}
-            className="flex space-x-4 mb-6"
-          >
-            <a
-              href="https://www.linkedin.com/in/GeeksforGeeks-mits-student-chapter-5b2986293"
-              target="_blank"
-              rel="noopener noreferrer"
+          <div style={{ flex: 1 }}>
+            <div
               style={{
-                width: "40px",
-                height: "40px",
-                backgroundColor: socialBgColor,
-                borderRadius: "9999px",
+                display: "flex",
+                gap: "16px",
+                marginBottom: "16px",
+                alignItems: "center",
+              }}
+              className="flex space-x-4"
+            >
+              <a
+                href="https://www.linkedin.com/in/geeksforgeeks-mits-student-chapter-5b2986293"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  width: "40px",
+                  height: "40px",
+                  backgroundColor: socialBgColor,
+                  borderRadius: "9999px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  transition: "background-color 0.3s",
+                  color: isDark ? "white" : "black",
+                }}
+                className="w-10 h-10 rounded-full flex items-center justify-center cursor-pointer"
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.backgroundColor = socialHoverColor)
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.backgroundColor = socialBgColor)
+                }
+              >
+                <Linkedin
+                  style={{ width: "20px", height: "20px" }}
+                  className="w-5 h-5"
+                />
+              </a>
+              <a
+                href="https://www.instagram.com/geeksforgeeks_mits/"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  width: "40px",
+                  height: "40px",
+                  backgroundColor: socialBgColor,
+                  borderRadius: "9999px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  transition: "background-color 0.3s",
+                  color: isDark ? "white" : "black",
+                }}
+                className="w-10 h-10 rounded-full flex items-center justify-center cursor-pointer"
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.backgroundColor = socialHoverColor)
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.backgroundColor = socialBgColor)
+                }
+              >
+                <Instagram
+                  style={{ width: "20px", height: "20px" }}
+                  className="w-5 h-5"
+                />
+              </a>
+              <a
+                href="https://www.geeksforgeeks.org"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{
+                  width: "40px",
+                  height: "40px",
+                  backgroundColor: socialBgColor,
+                  borderRadius: "9999px",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  transition: "background-color 0.3s",
+                  color: isDark ? "white" : "black",
+                }}
+                className="w-10 h-10 rounded-full flex items-center justify-center cursor-pointer"
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.backgroundColor = socialHoverColor)
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.backgroundColor = socialBgColor)
+                }
+              >
+                <Globe
+                  style={{ width: "20px", height: "20px" }}
+                  className="w-5 h-5"
+                />
+              </a>
+            </div>
+            <div
+              style={{
+                fontSize: "20px",
+                color: textColorBody,
+                lineHeight: "1.5",
                 display: "flex",
                 alignItems: "center",
-                justifyContent: "center",
-                transition: "background-color 0.3s",
-                color: isDark ? "white" : "black",
               }}
-              className="w-10 h-10 rounded-full flex items-center justify-center cursor-pointer"
-              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = socialHoverColor)}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = socialBgColor)}
+              className="text-xl"
             >
-              <Linkedin style={{ width: "20px", height: "20px" }} className="w-5 h-5" />
-            </a>
-            <a
-              href="https://www.instagram.com/GeeksforGeeks_mits/"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                width: "40px",
-                height: "40px",
-                backgroundColor: socialBgColor,
-                borderRadius: "9999px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                transition: "background-color 0.3s",
-                color: isDark ? "white" : "black",
-              }}
-              className="w-10 h-10 rounded-full flex items-center justify-center cursor-pointer"
-              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = socialHoverColor)}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = socialBgColor)}
-            >
-              <Instagram style={{ width: "20px", height: "20px" }} className="w-5 h-5" />
-            </a>
-            <a
-              href="https://www.GeeksforGeeks.org"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                width: "40px",
-                height: "40px",
-                backgroundColor: socialBgColor,
-                borderRadius: "9999px",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                transition: "background-color 0.3s",
-                color: isDark ? "white" : "black",
-              }}
-              className="w-10 h-10 rounded-full flex items-center justify-center cursor-pointer"
-              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = socialHoverColor)}
-              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = socialBgColor)}
-            >
-              <Globe style={{ width: "20px", height: "20px" }} className="w-5 h-5" />
-            </a>
-          </div>
-          <div 
-            style={{ 
-              fontSize: "20px", 
-              color: textColorBody, 
-              marginLeft: "-8px" 
-            }}
-            className="text-xl -ml-2"
-          >
-            <VisitorCountDisplay />
+              <VisitorCountDisplay />
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Email link */}
+      {/* Image button with hover effect */}
       <div
         style={{
           textAlign: "center",
@@ -272,79 +318,53 @@ const Footer = () => {
         }}
         className="text-center mt-12 px-4"
       >
-        {isDark ? (
-          <a
-            href="https://mail.google.com/mail/?view=cm&to=geeksforgeekmits@gmail.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ 
-              textDecoration: "none", 
-              display: "inline-block", 
-              paddingBottom: "20px",
-              color: "#D1FAE5",
-              fontSize: "20px",
-              border: `2px solid #065F46`,
-              borderRadius: "12px",
-              padding: "12px 24px",
-              background: "linear-gradient(135deg, #064E3B, #047857)",
-              transition: "all 0.3s ease",
-              fontWeight: "500"
+        <div
+          className="logo-button"
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: "12px 60px", 
+            borderRadius: "16px",
+            minWidth: "360px",
+            border: `2px solid ${isDark ? "#065F46" : "#6EE7B7"}`,
+            background: isDark
+              ? "linear-gradient(135deg, #064E3B, #047857)"
+              : "linear-gradient(135deg, #ECFDF5, #D1FAE5)",
+            transition: "all 0.3s ease",
+          }}
+          onMouseEnter={(e) => {
+            const el = e.currentTarget;
+            el.style.background = isDark
+              ? "linear-gradient(135deg, #047857, #059669)"
+              : "linear-gradient(135deg, #10B981, #059669)";
+            el.style.transform = "translateY(-2px)";
+            el.style.boxShadow = isDark
+              ? "0 8px 25px rgba(4, 120, 87, 0.4)"
+              : "0 8px 25px rgba(16, 185, 129, 0.3)";
+            el.style.borderColor = isDark ? "#047857" : "#10B981";
+          }}
+          onMouseLeave={(e) => {
+            const el = e.currentTarget;
+            el.style.background = isDark
+              ? "linear-gradient(135deg, #064E3B, #047857)"
+              : "linear-gradient(135deg, #ECFDF5, #D1FAE5)";
+            el.style.transform = "translateY(0)";
+            el.style.boxShadow = "none";
+            el.style.borderColor = isDark ? "#065F46" : "#6EE7B7";
+          }}
+        >
+          <img
+            src={HorizontalLightGFGLogo}
+            alt="GeeksforGeeks Logo"
+            style={{
+              height: "70px",
+              width: "auto",
+              objectFit: "contain",
+              display: "block",
             }}
-            className="pb-5 inline-block"
-            onMouseEnter={(e) => {
-              e.target.style.background = "linear-gradient(135deg, #047857, #059669)";
-              e.target.style.color = "white";
-              e.target.style.transform = "translateY(-2px)";
-              e.target.style.boxShadow = "0 8px 25px rgba(4, 120, 87, 0.4)";
-              e.target.style.borderColor = "#047857";
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.background = "linear-gradient(135deg, #064E3B, #047857)";
-              e.target.style.color = "#D1FAE5";
-              e.target.style.transform = "translateY(0)";
-              e.target.style.boxShadow = "none";
-              e.target.style.borderColor = "#065F46";
-            }}
-          >
-            geeksforgeekmits@gmail.com
-          </a>
-        ) : (
-          <a
-            href="https://mail.google.com/mail/?view=cm&to=geeksforgeekmits@gmail.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ 
-              textDecoration: "none", 
-              display: "inline-block", 
-              paddingBottom: "20px",
-              color: "#065F46",
-              fontSize: "20px",
-              border: `2px solid #6EE7B7`,
-              borderRadius: "12px",
-              padding: "12px 24px",
-              background: "linear-gradient(135deg, #ECFDF5, #D1FAE5)",
-              transition: "all 0.3s ease",
-              fontWeight: "500"
-            }}
-            className="pb-5 inline-block"
-            onMouseEnter={(e) => {
-              e.target.style.background = "linear-gradient(135deg, #10B981, #059669)";
-              e.target.style.color = "white";
-              e.target.style.transform = "translateY(-2px)";
-              e.target.style.boxShadow = "0 8px 25px rgba(16, 185, 129, 0.3)";
-              e.target.style.borderColor = "#10B981";
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.background = "linear-gradient(135deg, #ECFDF5, #D1FAE5)";
-              e.target.style.color = "#065F46";
-              e.target.style.transform = "translateY(0)";
-              e.target.style.boxShadow = "none";
-              e.target.style.borderColor = "#6EE7B7";
-            }}
-          >
-            geeksforgeekmits@gmail.com
-          </a>
-        )}
+          />
+        </div>
       </div>
 
       {/* Bottom line */}
@@ -370,7 +390,7 @@ const Footer = () => {
         }}
         className="pt-6 pb-6 text-center px-4 text-xl"
       >
-        © 2025 GeeksforGeeks Campus Body, MITS-DU Gwalior. All rights reserved.
+        © 2025 GeeksForGeeks Campus Body, MITS-DU Gwalior. All rights reserved.
       </div>
     </div>
   );

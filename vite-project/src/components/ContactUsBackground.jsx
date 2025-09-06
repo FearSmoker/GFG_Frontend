@@ -217,7 +217,7 @@ const ContactUsComponent = ({
                 }`}>
                   <p>GeeksforGeeks Campus Body</p>
                   <p>Madhav Institute of Technology & Science - DU</p>
-                  <p>Gwalior - 474003</p>
+                  <p>Gwalior - 474005</p>
                 </div>
               </div>
 

@@ -154,7 +154,11 @@ const Navbar = () => {
                 active={currentPath === "/signin"}
               />
             ) : (
-              <div className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 font-bold italic text-xl tracking-wide drop-shadow-sm font-[Poppins]">
+              <div className={`text-transparent bg-clip-text font-bold italic text-xl tracking-wide drop-shadow-sm font-[Poppins] ${
+                themeMode === "dark" 
+                  ? "bg-gradient-to-r from-[#081d26] via-[#31756e] to-[#49c8be]"
+                  : "bg-gradient-to-r from-[#20a2b4] via-[#6bc2cf] to-[#8bd0dc]"
+              }`}>
                 {user ? `Hi, ${user.username}` : "Loading user..."}
               </div>
             )}
@@ -381,7 +385,11 @@ const Navbar = () => {
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <div className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 font-bold italic text-xl tracking-wide drop-shadow-sm font-[Poppins]">
+                  <div className={`text-transparent bg-clip-text font-bold italic text-xl tracking-wide drop-shadow-sm font-[Poppins] ${
+                    themeMode === "dark" 
+                      ? "bg-gradient-to-r from-[#20a2b4] via-[#6bc2cf] to-[#8bd0dc]"
+                      : "bg-gradient-to-r from-[#081d26] via-[#31756e] to-[#49c8be]"
+                  }`}>
                     {user ? `Hi, ${user.username}` : "Loading user..."}
                   </div>
                   <div className={`text-sm text-center mt-2 ${
