@@ -197,12 +197,22 @@ const Footer = () => {
           >
             Connect
           </h4>
-          <div style={{ flex: 1 }}>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: "16px",
+              fontSize: "20px",
+              color: textColorBody,
+              fontWeight: 400,
+              flex: 1,
+            }}
+            className="space-y-4 text-xl"
+          >
             <div
               style={{
                 display: "flex",
                 gap: "16px",
-                marginBottom: "16px",
                 alignItems: "center",
               }}
               className="flex space-x-4"
@@ -294,13 +304,12 @@ const Footer = () => {
             </div>
             <div
               style={{
-                fontSize: "20px",
-                color: textColorBody,
                 lineHeight: "1.5",
-                display: "flex",
-                alignItems: "center",
+                cursor: "default",
+                transition: "color 0.3s",
+                color: textColorBody,
+                marginTop: "-7px",
               }}
-              className="text-xl"
             >
               <VisitorCountDisplay />
             </div>
