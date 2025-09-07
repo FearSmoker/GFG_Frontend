@@ -245,7 +245,7 @@ const AdminRegistrationDashboard = () => {
                 &gt;
               </span>
             </h1>
-            <p className="text-gray-300 text-lg max-w-2xl mx-auto">
+            <p className="text-gray-500 text-lg max-w-2xl mx-auto">
               Manage event registrations and approve/deny participant requests.
             </p>
           </div>
