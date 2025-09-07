@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { fetchEvents, deleteEvent } from "../api/Events_api.js";
 import { useNavigate } from "react-router-dom";
-import EventsBg1Component from "../components/EventBgComponent.jsx";
-import EventsBg1DarkComponent from "../components/EventBgDarkComponent.jsx";
+import EventsBg1Component2 from "../components/EventBgComponent2.jsx";
+import EventsBg1DarkComponent2 from "../components/EventBgDarkComponent2.jsx";
 import useTheme from "../context/ThemeContext.jsx";
 import useAuth from "../context/AuthContext";
 import toast from "react-hot-toast";
@@ -94,7 +94,7 @@ const DeleteEvents = () => {
   const overlayHeight = calculateOverlayHeight();
 
   const handleCheckboxChange = (id) => {
-    if (deleting) return; // Prevent changes while deleting
+    if (deleting) return;
     setSelectedIds((prev) =>
       prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
     );
@@ -106,7 +106,7 @@ const DeleteEvents = () => {
       return;
     }
 
-    if (deleting) return; // Prevent multiple delete operations
+    if (deleting) return; 
 
     const confirmDelete = window.confirm(
       `Are you sure you want to delete ${selectedIds.length} event(s)? This action cannot be undone.`
@@ -116,7 +116,6 @@ const DeleteEvents = () => {
 
     setDeleting(true);
     
-    // Show loading toast
     const loadingToast = toast.loading("Deleting events...", {
       duration: Infinity,
     });
@@ -137,12 +136,11 @@ const DeleteEvents = () => {
         setCurrentPage(1);
       }
 
-      // Dismiss loading toast and show success
       toast.dismiss(loadingToast);
       toast.success("Selected events deleted successfully.");
     } catch (error) {
       console.error("Error deleting events:", error);
-      // Dismiss loading toast and show error
+
       toast.dismiss(loadingToast);
       toast.error("Failed to delete some events. Please try again.");
     } finally {
@@ -155,7 +153,7 @@ const DeleteEvents = () => {
   };
 
   const paginate = (pageNumber) => {
-    if (deleting) return; // Prevent pagination while deleting
+    if (deleting) return;
     setCurrentPage(pageNumber);
 
     setTimeout(() => {
@@ -164,7 +162,7 @@ const DeleteEvents = () => {
   };
 
   const BackgroundComponent =
-    themeMode === "dark" ? EventsBg1DarkComponent : EventsBg1Component;
+    themeMode === "dark" ? EventsBg1DarkComponent2 : EventsBg1Component2;
 
   if (authLoading) {
     return (

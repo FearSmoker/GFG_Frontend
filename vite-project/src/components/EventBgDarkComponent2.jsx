@@ -1,11 +1,12 @@
 import * as React from "react";
-import EventBg1SVGComponent from '../Elements/EventsBg1.jsx';
-import EventBg2SVGComponent from '../Elements/EventsBg2.jsx';
+import EventBg1DarkSVGComponent from '../Elements/EventsBg1Dark.jsx';
+import EventBg2DarkSVGComponent from '../Elements/EventsBg2Dark.jsx';
 
-const EventsBg1Component = ({ 
+const EventsBg1DarkComponent2 = ({ 
   overlayHeight = 1205,
   children, 
   className = "",
+  shiftDown = 70,
   ...props 
 }) => {
   return (
@@ -15,15 +16,15 @@ const EventsBg1Component = ({
     >
       {/* Full page background */}
       <div className="absolute inset-0 w-full h-full">
-        <EventBg1SVGComponent />
+        <EventBg1DarkSVGComponent />
       </div>
       
-      {/* Overlay with dynamic height */}
+      {/* Overlay with dynamic height and shifted down */}
       <div 
-        className="absolute top-0 left-0 w-full" 
-        style={{ height: `${overlayHeight}px` }}
+        className="absolute left-0 w-full"
+        style={{ height: `${overlayHeight}px`, top: `${shiftDown}px` }}
       >
-        <EventBg2SVGComponent />
+        <EventBg2DarkSVGComponent />
       </div>
       
       {/* Content layer */}
@@ -34,4 +35,4 @@ const EventsBg1Component = ({
   );
 };
 
-export default EventsBg1Component;
+export default EventsBg1DarkComponent2;

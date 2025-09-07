@@ -2,10 +2,11 @@ import * as React from "react";
 import EventBg1SVGComponent from '../Elements/EventsBg1.jsx';
 import EventBg2SVGComponent from '../Elements/EventsBg2.jsx';
 
-const EventsBg1Component = ({ 
+const EventsBg1Component2 = ({ 
   overlayHeight = 1205,
   children, 
   className = "",
+  shiftDown = 70,
   ...props 
 }) => {
   return (
@@ -18,10 +19,10 @@ const EventsBg1Component = ({
         <EventBg1SVGComponent />
       </div>
       
-      {/* Overlay with dynamic height */}
+      {/* Overlay with dynamic height and shifted down */}
       <div 
-        className="absolute top-0 left-0 w-full" 
-        style={{ height: `${overlayHeight}px` }}
+        className="absolute left-0 w-full"
+        style={{ height: `${overlayHeight}px`, top: `${shiftDown}px` }}
       >
         <EventBg2SVGComponent />
       </div>
@@ -34,4 +35,4 @@ const EventsBg1Component = ({
   );
 };
 
-export default EventsBg1Component;
+export default EventsBg1Component2;

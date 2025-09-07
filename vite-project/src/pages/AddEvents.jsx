@@ -226,8 +226,10 @@ const AddEvents = () => {
           }}
         >
           <span
+            className={
+              themeMode === "light" ? "text-[#2195DE]" : "text-[#0065A5]"
+            }
             style={{
-              color: "#0E86D2",
               fontSize: "48px",
               fontFamily: "Cabin, sans-serif",
               fontWeight: 700,
@@ -236,9 +238,12 @@ const AddEvents = () => {
           >
             &lt;
           </span>
+
           <span
+            className={
+              themeMode === "light" ? "text-[#0A7956]" : "text-[#00FFAF]"
+            }
             style={{
-              color: "#00FFAF",
               fontSize: "48px",
               fontFamily: "Cabin, sans-serif",
               fontWeight: 700,
@@ -248,8 +253,10 @@ const AddEvents = () => {
             Add New Event
           </span>
           <span
+            className={
+              themeMode === "light" ? "text-[#2195DE]" : "text-[#0065A5]"
+            }
             style={{
-              color: "#0E86D2",
               fontSize: "48px",
               fontFamily: "Cabin, sans-serif",
               fontWeight: 700,
