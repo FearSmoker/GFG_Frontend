@@ -7,7 +7,7 @@ import Harsh from "../assets/Harsh.png";
 import MirSir from "../assets/MirSir.png";
 import KuldeepSir from "../assets/KuldeepSir.png";
 import MitsLogo from "../assets/MitsLogo.png"
-import useTheme from "../context/ThemeContext";
+import useTheme from "../context/ThemeContext.jsx";
 
 const CAMPUS_MANTRI = [
   {
@@ -72,7 +72,6 @@ const LEADS = [
 const TEACHERS = [
   {
     name: "Dr. Mir Shahnawaz Ahmad",
-    role: "Teacher",
     img: MirSir,
     displayName: "Mir Sir",
     social: {
@@ -82,7 +81,6 @@ const TEACHERS = [
   },
   {
     name: "Dr. Kuldeep Narayan Tripathi",
-    role: "Teacher",
     img: KuldeepSir,
     displayName: "Kuldeep Sir",
     social: {
@@ -225,7 +223,7 @@ const MeetOurGeeks = () => {
       <p className="text-center text-lg md:text-xl mb-15 text-[#A6A6A6]">
         The Hardworkers behind the Success of{" "}
         <span className={isLightTheme ? "text-[#02875D]" : "text-[#00895E]"}>
-          Geeks<span className="text-[#0065A5]">For</span>Geeks
+          Geeks<span className="text-[#0065A5]">for</span>Geeks
         </span>
       </p>
 

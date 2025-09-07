@@ -5,6 +5,7 @@ import VisitorCountDisplay from "./VisitorCountDisplay.jsx";
 import { useNavigation } from "../context/NavigationContext.jsx";
 import useTheme from "../context/ThemeContext.jsx";
 import HorizontalLightGFGLogo from "../assets/HorizontalLightGFGLogo.png";
+import HorizontalDarkGFGLogo from "../assets/HorizontalDarkGFGLogo.png";
 
 const Footer = () => {
   const { goTo } = useNavigation();
@@ -342,6 +343,7 @@ const Footer = () => {
               : "linear-gradient(135deg, #ECFDF5, #D1FAE5)",
             transition: "all 0.3s ease",
           }}
+          onClick={() => goTo("/")}
           onMouseEnter={(e) => {
             const el = e.currentTarget;
             el.style.background = isDark
@@ -364,7 +366,7 @@ const Footer = () => {
           }}
         >
           <img
-            src={HorizontalLightGFGLogo}
+            src={themeMode === "dark" ? HorizontalDarkGFGLogo : HorizontalLightGFGLogo} 
             alt="GeeksforGeeks Logo"
             style={{
               height: "70px",
@@ -399,7 +401,7 @@ const Footer = () => {
         }}
         className="pt-6 pb-6 text-center px-4 text-xl"
       >
-        © 2025 GeeksForGeeks Campus Body, MITS-DU Gwalior. All rights reserved.
+        © 2025 GeeksforGeeks Campus Body, MITS-DU Gwalior. All rights reserved.
       </div>
     </div>
   );

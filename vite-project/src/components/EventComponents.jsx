@@ -287,7 +287,7 @@ export const EventCarousel = ({
             isLarge ? "h-[500px]" : "h-[400px]"
           } flex items-center justify-center`}
         >
-          <p className="text-gray-300 text-lg">No events to display</p>
+          <p className="text-gray-300 text-lg">Exciting events coming soon 🚀</p>
         </div>
       ) : events.length === 1 ? (
         <div style={{ padding: "8px 0" }}>
@@ -1168,7 +1168,7 @@ export const Timeline = ({
           </h3>
         )}
         <div className="bg-gray-800/50 rounded-lg p-8 text-center">
-          <p className="text-gray-400 text-lg">No events to display</p>
+          <p className="text-gray-400 text-lg">Exciting events coming soon 🚀</p>
         </div>
       </div>
     );
@@ -1407,7 +1407,7 @@ export const EventMiniCard = ({
           <h3 className="text-2xl font-semibold mb-6 text-center">{title}</h3>
         )}
         <div className="bg-white/10 backdrop-blur-sm rounded-lg p-8 text-center h-72 flex items-center justify-center">
-          <p className="text-gray-300 text-lg">No events to display</p>
+          <p className="text-gray-300 text-lg">Exciting events coming soon 🚀</p>
         </div>
       </div>
     );
