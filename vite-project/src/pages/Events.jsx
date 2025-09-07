@@ -6,8 +6,8 @@ import {
   EventCarousel,
   EventMiniCard,
 } from "../components/EventComponents.jsx";
-import EventsBg1Component from "../components/EventBgComponent.jsx";
-import EventsBg1DarkComponent from "../components/EventBgDarkComponent.jsx";
+import EventsBg1Component3 from "../components/EventBgComponent3.jsx";
+import EventsBg1DarkComponent3 from "../components/EventBgDarkComponent3.jsx";
 import useAuth from "../context/AuthContext.jsx";
 import useTheme from "../context/ThemeContext.jsx";
 import "../css/EventBg.css";
@@ -161,7 +161,7 @@ const Events = () => {
   };
 
   const BackgroundComponent =
-    themeMode === "dark" ? EventsBg1DarkComponent : EventsBg1Component;
+    themeMode === "dark" ? EventsBg1DarkComponent3 : EventsBg1Component3;
 
 
     
