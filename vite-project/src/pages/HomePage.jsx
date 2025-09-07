@@ -100,23 +100,30 @@ const HomePage = () => {
       {/* Hero Section */}
       <div className="flex flex-col items-center justify-center flex-grow px-4 md:px-8 text-center min-h-screen">
         {/* Logo Card */}
-        <div className=  "mt-[-3rem] bg-white/20 backdrop-blur-md border-4 border-green-400 rounded-2xl pt-6 md:pt-10 px-6 md:px-10 pb-2 md:pb-3 shadow-lg transition-all duration-500 hover:scale-105">
+        <div className="mt-[-3rem] bg-white/20 backdrop-blur-md border-4 border-green-400 rounded-2xl pt-6 md:pt-10 px-6 md:px-10 pb-2 md:pb-3 shadow-lg transition-all duration-500 hover:scale-105">
           <img
             src={NewLogoLight}
             alt="Campus Body"
             className="h-40 md:h-48 mx-auto mb-4"
           />
         </div>
-        {/* Paragraph */}
-        <p className="mt-10 max-w-3xl text-white text-md md:text-xl leading-relaxed font-semibold">
-          We are a student-driven community dedicated to fostering a passion for
-          coding, problem-solving, and technology at Madhav Institute of
-          Technology and Science. Our mission is to empower students with the
-          skills and knowledge needed for success in competitive programming,
-          technical interviews, and beyond. Join us for workshops, coding
-          challenges, and collaborative learning as we grow together in the
-          world of computer science.
-        </p>
+        
+        {/* Styled Content Block */}
+        <div className={`mt-10 max-w-3xl mx-auto p-6 md:p-8 rounded-2xl shadow-lg transition-all duration-200 hover:shadow-xl bg-transparent ${
+          themeMode === "dark" 
+            ? "text-white" 
+            : "text-[#002b46]"
+        }`} style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)', backdropFilter: 'blur(10px)' }}>
+          <p className="text-md md:text-xl leading-relaxed font-semibold">
+            We are a student-driven community dedicated to fostering a passion for
+            coding, problem-solving, and technology at Madhav Institute of
+            Technology and Science. Our mission is to empower students with the
+            skills and knowledge needed for success in competitive programming,
+            technical interviews, and beyond. Join us for workshops, coding
+            challenges, and collaborative learning as we grow together in the
+            world of computer science.
+          </p>
+        </div>
       </div>
 
       {/* Timeline Section */}
