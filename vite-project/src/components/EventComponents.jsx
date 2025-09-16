@@ -215,18 +215,7 @@ export const EventCarousel = ({
             </div>
           </div>
           <div className="flex items-center justify-between">
-            <div className="flex items-center text-gray-200 text-base">
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                className="mr-2"
-              >
-                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-              </svg>
-              <span className="font-medium">50+ Registered</span>
-            </div>
+            
             <div className="flex items-center text-gray-200 text-base">
               <svg
                 width="18"
@@ -1485,20 +1474,7 @@ export const EventMiniCard = ({
 
                 {/* Participants and Prize Info in a row */}
                 <div className="flex items-center justify-between text-xs">
-                  {/* Participants Info */}
-                  <div className="flex items-center text-gray-200">
-                    <svg
-                      width="14"
-                      height="14"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                      className="mr-1"
-                    >
-                      <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                    </svg>
-                    <span className="font-medium">50+</span>
-                  </div>
-
+                  
                   {/* Prize Info */}
                   <div className="flex items-center text-gray-200">
                     <svg
