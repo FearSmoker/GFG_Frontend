@@ -340,7 +340,13 @@ export const EventForm = ({
 
   const isPaidEvent = parseFloat(newEvent.registrationFee) > 0;
 
-  // Helper function to add red asterisk for required fields
+  const formatDateForInput = (date) => {
+    if (!date) return "";
+    const d = new Date(date);
+    d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+    return d.toISOString().slice(0, 16);
+  };
+
   const RequiredLabel = ({ children, isRequired = false }) => (
     <label className="block text-sm font-medium text-gray-300 mb-2">
       {children}
@@ -401,7 +407,7 @@ export const EventForm = ({
           <RequiredLabel isRequired={true}>Event Date</RequiredLabel>
           <input
             type="datetime-local"
-            value={selectedDate.toISOString().slice(0, 16)}
+            value={formatDateForInput(selectedDate)}
             onChange={(e) => setSelectedDate(new Date(e.target.value))}
             className="w-full p-3 rounded-md bg-gray-700 text-white border border-gray-600 focus:border-green-500 focus:outline-none"
             required
@@ -415,7 +421,7 @@ export const EventForm = ({
             type="file"
             accept="image/*"
             onChange={handleFileChange}
-            className="w-full p-3 rounded-md bg-gray-700 text-white border border-gray-600 focus:border-green-500 focus:outline-none"
+            className="w-full p-3 rounded-md bg-gray-900 text-white border-2 border-gray-500 focus:border-green-500 focus:outline-none file:mr-3 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-bold file:bg-gray-700 file:text-white hover:file:bg-gray-600 cursor-pointer"
             required
           />
           {newEvent.imageFile && (
@@ -505,9 +511,7 @@ export const EventForm = ({
             type="datetime-local"
             value={
               newEvent.registrationDeadline
-                ? new Date(newEvent.registrationDeadline)
-                    .toISOString()
-                    .slice(0, 16)
+                ? formatDateForInput(newEvent.registrationDeadline)
                 : ""
             }
             onChange={(e) =>
