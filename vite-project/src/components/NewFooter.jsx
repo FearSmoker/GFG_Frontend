@@ -320,63 +320,65 @@ const Footer = () => {
 
       {/* Image button with hover effect */}
       <div
+  style={{
+    textAlign: "center",
+    marginTop: "48px",
+    padding: "0 16px",
+    fontSize: "20px",
+  }}
+  className="text-center mt-12 px-4"
+>
+      <div
+        className="logo-button transition-all duration-300 ease-in-out"
         style={{
-          textAlign: "center",
-          marginTop: "48px",
-          padding: "0 16px",
-          fontSize: "20px",
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "12px 4vw", // responsive padding
+          borderRadius: "16px",
+          minWidth: "240px", // smaller min width for small screens
+          maxWidth: "90%", // prevents overflow on mobile
+          border: `2px solid ${isDark ? "#065F46" : "#6EE7B7"}`,
+          background: isDark
+            ? "linear-gradient(135deg, #064E3B, #047857)"
+            : "linear-gradient(135deg, #ECFDF5, #D1FAE5)",
         }}
-        className="text-center mt-12 px-4"
+        onClick={() => goTo("/")}
+        onMouseEnter={(e) => {
+          const el = e.currentTarget;
+          el.style.background = isDark
+            ? "linear-gradient(135deg, #047857, #059669)"
+            : "linear-gradient(135deg, #10B981, #059669)";
+          el.style.transform = "translateY(-2px)";
+          el.style.boxShadow = isDark
+            ? "0 8px 25px rgba(4, 120, 87, 0.4)"
+            : "0 8px 25px rgba(16, 185, 129, 0.3)";
+          el.style.borderColor = isDark ? "#047857" : "#10B981";
+        }}
+        onMouseLeave={(e) => {
+          const el = e.currentTarget;
+          el.style.background = isDark
+            ? "linear-gradient(135deg, #064E3B, #047857)"
+            : "linear-gradient(135deg, #ECFDF5, #D1FAE5)";
+          el.style.transform = "translateY(0)";
+          el.style.boxShadow = "none";
+          el.style.borderColor = isDark ? "#065F46" : "#6EE7B7";
+        }}
       >
-        <div
-          className="logo-button"
+        <img
+          src={themeMode === "dark" ? HorizontalDarkGFGLogo : HorizontalLightGFGLogo}
+          alt="GeeksforGeeks Logo"
           style={{
-            display: "inline-flex",
-            alignItems: "center",
-            justifyContent: "center",
-            padding: "12px 60px", 
-            borderRadius: "16px",
-            minWidth: "360px",
-            border: `2px solid ${isDark ? "#065F46" : "#6EE7B7"}`,
-            background: isDark
-              ? "linear-gradient(135deg, #064E3B, #047857)"
-              : "linear-gradient(135deg, #ECFDF5, #D1FAE5)",
-            transition: "all 0.3s ease",
+            height: "70px",
+            width: "auto",
+            maxWidth: "100%", // ensures image scales down
+            objectFit: "contain",
+            display: "block",
           }}
-          onClick={() => goTo("/")}
-          onMouseEnter={(e) => {
-            const el = e.currentTarget;
-            el.style.background = isDark
-              ? "linear-gradient(135deg, #047857, #059669)"
-              : "linear-gradient(135deg, #10B981, #059669)";
-            el.style.transform = "translateY(-2px)";
-            el.style.boxShadow = isDark
-              ? "0 8px 25px rgba(4, 120, 87, 0.4)"
-              : "0 8px 25px rgba(16, 185, 129, 0.3)";
-            el.style.borderColor = isDark ? "#047857" : "#10B981";
-          }}
-          onMouseLeave={(e) => {
-            const el = e.currentTarget;
-            el.style.background = isDark
-              ? "linear-gradient(135deg, #064E3B, #047857)"
-              : "linear-gradient(135deg, #ECFDF5, #D1FAE5)";
-            el.style.transform = "translateY(0)";
-            el.style.boxShadow = "none";
-            el.style.borderColor = isDark ? "#065F46" : "#6EE7B7";
-          }}
-        >
-          <img
-            src={themeMode === "dark" ? HorizontalDarkGFGLogo : HorizontalLightGFGLogo} 
-            alt="GeeksforGeeks Logo"
-            style={{
-              height: "70px",
-              width: "auto",
-              objectFit: "contain",
-              display: "block",
-            }}
-          />
-        </div>
+        />
       </div>
+    </div>
+
 
       {/* Bottom line */}
       <div
