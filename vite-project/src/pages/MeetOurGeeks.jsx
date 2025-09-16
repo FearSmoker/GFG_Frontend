@@ -6,7 +6,7 @@ import Mukul from "../assets/Mukul.png";
 import Harsh from "../assets/Harsh.png";
 import MirSir from "../assets/MirSir.png";
 import KuldeepSir from "../assets/KuldeepSir.png";
-import ManishSir from "../assets/Manishsir.png";
+import ManishSir from "../assets/manishsir.png";
 import MitsLogo from "../assets/MitsLogo.png"
 import useTheme from "../context/ThemeContext.jsx";
 import FacultyCard from "../components/FacultyCard.jsx";
