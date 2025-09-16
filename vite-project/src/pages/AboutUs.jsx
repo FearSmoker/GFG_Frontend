@@ -9,16 +9,12 @@ const AboutUs = () => {
 
   const cardData = [
     {
-      title: "Who are we?",
-      text: "GFG Campus Body MITS DU is your on-campus GeeksforGeeks chapter—a vibrant, student-led tech community empowering learners through coding, collaboration, and career development. Founded to build a culture of peer learning and innovation, we organize workshops, coding contests, mentorship programs, and hands-on projects to help every member grow and lead in the world of technology.",
-    },
-    {
       title: "Our Vision",
-      text: "At GFG Campus Body MITS DU, our vision is to nurture a dynamic ecosystem of passionate problem-solvers and programmers who are well-equipped to excel in an ever-evolving tech landscape. We aspire to foster a culture of continuous learning, creativity, and inclusive community engagement, empowering students across disciplines to innovate and make meaningful technological impact.",
+      text: "At GFG Campus Body MITS DU, we aim to build a vibrant community of problem-solvers and programmers driven by curiosity and collaboration. We foster continuous learning, creativity, and inclusivity to empower students to innovate and create lasting technological impact.",
     },
     {
       title: "Our Mission",
-      text: "Our mission is to build a thriving campus coding culture by organizing hands-on workshops, interactive hackathons, expert sessions, and collaborative projects. We strive to enhance technical skills, promote peer-to-peer mentorship, facilitate industry exposure, and prepare students at MITS DU for successful careers in technology—all while forging connections, leadership, and confidence.",
+      text: "To shape MITS DU’s premier hub for complete growth—where ambitious students gain advanced technical skills, entrepreneurial insight, communication mastery, and leadership through exclusive projects, hackathons, and mentorship with masters of their fields.",
     },
   ];
 
@@ -33,7 +29,7 @@ const AboutUs = () => {
             userSelect: "none",
             fontSize: "60px",
           }}
-          className="text-center mb-4"
+          className="text-center  mt-10"
         >
           <span
             className={`${isLightTheme ? "text-[#2195DE]" : "text-[#0065A5]"}`}
@@ -53,7 +49,27 @@ const AboutUs = () => {
           </span>
         </h1>
 
-        <div className="flex flex-col lg:flex-row gap-6 justify-center items-stretch w-full max-w-[1400px] px-4">
+            <div
+              className={`${
+                  isLightTheme ? "text-gray-800" : "text-white"
+                } flex flex-col md:text-3xl `}>
+              <h1 className="text-center font-bold">Our Motto</h1>
+              <p>
+              <span 
+                className={`${
+                  isLightTheme ? "text-[#2195DE]" : "text-[#0065A5]"
+                } `}
+              >Quality</span> is not an act, it is a<span
+                className={`${
+                  isLightTheme ? "text-[#0A7956]" : "text-[#00FFAF]"
+                } mx-2 `}
+              >
+                habit.
+              </span></p>
+              <p className="text-right md:text-xl">~ Aristotle</p>
+            </div>
+
+        <div className="tracking-wider flex flex-col lg:flex-row gap-34 justify-center items-stretch w-full max-w-[1400px] px-4">
           {cardData.map((card, index) => (
             <div
               key={index}
@@ -63,7 +79,7 @@ const AboutUs = () => {
               <h2 className="text-[#00FFF2] text-[32px] font-bold font-[Cabin] mb-4">
                 {card.title}
               </h2>
-              <p className="text-white text-[16px] font-[Cabin] font-normal overflow-y-auto">
+              <p className="text-white text-[17px] font-[Cabin] font-normal overflow-y-auto">
                 {card.text}
               </p>
             </div>

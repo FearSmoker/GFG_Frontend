@@ -6,8 +6,11 @@ import Mukul from "../assets/Mukul.png";
 import Harsh from "../assets/Harsh.png";
 import MirSir from "../assets/MirSir.png";
 import KuldeepSir from "../assets/KuldeepSir.png";
+import ManishSir from "../assets/Manishsir.png";
 import MitsLogo from "../assets/MitsLogo.png"
 import useTheme from "../context/ThemeContext.jsx";
+import FacultyCard from "../components/FacultyCard.jsx";
+
 
 const CAMPUS_MANTRI = [
   {
@@ -88,6 +91,19 @@ const TEACHERS = [
       mits: "https://web.mitsgwalior.in/faculty-profiles-cse-2/dr-kuldeep-narayan-tripathi",
     },
   },
+]; 
+
+const CON = [
+  {
+    name: "Dr. Manish Dixit",
+    img: ManishSir,
+    displayName: "Manish Sir",
+    social: {
+      linkedin: "https://www.linkedin.com/in/dixitmanish/",
+      mits: "https://web.mitsgwalior.in/faculty-profiles-cse-2/dr-manish-dixit-2",
+    },
+  },
+  
 ];
 
 const LinkedInIcon = () => (
@@ -263,23 +279,34 @@ const MeetOurGeeks = () => {
         ))}
       </div>
 
-      {/* Faculty Coordinators Section */}
-      <p
-        className={`flex justify-center text-4xl mb-10 ${
-          isLightTheme ? "text-[#7D7D7D]" : "text-white"
-        }`}
-      >
-        Faculty Coordinators
-      </p>
-      <div className="flex flex-wrap justify-center gap-14">
-        {TEACHERS.map((person, index) => (
-          <ProfileCard
-            key={index}
-            person={person}
-            isLightTheme={isLightTheme}
-          />
-        ))}
-      </div>
+              {/* Faculty Coordinators Section */}
+        <p className={`flex justify-center text-4xl mb-10 ${isLightTheme ? "text-[#7D7D7D]" : "text-white"}`}>
+          Faculty Coordinators
+        </p>
+        <div className="flex flex-wrap justify-center gap-14">
+          {TEACHERS.map((person, index) => (
+            <FacultyCard
+              key={index}
+              person={person}
+              isLightTheme={isLightTheme}
+            />
+          ))}
+        </div>
+
+        {/* Convenor Section */}
+        <p className={`flex justify-center text-4xl mb-10 mt-10 ${isLightTheme ? "text-[#7D7D7D]" : "text-white"}`}>
+          Convenor
+        </p>
+        <div className="flex flex-wrap justify-center gap-14">
+          {CON.map((person, index) => (
+            <FacultyCard
+              key={index}
+              person={person}
+              isLightTheme={isLightTheme}
+            />
+          ))}
+        </div>
+
     </div>
   );
 };
