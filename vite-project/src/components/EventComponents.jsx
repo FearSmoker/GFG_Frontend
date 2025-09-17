@@ -143,7 +143,6 @@ export const EventCarousel = ({
       const eventId = event._id || event.id;
       if (eventId) {
         navigate(`/events/${eventId}`);
-        // Scroll to top after navigation
         setTimeout(() => {
           window.scrollTo(0, 0);
         }, 100);
@@ -154,7 +153,6 @@ export const EventCarousel = ({
   const handleLearnMoreClick = (eventId) => {
     if (eventId) {
       navigate(`/events/${eventId}`);
-      // Scroll to top after navigation
       setTimeout(() => {
         window.scrollTo(0, 0);
       }, 100);
@@ -215,7 +213,6 @@ export const EventCarousel = ({
             </div>
           </div>
           <div className="flex items-center justify-between">
-            
             <div className="flex items-center text-gray-200 text-base">
               <svg
                 width="18"
@@ -276,7 +273,9 @@ export const EventCarousel = ({
             isLarge ? "h-[500px]" : "h-[400px]"
           } flex items-center justify-center`}
         >
-          <p className="text-gray-300 text-lg">Exciting events coming soon 🚀</p>
+          <p className="text-gray-300 text-lg">
+            Exciting events coming soon 🚀
+          </p>
         </div>
       ) : events.length === 1 ? (
         <div style={{ padding: "8px 0" }}>
@@ -1068,8 +1067,26 @@ export const Timeline = ({
     });
   };
 
-  const getStatusColor = (eventStatus) => {
-    switch (eventStatus) {
+  const getActualEventStatus = (event) => {
+    if (!event || !event.date) return "upcoming";
+
+    const currentDate = new Date();
+    const eventDate = new Date(event.date);
+
+    if (event.eventStatus === "cancelled") {
+      return "cancelled";
+    }
+
+    if (eventDate < currentDate) {
+      return "completed";
+    }
+
+    return "upcoming";
+  };
+
+  const getStatusColor = (event) => {
+    const actualStatus = getActualEventStatus(event);
+    switch (actualStatus) {
       case "upcoming":
         return "text-green-400";
       case "ongoing":
@@ -1083,8 +1100,9 @@ export const Timeline = ({
     }
   };
 
-  const getStatusDot = (eventStatus) => {
-    switch (eventStatus) {
+  const getStatusDot = (event) => {
+    const actualStatus = getActualEventStatus(event);
+    switch (actualStatus) {
       case "upcoming":
         return "bg-green-400";
       case "ongoing":
@@ -1102,7 +1120,6 @@ export const Timeline = ({
     const eventId = event._id || event.id;
     if (eventId) {
       navigate(`/events/${eventId}`);
-      // Scroll to top after navigation
       setTimeout(() => {
         window.scrollTo(0, 0);
       }, 100);
@@ -1111,29 +1128,24 @@ export const Timeline = ({
 
   const handleViewAllEvents = () => {
     navigate("/events");
-    
-    // Function to attempt scrolling with retries
+
     const attemptScroll = (attempts = 0) => {
-      if (attempts >= 10) return; // Max 10 attempts
-      
-      // Try to find the event tabs section first
+      if (attempts >= 10) return;
+
       const eventTabsSection = document.querySelector(".event-tabs-section");
-      
+
       if (eventTabsSection) {
-        // Scroll to show the event tabs at the top
-        const offsetTop = eventTabsSection.offsetTop - 100; // 100px offset from top
+        const offsetTop = eventTabsSection.offsetTop - 100;
         window.scrollTo({
           top: offsetTop,
-          behavior: "smooth"
+          behavior: "smooth",
         });
         return;
       }
-      
-      // If not found, try again after a short delay
+
       setTimeout(() => attemptScroll(attempts + 1), 200);
     };
-    
-    // Start attempting to scroll after initial page load
+
     setTimeout(() => attemptScroll(), 300);
   };
 
@@ -1161,7 +1173,9 @@ export const Timeline = ({
           </h3>
         )}
         <div className="bg-gray-800/50 rounded-lg p-8 text-center">
-          <p className="text-gray-400 text-lg">Exciting events coming soon 🚀</p>
+          <p className="text-gray-400 text-lg">
+            Exciting events coming soon 🚀
+          </p>
         </div>
       </div>
     );
@@ -1186,10 +1200,10 @@ export const Timeline = ({
               key={event._id || event.id}
               className="relative flex items-start"
             >
-              {/* Timeline dot */}
+              {/* Timeline dot - now using time-aware status */}
               <div
                 className={`absolute left-2 w-4 h-4 rounded-full border-2 border-gray-900 ${getStatusDot(
-                  event.eventStatus
+                  event
                 )} z-10`}
               ></div>
 
@@ -1210,10 +1224,10 @@ export const Timeline = ({
                   </div>
                   <span
                     className={`text-xs font-medium px-2 py-1 rounded ${getStatusColor(
-                      event.eventStatus
+                      event
                     )}`}
                   >
-                    {event.eventStatus?.toUpperCase() || "UNKNOWN"}
+                    {getActualEventStatus(event).toUpperCase()}
                   </span>
                 </div>
 
@@ -1400,7 +1414,9 @@ export const EventMiniCard = ({
           <h3 className="text-2xl font-semibold mb-6 text-center">{title}</h3>
         )}
         <div className="bg-white/10 backdrop-blur-sm rounded-lg p-8 text-center h-72 flex items-center justify-center">
-          <p className="text-gray-300 text-lg">Exciting events coming soon 🚀</p>
+          <p className="text-gray-300 text-lg">
+            Exciting events coming soon 🚀
+          </p>
         </div>
       </div>
     );
@@ -1474,7 +1490,6 @@ export const EventMiniCard = ({
 
                 {/* Participants and Prize Info in a row */}
                 <div className="flex items-center justify-between text-xs">
-                  
                   {/* Prize Info */}
                   <div className="flex items-center text-gray-200">
                     <svg

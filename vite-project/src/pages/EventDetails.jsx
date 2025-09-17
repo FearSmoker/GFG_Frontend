@@ -176,9 +176,6 @@ const EventDetails = () => {
     const currentDate = new Date();
     const eventDate = new Date(event.date);
 
-    currentDate.setHours(0, 0, 0, 0);
-    eventDate.setHours(0, 0, 0, 0);
-
     if (event.eventStatus === "cancelled") {
       return "cancelled";
     }
@@ -429,7 +426,10 @@ const EventDetails = () => {
     if (eventStatus !== "upcoming") return false;
 
     if (event.registrationDeadline) {
-      return new Date() < new Date(event.registrationDeadline);
+      const currentDate = new Date();
+      const deadlineDate = new Date(event.registrationDeadline);
+      
+      return currentDate < deadlineDate;
     }
 
     return true;
@@ -611,7 +611,13 @@ const EventDetails = () => {
                         Registration ends:{" "}
                         {new Date(
                           event.registrationDeadline
-                        ).toLocaleDateString()}
+                        ).toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "short",
+                          day: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                        })}
                       </span>
                     </div>
                   )}
@@ -767,7 +773,6 @@ const EventDetails = () => {
                 </div>
               </div>
             ) : (
-              /* Use RegisterForm for all steps */
               <RegisterForm
                 registrationData={registrationData}
                 setRegistrationData={setRegistrationData}
