@@ -88,7 +88,7 @@ const POTD = () => {
             {/* Show Problem Button */}
             <button
               onClick={() => setShowProblem(true)}
-              className={`font-semibold px-6 py-2 rounded-md text-sm md:text-base ${
+              className={`transform transition-transform duration-300 hover:scale-105 hover:cursor-pointer  font-semibold px-6 py-2 rounded-md text-sm md:text-base ${
                 isLightTheme
                   ? "bg-[#18EDAA] border border-[#004C7C] text-[#014570]"
                   : "bg-[#00FFAF] border border-[#004C7C] text-black"

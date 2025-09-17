@@ -50,30 +50,23 @@ const AboutUs = () => {
         </h1>
 
             <div
-              className={`${
-                  isLightTheme ? "text-gray-800" : "text-white"
-                } flex flex-col md:text-3xl `}>
-              <h1 className="text-center font-bold">Our Motto</h1>
-              <p>
-              <span 
-                className={`${
-                  isLightTheme ? "text-[#2195DE]" : "text-[#0065A5]"
-                } `}
-              >Quality</span> is not an act, it is a<span
-                className={`${
-                  isLightTheme ? "text-[#0A7956]" : "text-[#00FFAF]"
-                } mx-2 `}
+                className="text-center hover:cursor-pointer transform transition-transform duration-300 hover:scale-105  flex-1 lg:min-w-[580px] max-w-[420px] bg-[#002B46] rounded-[20px] border border-[#004C7C] p-6 flex flex-col"
+                style={{ height: "374px" }}
               >
-                habit.
-              </span></p>
-              <p className="text-right md:text-xl">~ Aristotle</p>
+              <h2 className="text-[#00FFF2] text-[32px] font-bold font-[Cabin] mb-4 ">
+                Our Motto
+              </h2>
+              <p className="text-white text-[18px] font-[Cabin] font-normal overflow-y-auto">
+                Quality is not an act, it is a habit.
+              </p>
+              <p className="text-right md:mr-20">~ Aristotle</p>
             </div>
 
         <div className="tracking-wider flex flex-col lg:flex-row gap-34 justify-center items-stretch w-full max-w-[1400px] px-4">
           {cardData.map((card, index) => (
             <div
               key={index}
-              className="flex-1 min-w-[280px] max-w-[420px] bg-[#002B46] rounded-[20px] border border-[#004C7C] p-6 flex flex-col"
+              className="hover:cursor-pointer transform transition-transform duration-300 hover:scale-105 flex-1 min-w-[280px] max-w-[420px] bg-[#002B46] rounded-[20px] border border-[#004C7C] p-6 flex flex-col"
               style={{ height: "374px" }}
             >
               <h2 className="text-[#00FFF2] text-[32px] font-bold font-[Cabin] mb-4">
