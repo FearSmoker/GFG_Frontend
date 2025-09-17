@@ -20,7 +20,7 @@ const FacultyCard = ({ person, isLightTheme }) => {
             <img
               src={person.img}
               alt={person.name}
-              className="w-32 h-32 rounded-full border-4 border-white mb-3 object-cover object-center"
+              className="w-32 h-32 rounded-full border-4 border-white mb-3 object-cover object-top"
             />
           ) : (
             <div className="w-32 h-32 rounded-full border-4 border-white mb-3 bg-gray-300 flex items-center justify-center text-gray-600 text-lg font-bold">

@@ -295,7 +295,7 @@ const MeetOurGeeks = () => {
 
         {/* Convenor Section */}
         <p className={`flex justify-center text-4xl mb-10 mt-10 ${isLightTheme ? "text-[#7D7D7D]" : "text-white"}`}>
-          Convenor
+          Convenor & Head CSE Department
         </p>
         <div className="flex flex-wrap justify-center gap-14">
           {CON.map((person, index) => (
