@@ -25,11 +25,13 @@ const Navbar = () => {
 
   React.useEffect(() => {
     const handleClickOutside = (event) => {
-      
-      if (event.target.closest('button') && event.target.closest('.logout-card-container')) {
+      if (
+        event.target.closest("button") &&
+        event.target.closest(".logout-card-container")
+      ) {
         return;
       }
-      
+
       if (
         isProfileDropdownOpen &&
         !event.target.closest(".profile-dropdown-container")
@@ -49,19 +51,19 @@ const Navbar = () => {
 
   React.useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = 'hidden';
-      document.body.style.position = 'fixed';
-      document.body.style.width = '100%';
+      document.body.style.overflow = "hidden";
+      document.body.style.position = "fixed";
+      document.body.style.width = "100%";
     } else {
-      document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.width = "";
     }
 
     return () => {
-      document.body.style.overflow = '';
-      document.body.style.position = '';
-      document.body.style.width = '';
+      document.body.style.overflow = "";
+      document.body.style.position = "";
+      document.body.style.width = "";
     };
   }, [isOpen]);
 
@@ -130,17 +132,9 @@ const Navbar = () => {
           <div className="flex items-center space-x-3">
             <a href="/">
               {themeMode === "dark" ? (
-                <img
-                  src={NewLogoDark}
-                  alt="Logo"
-                  className="h-10 md:h-20"
-                />
+                <img src={NewLogoDark} alt="Logo" className="h-10 md:h-20" />
               ) : (
-                <img
-                  src={NewLogoLight}
-                  alt="Logo"
-                  className="h-10 md:h-20"
-                />
+                <img src={NewLogoLight} alt="Logo" className="h-10 md:h-20" />
               )}
             </a>
           </div>
@@ -154,11 +148,13 @@ const Navbar = () => {
                 active={currentPath === "/signin"}
               />
             ) : (
-              <div className={`text-transparent bg-clip-text font-bold italic text-xl tracking-wide drop-shadow-sm font-[Poppins] ${
-                themeMode === "dark" 
-                  ? "bg-gradient-to-r from-[#081d26] via-[#31756e] to-[#49c8be]"
-                  : "bg-gradient-to-r from-[#20a2b4] via-[#6bc2cf] to-[#8bd0dc]"
-              }`}>
+              <div
+                className={`text-transparent bg-clip-text font-bold italic text-xl tracking-wide drop-shadow-sm font-[Poppins] ${
+                  themeMode === "dark"
+                    ? "bg-gradient-to-r from-[#081d26] via-[#31756e] to-[#49c8be]"
+                    : "bg-gradient-to-r from-[#20a2b4] via-[#6bc2cf] to-[#8bd0dc]"
+                }`}
+              >
                 {user ? `Hi, ${user.username}` : "Loading user..."}
               </div>
             )}
@@ -314,12 +310,11 @@ const Navbar = () => {
 
             <ThemeBtn />
           </div>
-
           {/* Mobile Menu Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
             className={`md:hidden focus:outline-none z-20  ${
-              themeMode === "dark" ? "text-white" : "text-gray-700"
+              themeMode === "dark" ? "text-[#c3d6d9]" : "text-gray-700"
             }`}
             aria-label="Toggle menu"
           >
@@ -332,52 +327,53 @@ const Navbar = () => {
       {isOpen && (
         <div className="md:hidden fixed inset-0 top-0 z-100 ">
           {/* Background with theme colors */}
-          <div className={`absolute inset-0 ${
-            themeMode === "dark" 
-              ? "bg-gradient-to-br from-emerald-900 via-green-900 to-gray-900" 
-              : "bg-gradient-to-br from-green-50 via-emerald-100 to-teal-100"
-          }`} />
-          
+          <div
+            className={`absolute inset-0 ${
+              themeMode === "dark"
+                ? "bg-gradient-to-br from-[#081d26] via-[#31756e] to-[#204c4c]"
+                : "bg-gradient-to-br from-green-50 via-emerald-100 to-teal-100"
+            }`}
+          />
+
           {/* Mobile Menu Header with Close Button - Fixed */}
           <div className="relative z-20 flex justify-between items-center px-6 py-4 pt-6">
             <div className="flex items-center space-x-3">
               <a href="/" onClick={() => setIsOpen(false)}>
                 {themeMode === "dark" ? (
-                  <img
-                    src={NewLogoDark}
-                    alt="Logo"
-                    className="h-10"
-                  />
+                  <img src={NewLogoDark} alt="Logo" className="h-10" />
                 ) : (
-                  <img
-                    src={NewLogoLight}
-                    alt="Logo"
-                    className="h-10"
-                  />
+                  <img src={NewLogoLight} alt="Logo" className="h-10" />
                 )}
               </a>
             </div>
-            
+
             {/* Close Button (X) */}
             <button
               onClick={() => setIsOpen(false)}
               className={`focus:outline-none  ${
-                themeMode === "dark" ? "text-white" : "text-emerald-800"
+                themeMode === "dark" ? "text-[#c3d6d9]" : "text-emerald-800"
               }`}
               aria-label="Close menu"
             >
               <X size={30} />
             </button>
           </div>
-          
+
           {/* Scrollable Content */}
-          <div className="relative z-10 overflow-y-auto" style={{ height: 'calc(100vh - 80px)' }}>
+          <div
+            className="relative z-10 overflow-y-auto"
+            style={{ height: "calc(100vh - 80px)" }}
+          >
             <div className="px-6 py-4">
               {/* User Section */}
               {isAuthenticated && user ? (
-                <div className={`flex flex-col items-center mb-8 pb-6 border-b ${
-                  themeMode === "dark" ? "border-emerald-600" : "border-emerald-300"
-                }`}>
+                <div
+                  className={`flex flex-col items-center mb-8 pb-6 border-b ${
+                    themeMode === "dark"
+                      ? "border-[#2d5768]"
+                      : "border-emerald-300"
+                  }`}
+                >
                   <div className="w-16 h-16 bg-blue-700 rounded-full mb-4 overflow-hidden flex items-center justify-center shadow-lg">
                     <img
                       src={user.avatar}
@@ -385,21 +381,33 @@ const Navbar = () => {
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <div className={`text-transparent bg-clip-text font-bold italic text-xl tracking-wide drop-shadow-sm font-[Poppins] ${
-                    themeMode === "dark" 
-                      ? "bg-gradient-to-r from-[#20a2b4] via-[#6bc2cf] to-[#8bd0dc]"
-                      : "bg-gradient-to-r from-[#081d26] via-[#31756e] to-[#49c8be]"
-                  }`}>
+                  <div
+                    className={`text-transparent bg-clip-text font-bold italic text-xl tracking-wide drop-shadow-sm font-[Poppins] ${
+                      themeMode === "dark"
+                        ? "bg-gradient-to-r from-[#081d26] via-[#31756e] to-[#49c8be]"
+                        : "bg-gradient-to-r from-[#081d26] via-[#31756e] to-[#49c8be]"
+                    }`}
+                  >
                     {user ? `Hi, ${user.username}` : "Loading user..."}
                   </div>
-                  <div className={`text-sm text-center mt-2 ${
-                    themeMode === "dark" ? "text-emerald-300" : "text-emerald-600"
-                  }`}>Welcome back</div>
+                  <div
+                    className={`text-sm text-center mt-2 ${
+                      themeMode === "dark"
+                        ? "text-[#49c8be]"
+                        : "text-emerald-600"
+                    }`}
+                  >
+                    Welcome back
+                  </div>
                 </div>
               ) : (
-                <div className={`flex justify-center mb-8 pb-6 border-b ${
-                  themeMode === "dark" ? "border-emerald-600" : "border-emerald-300"
-                }`}>
+                <div
+                  className={`flex justify-center mb-8 pb-6 border-b ${
+                    themeMode === "dark"
+                      ? "border-[#2d5768]"
+                      : "border-emerald-300"
+                  }`}
+                >
                   <button
                     onClick={() => {
                       goTo("/signin");
@@ -407,7 +415,7 @@ const Navbar = () => {
                     }}
                     className={`text-lg font-medium px-8 py-3 rounded-full border transition-all duration-300 shadow-lg ${
                       themeMode === "dark"
-                        ? "bg-emerald-800 text-white border-emerald-600 hover:bg-emerald-700"
+                        ? "bg-[#1e3946] text-[#c3d6d9] border-[#2d5768] hover:bg-[#31756e]"
                         : "bg-white text-emerald-800 border-emerald-300 hover:bg-emerald-50"
                     }`}
                   >
@@ -419,9 +427,17 @@ const Navbar = () => {
               {/* Navigation Links */}
               <div className="flex flex-col space-y-3 mb-8">
                 {[
-                  { label: "Meet Our Geeks", path: "/meet-our-geeks", icon: "👥" },
+                  {
+                    label: "Meet Our Geeks",
+                    path: "/meet-our-geeks",
+                    icon: "👥",
+                  },
                   { label: "Events", path: "/events", icon: "🎯" },
-                  { label: "Nation Skill Up!", path: "/nation-skill-up", icon: "🚀" },
+                  {
+                    label: "Nation Skill Up!",
+                    path: "/nation-skill-up",
+                    icon: "🚀",
+                  },
                   { label: "About Us", path: "/about-us", icon: "ℹ️" },
                   { label: "POTD", path: "/potd", icon: "💡" },
                 ].map(({ label, path, icon }) => (
@@ -433,7 +449,7 @@ const Navbar = () => {
                     }}
                     className={`flex items-center justify-center text-base font-medium px-5 py-3 rounded-lg border transition-all duration-300 shadow-md hover:scale-105 active:scale-95 ${
                       themeMode === "dark"
-                        ? "bg-emerald-800 text-white border-emerald-600 hover:bg-emerald-700"
+                        ? "bg-[#1e3946] text-[#c3d6d9] border-[#2d5768] hover:bg-[#31756e]"
                         : "bg-white text-emerald-800 border-emerald-300 hover:bg-emerald-50"
                     }`}
                   >
@@ -446,9 +462,13 @@ const Navbar = () => {
               {/* Profile Actions for Authenticated Users */}
               {isAuthenticated && user && (
                 <div className="mb-8">
-                  <div className={`text-sm font-medium mb-4 text-center uppercase tracking-wider ${
-                    themeMode === "dark" ? "text-emerald-300" : "text-emerald-600"
-                  }`}>
+                  <div
+                    className={`text-sm font-medium mb-4 text-center uppercase tracking-wider ${
+                      themeMode === "dark"
+                        ? "text-[#49c8be]"
+                        : "text-emerald-600"
+                    }`}
+                  >
                     Profile Actions
                   </div>
                   <div className="grid grid-cols-2 gap-3 mb-6">
@@ -459,7 +479,7 @@ const Navbar = () => {
                       }}
                       className={`text-sm font-medium px-4 py-3 rounded-lg border transition-all duration-300 text-center ${
                         themeMode === "dark"
-                          ? "bg-emerald-800 text-white border-emerald-600 hover:bg-emerald-700"
+                          ? "bg-[#1e3946] text-[#c3d6d9] border-[#2d5768] hover:bg-[#31756e]"
                           : "bg-white text-emerald-800 border-emerald-300 hover:bg-emerald-50"
                       }`}
                     >
@@ -472,7 +492,7 @@ const Navbar = () => {
                       }}
                       className={`text-sm font-medium px-4 py-3 rounded-lg border transition-all duration-300 text-center ${
                         themeMode === "dark"
-                          ? "bg-emerald-800 text-white border-emerald-600 hover:bg-emerald-700"
+                          ? "bg-[#1e3946] text-[#c3d6d9] border-[#2d5768] hover:bg-[#31756e]"
                           : "bg-white text-emerald-800 border-emerald-300 hover:bg-emerald-50"
                       }`}
                     >
@@ -485,7 +505,7 @@ const Navbar = () => {
                       }}
                       className={`text-sm font-medium px-4 py-3 rounded-lg border transition-all duration-300 text-center ${
                         themeMode === "dark"
-                          ? "bg-emerald-800 text-white border-emerald-600 hover:bg-emerald-700"
+                          ? "bg-[#1e3946] text-[#c3d6d9] border-[#2d5768] hover:bg-[#31756e]"
                           : "bg-white text-emerald-800 border-emerald-300 hover:bg-emerald-50"
                       }`}
                     >
@@ -498,7 +518,7 @@ const Navbar = () => {
                       }}
                       className={`text-sm font-medium px-4 py-3 rounded-lg border transition-all duration-300 text-center ${
                         themeMode === "dark"
-                          ? "bg-emerald-800 text-white border-emerald-600 hover:bg-emerald-700"
+                          ? "bg-[#1e3946] text-[#c3d6d9] border-[#2d5768] hover:bg-[#31756e]"
                           : "bg-white text-emerald-800 border-emerald-300 hover:bg-emerald-50"
                       }`}
                     >
@@ -511,7 +531,11 @@ const Navbar = () => {
                     <div className="relative logout-card-container">
                       <button
                         onClick={() => setShowLogoutCard(true)}
-                        className="relative flex items-center justify-center p-2 rounded-lg border transition-all duration-300 bg-transparent border-transparent hover:border-[#004C7C] hover:bg-[rgba(0,43,70,0.32)]"
+                        className={`relative flex items-center justify-center p-2 rounded-lg border transition-all duration-300 bg-transparent border-transparent ${
+                          themeMode === "dark"
+                            ? "hover:border-[#2d5768] hover:bg-[rgba(29,87,104,0.32)]"
+                            : "hover:border-[#004C7C] hover:bg-[rgba(0,43,70,0.32)]"
+                        }`}
                         aria-label="Logout"
                       >
                         <img
@@ -535,15 +559,12 @@ const Navbar = () => {
 
                       {/* Mobile Logout Card - Positioned below the button and centered */}
                       {showLogoutCard && (
-                        
-                          <div className="scale-75 z-50 transform translate-x-26 translate-y-2 ">
-                            
-                            <LogoutCard
-                              onConfirm={handleLogoutConfirm}
-                              onCancel={handleLogoutCancel}
-                            />
-                          </div>
-                        
+                        <div className="scale-75 z-50 transform translate-x-26 translate-y-2 ">
+                          <LogoutCard
+                            onConfirm={handleLogoutConfirm}
+                            onCancel={handleLogoutCancel}
+                          />
+                        </div>
                       )}
                     </div>
                   </div>
@@ -551,12 +572,18 @@ const Navbar = () => {
               )}
 
               {/* Bottom Actions */}
-              <div className={`flex items-center justify-center space-x-4 pt-6 pb-8 border-t mb-40 ${
-                themeMode === "dark" ? "border-emerald-600" : "border-emerald-300"
-              }`}>
-                <div className={`rounded-full p-1 ${
-                  themeMode === "dark" ? "bg-emerald-800" : "bg-white shadow-md"
-                }`}>
+              <div
+                className={`flex items-center justify-center space-x-4 pt-6 pb-8 border-t mb-40 ${
+                  themeMode === "dark"
+                    ? "border-[#2d5768]"
+                    : "border-emerald-300"
+                }`}
+              >
+                <div
+                  className={`rounded-full p-1 ${
+                    themeMode === "dark" ? "bg-[#1e3946]" : "bg-white shadow-md"
+                  }`}
+                >
                   <ThemeBtn />
                 </div>
               </div>
@@ -564,7 +591,6 @@ const Navbar = () => {
           </div>
         </div>
       )}
-      
     </div>
   );
 };
