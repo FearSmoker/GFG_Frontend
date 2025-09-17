@@ -330,7 +330,7 @@ const Navbar = () => {
 
       {/* Mobile Menu - Improved Layout */}
       {isOpen && (
-        <div className="md:hidden fixed inset-0 top-0 z-100">
+        <div className="md:hidden fixed inset-0 top-0 z-100 ">
           {/* Background with theme colors */}
           <div className={`absolute inset-0 ${
             themeMode === "dark" 
@@ -508,50 +508,50 @@ const Navbar = () => {
 
                   {/* Mobile Logout Button - Fixed with Modal Overlay */}
                   <div className="flex justify-center">
-  <div className="logout-card-container">
-    <button
-      onClick={() => setShowLogoutCard(true)}
-      className="relative flex items-center justify-center p-2 rounded-lg border transition-all duration-300 bg-transparent border-transparent hover:border-[#004C7C] hover:bg-[rgba(0,43,70,0.32)]"
-      aria-label="Logout"
-    >
-      <img
-        src={logoutIcon}
-        alt="Logout"
-        className={`h-5 w-5 filter transition-all duration-300 ${
-          themeMode === "dark"
-            ? "brightness-0 invert hover:brightness-0 hover:sepia hover:saturate-200 hover:hue-rotate-90"
-            : "hover:brightness-0 hover:sepia hover:saturate-200 hover:hue-rotate-90"
-        }`}
-        style={
-          themeMode === "light"
-            ? {
-                filter:
-                  "brightness(0) saturate(100%) invert(16%) sepia(28%) saturate(2049%) hue-rotate(185deg) brightness(91%) contrast(101%)",
-              }
-            : {}
-        }
-      />
-    </button>
-  </div>
+                    <div className="relative logout-card-container">
+                      <button
+                        onClick={() => setShowLogoutCard(true)}
+                        className="relative flex items-center justify-center p-2 rounded-lg border transition-all duration-300 bg-transparent border-transparent hover:border-[#004C7C] hover:bg-[rgba(0,43,70,0.32)]"
+                        aria-label="Logout"
+                      >
+                        <img
+                          src={logoutIcon}
+                          alt="Logout"
+                          className={`h-5 w-5 filter transition-all duration-300 ${
+                            themeMode === "dark"
+                              ? "brightness-0 invert hover:brightness-0 hover:sepia hover:saturate-200 hover:hue-rotate-90"
+                              : "hover:brightness-0 hover:sepia hover:saturate-200 hover:hue-rotate-90"
+                          }`}
+                          style={
+                            themeMode === "light"
+                              ? {
+                                  filter:
+                                    "brightness(0) saturate(100%) invert(16%) sepia(28%) saturate(2049%) hue-rotate(185deg) brightness(91%) contrast(101%)",
+                                }
+                              : {}
+                          }
+                        />
+                      </button>
 
-  {/* Glassy Fullscreen Overlay + Centered LogoutCard */}
-  {showLogoutCard && (
-    <div className="fixed inset-0 z-50 bg-[rgba(0,0,0,0.35)] backdrop-blur-md">
-      <div className="absolute top-1/2  right-1/14 ">
-        <LogoutCard
-          onConfirm={handleLogoutConfirm}
-          onCancel={handleLogoutCancel}
-        />
-      </div>
-    </div>
-  )}
-</div>
-
+                      {/* Mobile Logout Card - Positioned below the button and centered */}
+                      {showLogoutCard && (
+                        
+                          <div className="scale-75 z-50 transform translate-x-26 translate-y-2 ">
+                            
+                            <LogoutCard
+                              onConfirm={handleLogoutConfirm}
+                              onCancel={handleLogoutCancel}
+                            />
+                          </div>
+                        
+                      )}
+                    </div>
+                  </div>
                 </div>
               )}
 
               {/* Bottom Actions */}
-              <div className={`flex items-center justify-center space-x-4 pt-6 pb-8 border-t ${
+              <div className={`flex items-center justify-center space-x-4 pt-6 pb-8 border-t mb-40 ${
                 themeMode === "dark" ? "border-emerald-600" : "border-emerald-300"
               }`}>
                 <div className={`rounded-full p-1 ${
