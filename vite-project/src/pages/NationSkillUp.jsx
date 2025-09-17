@@ -69,11 +69,11 @@ export default function NationSkillUpPage() {
             transition={{ delay: 0.8, duration: 1 }}
             className={`${
               isLightTheme ? "text-gray-700" : "text-white"
-            } relative z-10 text-base sm:text-lg md:text-xl max-w-4xl px-2 flex flex-col items-center`}
+            } relative z-10 text-lg md:text-xl max-w-4xl px-2 flex flex-col items-center`}
           >
             <div className="scale-120 mb-10">
-              <p className="text-lg sm:text-3xl font-semibold ">A Mission To <span className="text-emerald-600">Level Up</span> The <span className="text-emerald-600">Nation!</span></p>
-              <p className=" mt-3">Grab FREE courses across top domains and boost your skills.</p>
+              <p className="text-md px-2 sm:text-3xl font-semibold ">A Mission To <span className="text-emerald-600">Level Up</span> The <span className="text-emerald-600">Nation!</span></p>
+              <p className="text-xs px-2 mt-3">Grab FREE courses across top domains and boost your skills.</p>
             </div>
             
             <motion.button

@@ -7,7 +7,7 @@ const EventTabs = ({ selectedEventType, onEventTypeChange }) => {
   const { themeMode } = useTheme();
 
   return (
-    <div
+    <div className="gap-1 md:gap-5"
       style={{
         marginTop: "1rem",
         marginBottom: "1rem",
@@ -16,7 +16,7 @@ const EventTabs = ({ selectedEventType, onEventTypeChange }) => {
         marginLeft: "auto",
         marginRight: "auto",
         display: "flex",
-        gap: "1rem",
+        
       }}
     >
       {tabs.map((tab) => {
