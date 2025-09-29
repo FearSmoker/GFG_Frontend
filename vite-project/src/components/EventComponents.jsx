@@ -727,6 +727,7 @@ export const RegisterForm = ({
   const [showToast, setShowToast] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [teamRegistering, setTeamRegistering] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
 
   const selectedTeam = useMemo(() => {
     return userTeams.find((team) => team._id === registrationData.teamId);
@@ -836,6 +837,23 @@ export const RegisterForm = ({
     }
   }, [canRegisterTeam, fetchUserLeaderTeams]);
 
+  const formatDate = (dateString) => {
+    if (!dateString) return "Date not available";
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString("en-US", {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+    } catch (error) {
+      return "Invalid date";
+    }
+  };
+
   const getTeamSizeString = (memberCount) => {
     switch (memberCount) {
       case 1:
@@ -862,6 +880,7 @@ export const RegisterForm = ({
 
   const handleParticipationTypeChange = (type) => {
     setParticipationType(type);
+    setIsEditMode(false); // Reset edit mode when changing participation type
     setRegistrationData((prev) => ({
       ...prev,
       participationType: type,
@@ -871,6 +890,10 @@ export const RegisterForm = ({
 
   const handleTeamSelection = (teamId) => {
     setRegistrationData((prev) => ({ ...prev, teamId }));
+  };
+
+  const handleEditToggle = () => {
+    setIsEditMode(!isEditMode);
   };
 
   const validateSoloForm = () => {
@@ -1011,6 +1034,25 @@ export const RegisterForm = ({
         )}
 
         <div className="bg-gray-800 rounded-2xl p-6 shadow-2xl backdrop-blur-sm border border-gray-700/50">
+          {/* Event Details Section */}
+          <div className="mb-6">
+            <p className="text-gray-300 mb-2">
+              Event Date: {formatDate(event.date || event.eventDate)}
+            </p>
+            <p className="text-gray-300 mb-2">
+              Fee:{" "}
+              {(event.registrationFee || event.fee || 0) > 0
+                ? `₹${event.registrationFee || event.fee}`
+                : "Free"}
+            </p>
+            {event.maxParticipants && (
+              <p className="text-gray-300 mb-4">
+                Spots remaining:{" "}
+                {event.maxParticipants - (event.currentParticipants || 0)}
+              </p>
+            )}
+          </div>
+
           <h3 className="text-xl font-bold text-white mb-6 text-center">
             Event Registration
           </h3>
@@ -1058,8 +1100,64 @@ export const RegisterForm = ({
             </div>
           )}
 
-          {/* Show solo form only after solo is selected OR if mode is solo-only */}
-          {(participationType === "solo" || participationMode === "solo") && (
+          {/* Show solo registration details card first (if solo selected) */}
+          {(participationType === "solo" || participationMode === "solo") && !isEditMode && (
+            <div className="mb-6">
+              <h4 className="text-white font-semibold mb-4 text-center">
+                Registration Details:
+              </h4>
+              <div className="bg-gray-700/60 rounded-xl p-4 space-y-3 text-sm">
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-400">Name:</span>
+                  <span className="text-white font-medium">
+                    {registrationData.fullName || "Not provided"}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-400">Email:</span>
+                  <span className="text-white font-medium">
+                    {registrationData.email || "Not provided"}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-400">Enrollment:</span>
+                  <span className="text-white font-medium">
+                    {registrationData.enrollmentNo || "Not provided"}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-400">Branch:</span>
+                  <span className="text-white font-medium">
+                    {registrationData.branch || "Not provided"}
+                  </span>
+                </div>
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-400">Mobile:</span>
+                  <span className="text-white font-medium">
+                    {registrationData.mobileNo || "Not provided"}
+                  </span>
+                </div>
+              </div>
+              <div className="flex gap-3 mt-4">
+                <button
+                  onClick={handleEditToggle}
+                  className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors duration-200 text-sm"
+                >
+                  Edit Details
+                </button>
+                <button
+                  onClick={handleSoloRegister}
+                  disabled={isLoading}
+                  className="flex-1 bg-green-600 hover:bg-green-700 disabled:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors duration-200 text-sm font-medium"
+                >
+                  {isLoading ? "Registering..." : "Confirm Registration"}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Show solo form only when in edit mode or initially */}
+          {(participationType === "solo" || participationMode === "solo") && isEditMode && (
             <form onSubmit={handleSoloRegister} className="space-y-4">
               <div>
                 <label
@@ -1180,7 +1278,7 @@ export const RegisterForm = ({
               <div className="flex gap-3 pt-4">
                 <button
                   type="button"
-                  onClick={onCancel}
+                  onClick={() => setIsEditMode(false)}
                   className="flex-1 bg-gray-600/80 hover:bg-gray-700 text-white font-medium py-3 rounded-xl transition-colors"
                   disabled={isLoading}
                 >
@@ -1349,11 +1447,25 @@ export const RegisterForm = ({
               )}
             </div>
           )}
+
+          {/* Cancel button for when no participation type is selected */}
+          {participationMode === "both" && !participationType && (
+            <div className="flex justify-center pt-4">
+              <button
+                type="button"
+                onClick={onCancel}
+                className="bg-gray-600/80 hover:bg-gray-700 text-white font-medium py-3 px-6 rounded-xl transition-colors"
+              >
+                Cancel
+              </button>
+            </div>
+          )}
         </div>
       </>
     );
   }
 
+  // Payment and Success steps remain the same...
   if (registrationStep === "payment" && isPaidEvent) {
     return (
       <div className="bg-gray-800 rounded-2xl p-6 shadow-2xl backdrop-blur-sm border border-gray-700/50">

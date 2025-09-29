@@ -20,7 +20,6 @@ const EventDetails = () => {
   const [registering, setRegistering] = useState(false);
   const [showRegisterForm, setShowRegisterForm] = useState(false);
   const [registrationData, setRegistrationData] = useState({});
-  const [isEditMode, setIsEditMode] = useState(false);
   const [isAlreadyRegistered, setIsAlreadyRegistered] = useState(false);
   const [checkingRegistration, setCheckingRegistration] = useState(false);
   const [registrationStatus, setRegistrationStatus] = useState(null);
@@ -219,11 +218,12 @@ const EventDetails = () => {
       return;
     }
 
+    // Directly open the register form
     setShowRegisterForm(true);
     setRegistrationStep("form");
   };
 
-  const handleRegistrationSubmit = async (e) => {
+  const handleRegistrationSubmit = async (e, apiRegistrationData = null) => {
     e.preventDefault();
 
     if (!eventId) {
@@ -231,46 +231,19 @@ const EventDetails = () => {
       return;
     }
 
-    const requiredFields = [
-      "fullName",
-      "email",
-      "enrollmentNo",
-      "branch",
-      "mobileNo",
-    ];
-    const fieldNames = {
-      fullName: "Full Name",
-      email: "Email",
-      enrollmentNo: "Enrollment Number",
-      branch: "Branch",
-      mobileNo: "Mobile Number",
+    // Use provided API data or fall back to solo registration data
+    const dataToSubmit = apiRegistrationData || {
+      participationType: "solo",
+      fullName: registrationData.fullName,
+      email: registrationData.email,
+      enrollmentNo: registrationData.enrollmentNo,
+      branch: registrationData.branch,
+      mobileNo: registrationData.mobileNo,
     };
-
-    const missingFields = requiredFields.filter((field) => {
-      const value = registrationData[field];
-      return !value || value.toString().trim() === "";
-    });
-
-    if (missingFields.length > 0) {
-      const missingFieldNames = missingFields
-        .map((field) => fieldNames[field])
-        .join(", ");
-      toast.error(
-        `Please fill in the following required fields: ${missingFieldNames}`
-      );
-      setIsEditMode(true);
-      return;
-    }
-
-    const mobileRegex = /^[0-9]{10}$/;
-    if (!mobileRegex.test(registrationData.mobileNo)) {
-      toast.error("Please enter a valid 10-digit mobile number");
-      return;
-    }
 
     setRegistering(true);
     try {
-      const result = await registerForEvent(eventId);
+      const result = await registerForEvent(eventId, dataToSubmit);
 
       let extractedRegistrationId = null;
       if (result.registration && result.registration._id) {
@@ -303,8 +276,6 @@ const EventDetails = () => {
         setRegistrationStatus("approved");
         await fetchEventDetails();
       }
-
-      setIsEditMode(false);
     } catch (error) {
       console.error("Registration error:", error);
 
@@ -352,13 +323,8 @@ const EventDetails = () => {
     }
   };
 
-  const handleEditToggle = () => {
-    setIsEditMode(!isEditMode);
-  };
-
   const handleCancelRegistration = () => {
     setShowRegisterForm(false);
-    setIsEditMode(false);
     setRegistrationStep("form");
     setRegistrationId(null);
 
@@ -662,9 +628,9 @@ const EventDetails = () => {
         </div>
       </div>
 
-      {/* Registration Form Modal - Updated with proper centering */}
+      {/* Registration Form Modal */}
       {showRegisterForm && event && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center p-4 z-50">
           <div className="bg-gray-800 rounded-lg p-6 max-w-md w-full max-h-[calc(100vh-4rem)] overflow-y-auto my-8">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-xl font-bold text-white">
@@ -678,84 +644,17 @@ const EventDetails = () => {
               </button>
             </div>
 
-            {/* Only show event details in form step */}
-            {registrationStep === "form" && (
-              <div className="mb-4">
-                <p className="text-gray-300 mb-2">
-                  Event Date: {formatDate(event.date || event.eventDate)}
-                </p>
-                <p className="text-gray-300 mb-2">
-                  Fee:{" "}
-                  {(event.registrationFee || event.fee || 0) > 0
-                    ? `₹${event.registrationFee || event.fee}`
-                    : "Free"}
-                </p>
-                {event.maxParticipants && (
-                  <p className="text-gray-300 mb-4">
-                    Spots remaining:{" "}
-                    {event.maxParticipants - (event.currentParticipants || 0)}
-                  </p>
-                )}
-              </div>
-            )}
-
-            {/* Show registration details or edit form for form step only */}
-            {registrationStep === "form" && !isEditMode ? (
-              <div className="mb-4">
-                <h4 className="text-white font-semibold mb-2">
-                  Registration Details:
-                </h4>
-                <div className="space-y-2 text-gray-300 text-sm">
-                  <p>
-                    <strong>Name:</strong>{" "}
-                    {registrationData.fullName || "Not provided"}
-                  </p>
-                  <p>
-                    <strong>Email:</strong>{" "}
-                    {registrationData.email || "Not provided"}
-                  </p>
-                  <p>
-                    <strong>Enrollment:</strong>{" "}
-                    {registrationData.enrollmentNo || "Not provided"}
-                  </p>
-                  <p>
-                    <strong>Branch:</strong>{" "}
-                    {registrationData.branch || "Not provided"}
-                  </p>
-                  <p>
-                    <strong>Mobile:</strong>{" "}
-                    {registrationData.mobileNo || "Not provided"}
-                  </p>
-                </div>
-                <div className="flex gap-3 mt-4">
-                  <button
-                    onClick={handleEditToggle}
-                    className="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors duration-200"
-                  >
-                    Edit Details
-                  </button>
-                  <button
-                    onClick={handleRegistrationSubmit}
-                    disabled={registering}
-                    className="flex-1 bg-green-600 hover:bg-green-700 disabled:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors duration-200"
-                  >
-                    {registering ? "Registering..." : "Confirm Registration"}
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <RegisterForm
-                registrationData={registrationData}
-                setRegistrationData={setRegistrationData}
-                handleRegisterSubmit={handleRegistrationSubmit}
-                isLoading={registering}
-                onCancel={handleCancelRegistration}
-                event={event}
-                registrationStep={registrationStep}
-                onPaymentCompleted={handlePaymentCompleted}
-                registrationId={registrationId}
-              />
-            )}
+            <RegisterForm
+              registrationData={registrationData}
+              setRegistrationData={setRegistrationData}
+              handleRegisterSubmit={handleRegistrationSubmit}
+              isLoading={registering}
+              onCancel={handleCancelRegistration}
+              event={event}
+              registrationStep={registrationStep}
+              onPaymentCompleted={handlePaymentCompleted}
+              registrationId={registrationId}
+            />
           </div>
         </div>
       )}
