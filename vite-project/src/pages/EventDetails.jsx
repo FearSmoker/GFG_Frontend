@@ -45,9 +45,7 @@ const EventDetails = () => {
 
     setCheckingRegistration(true);
     try {
-      console.log("Checking registration status for eventId:", eventId);
       const response = await getUserRegistrations();
-      console.log("User registrations response:", response);
 
       const userRegistrations =
         response.data?.registrations ||
@@ -55,7 +53,6 @@ const EventDetails = () => {
         response.data ||
         response ||
         [];
-      console.log("User registrations array:", userRegistrations);
 
       if (!Array.isArray(userRegistrations)) {
         console.error("Registrations is not an array:", userRegistrations);
@@ -63,8 +60,6 @@ const EventDetails = () => {
       }
 
       const matchingRegistration = userRegistrations.find((reg) => {
-        console.log("Checking registration:", reg);
-
         let regEventId;
         if (reg.eventId) {
           if (typeof reg.eventId === "object" && reg.eventId._id) {
@@ -84,13 +79,6 @@ const EventDetails = () => {
           }
         }
 
-        console.log(
-          "Comparing regEventId:",
-          regEventId,
-          "with eventId:",
-          eventId
-        );
-
         const isNotCancelled =
           !reg.attendanceStatus || reg.attendanceStatus !== "cancelled";
 
@@ -98,13 +86,6 @@ const EventDetails = () => {
           regEventId &&
           (regEventId.toString() === eventId.toString() ||
             regEventId === eventId);
-
-        console.log(
-          "IDs match:",
-          idsMatch,
-          "Is not cancelled:",
-          isNotCancelled
-        );
 
         return idsMatch && isNotCancelled;
       });
@@ -120,15 +101,6 @@ const EventDetails = () => {
         setIsAlreadyRegistered(false);
         setRegistrationStatus(null);
       }
-
-      console.log(
-        "Final registration status:",
-        matchingRegistration ? "registered" : "not registered"
-      );
-      console.log(
-        "Approval status:",
-        matchingRegistration?.approvalStatus || matchingRegistration?.status
-      );
     } catch (error) {
       console.error("Error checking registration status:", error);
     } finally {
@@ -299,7 +271,6 @@ const EventDetails = () => {
     setRegistering(true);
     try {
       const result = await registerForEvent(eventId);
-      console.log("Registration result:", result);
 
       let extractedRegistrationId = null;
       if (result.registration && result.registration._id) {
@@ -428,7 +399,7 @@ const EventDetails = () => {
     if (event.registrationDeadline) {
       const currentDate = new Date();
       const deadlineDate = new Date(event.registrationDeadline);
-      
+
       return currentDate < deadlineDate;
     }
 

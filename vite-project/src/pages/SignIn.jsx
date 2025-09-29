@@ -46,7 +46,6 @@ const SignIn = () => {
       toast.success("Login successful!");
       navigate("/");
     } catch (error) {
-      console.log("Error caught:", error);
       const errorMessage =
         error.response?.data?.message ||
         error.message ||

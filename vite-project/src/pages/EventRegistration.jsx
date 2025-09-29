@@ -7,6 +7,7 @@ import {
 } from "../api/Registration_api";
 import useAuth from "../context/AuthContext";
 import toast from "react-hot-toast";
+import { RegisterForm } from "../components/EventComponents.jsx"; 
 
 const EventRegistration = () => {
   const { user, isAuthenticated, loading: authLoading } = useAuth();
@@ -18,15 +19,9 @@ const EventRegistration = () => {
   const [registering, setRegistering] = useState({});
   const [selectedEvent, setSelectedEvent] = useState(null);
   const [showRegistrationModal, setShowRegistrationModal] = useState(false);
-  const [registrationNotes, setRegistrationNotes] = useState("");
+  const [registrationData, setRegistrationData] = useState({});
   const [userRegistrations, setUserRegistrations] = useState([]);
   const [loadingRegistrations, setLoadingRegistrations] = useState(false);
-
-  useEffect(() => {
-    console.log("isAuthenticated:", isAuthenticated);
-    console.log("user:", user);
-    console.log("token exists:", !!localStorage.getItem("access_token"));
-  }, [authLoading, isAuthenticated, user]);
 
   useEffect(() => {
     if (!authLoading && !isAuthenticated) {
@@ -41,7 +36,6 @@ const EventRegistration = () => {
     setLoadingRegistrations(true);
     try {
       const response = await getUserRegistrations();
-      console.log("User registrations response:", response);
 
       const registrations =
         response.data?.registrations ||
@@ -50,13 +44,6 @@ const EventRegistration = () => {
         response ||
         [];
       setUserRegistrations(Array.isArray(registrations) ? registrations : []);
-
-      if (Array.isArray(registrations)) {
-        const registrationIds = registrations
-          .map((reg) => reg._id)
-          .filter(Boolean);
-        console.log("User registration IDs:", registrationIds);
-      }
     } catch (error) {
       console.error("Error fetching user registrations:", error);
       setUserRegistrations([]);
@@ -69,7 +56,6 @@ const EventRegistration = () => {
     setLoading(true);
     try {
       const response = await fetchEvents();
-      console.log("API Response:", response);
 
       if (Array.isArray(response)) {
         setEvents(response);
@@ -78,7 +64,6 @@ const EventRegistration = () => {
       } else if (response?.events) {
         setEvents(response.events);
       } else {
-        console.log("Unexpected response structure:", response);
         setEvents([]);
       }
     } catch (error) {
@@ -141,13 +126,6 @@ const EventRegistration = () => {
     const isLoggedIn = (user && isAuthenticated) || hasToken;
 
     if (!isLoggedIn) {
-      console.log("Auth check failed - Details:", {
-        user: !!user,
-        isAuthenticated,
-        hasToken: !!hasToken,
-        userAndAuth: !!(user && isAuthenticated),
-        finalCheck: isLoggedIn,
-      });
       toast.error("Please login to register for events");
       navigate("/signin");
       return;
@@ -171,11 +149,21 @@ const EventRegistration = () => {
       return;
     }
 
+    // Initialize registration data based on user info
+    const initialData = {
+      fullName: user?.name || user?.username || "",
+      email: user?.email || "",
+      enrollmentNo: user?.enrollmentNo || "",
+      branch: user?.branch || "",
+      mobileNo: user?.mobileNo || "",
+    };
+
+    setRegistrationData(initialData);
     setSelectedEvent(event);
     setShowRegistrationModal(true);
   };
 
-  const handleRegistration = async () => {
+  const handleRegisterSubmit = async (e, apiRegistrationData) => {
     if (!selectedEvent) return;
 
     const hasToken = localStorage.getItem("access_token");
@@ -189,11 +177,7 @@ const EventRegistration = () => {
     setRegistering((prev) => ({ ...prev, [selectedEvent._id]: true }));
 
     try {
-      console.log("Current user:", user);
-      console.log("Token exists:", !!hasToken);
-
-      const result = await registerForEvent(selectedEvent._id);
-      console.log("Registration result:", result);
+      const result = await registerForEvent(selectedEvent._id, apiRegistrationData);
 
       let registrationId = null;
       if (result.registration && result.registration._id) {
@@ -203,8 +187,6 @@ const EventRegistration = () => {
       } else if (result._id) {
         registrationId = result._id;
       }
-
-      console.log("Registration ID:", registrationId);
 
       const isPaidEvent =
         parseFloat(selectedEvent.registrationFee || selectedEvent.fee || 0) > 0;
@@ -226,14 +208,14 @@ const EventRegistration = () => {
       setTimeout(() => {
         toast.success("Registration confirmation mail sent to your inbox.");
       }, 1500);
-      
+
       setTimeout(() => {
         toast.success("You will be notified of confirmation via email.");
       }, 3000);
 
       setShowRegistrationModal(false);
       setSelectedEvent(null);
-      setRegistrationNotes("");
+      setRegistrationData({});
 
       await fetchAllEvents();
       await fetchUserRegistrations();
@@ -261,6 +243,12 @@ const EventRegistration = () => {
     } finally {
       setRegistering((prev) => ({ ...prev, [selectedEvent._id]: false }));
     }
+  };
+
+  const handleCancel = () => {
+    setShowRegistrationModal(false);
+    setSelectedEvent(null);
+    setRegistrationData({});
   };
 
   const formatDate = (dateString) => {
@@ -601,89 +589,19 @@ const EventRegistration = () => {
         )}
       </div>
 
-      {/* Registration Modal */}
+      {/* Registration Modal using RegisterForm */}
       {showRegistrationModal && selectedEvent && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-gray-800 rounded-lg p-6 max-w-md w-full">
-            <h3 className="text-xl font-bold text-white mb-4">
-              Register for {selectedEvent.title}
-            </h3>
-
-            <div className="mb-4">
-              <p className="text-gray-300 mb-2">
-                Event Date:{" "}
-                {formatDate(selectedEvent.date || selectedEvent.eventDate)}
-              </p>
-              <p className="text-gray-300 mb-2">
-                Payment Amount:{" "}
-                {(selectedEvent.registrationFee || selectedEvent.fee || 0) > 0
-                  ? `₹${selectedEvent.registrationFee || selectedEvent.fee}`
-                  : "Free"}
-              </p>
-              {selectedEvent.maxParticipants && (
-                <p className="text-gray-300 mb-4">
-                  Spots remaining:{" "}
-                  {selectedEvent.maxParticipants -
-                    (selectedEvent.currentParticipants || 0)}
-                </p>
-              )}
-              {/* Show payment form link and admin approval message for paid events */}
-              {parseFloat(
-                selectedEvent.registrationFee || selectedEvent.fee || 0
-              ) > 0 && (
-                <div className="bg-yellow-900 border border-yellow-600 rounded-lg p-3 mb-4">
-                  <p className="text-yellow-300 text-sm mb-2">
-                    <strong>Note:</strong> This is a paid event. After
-                    registration:
-                  </p>
-                  <ul className="text-yellow-300 text-sm list-disc list-inside space-y-1">
-                    <li>You'll receive a registration ID for tracking</li>
-                    <li>
-                      Complete payment using the Google form link provided
-                    </li>
-                    <li>Your registration will be pending admin approval</li>
-                    <li>
-                      Admin will verify your payment and update approval status
-                    </li>
-                  </ul>
-                </div>
-              )}
-            </div>
-
-            <div className="mb-6">
-              <label className="block text-gray-300 text-sm font-medium mb-2">
-                Registration Notes (Optional)
-              </label>
-              <textarea
-                value={registrationNotes}
-                onChange={(e) => setRegistrationNotes(e.target.value)}
-                placeholder="Any special requirements or notes..."
-                className="w-full px-3 py-2 bg-gray-700 text-white rounded-lg border border-gray-600 focus:border-blue-500 focus:outline-none resize-none"
-                rows="3"
-              />
-            </div>
-
-            <div className="flex gap-3">
-              <button
-                onClick={() => {
-                  setShowRegistrationModal(false);
-                  setSelectedEvent(null);
-                  setRegistrationNotes("");
-                }}
-                className="flex-1 bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg transition-colors duration-200"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleRegistration}
-                disabled={registering[selectedEvent._id]}
-                className="flex-1 bg-green-600 hover:bg-green-700 disabled:bg-gray-600 text-white px-4 py-2 rounded-lg transition-colors duration-200"
-              >
-                {registering[selectedEvent._id]
-                  ? "Registering..."
-                  : "Confirm Registration"}
-              </button>
-            </div>
+        <div className="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center p-4 z-50">
+          <div className="max-w-md w-full">
+            <RegisterForm
+              registrationData={registrationData}
+              setRegistrationData={setRegistrationData}
+              handleRegisterSubmit={handleRegisterSubmit}
+              isLoading={registering[selectedEvent._id] || false}
+              onCancel={handleCancel}
+              event={selectedEvent}
+              registrationStep="form"
+            />
           </div>
         </div>
       )}

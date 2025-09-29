@@ -243,6 +243,19 @@ const Navbar = () => {
                         </button>
                         <button
                           onClick={() => {
+                            goTo("/teams");
+                            setIsProfileDropdownOpen(false);
+                          }}
+                          className={`w-full text-left px-4 py-2 ${
+                            themeMode === "dark"
+                              ? "text-white"
+                              : "text-[#002b46]"
+                          } text-[16px] font-light font-[Merriweather Sans] transition-all duration-300 hover:text-[#00FFAF] hover:bg-[rgba(0,43,70,0.5)]`}
+                        >
+                          My Teams
+                        </button>
+                        <button
+                          onClick={() => {
                             goTo("/my-registrations");
                             setIsProfileDropdownOpen(false);
                           }}
@@ -497,6 +510,19 @@ const Navbar = () => {
                       }`}
                     >
                       Dashboard
+                    </button>
+                    <button
+                      onClick={() => {
+                        goTo("/teams");
+                        setIsOpen(false);
+                      }}
+                      className={`text-sm font-medium px-4 py-3 rounded-lg border transition-all duration-300 text-center ${
+                        themeMode === "dark"
+                          ? "bg-[#1e3946] text-[#c3d6d9] border-[#2d5768] hover:bg-[#31756e]"
+                          : "bg-white text-emerald-800 border-emerald-300 hover:bg-emerald-50"
+                      }`}
+                    >
+                      My Teams
                     </button>
                     <button
                       onClick={() => {

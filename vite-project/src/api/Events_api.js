@@ -1,6 +1,6 @@
 const BASE_URL = "https://gfg-backend-rjtn.onrender.com/api/v1/events";
 
-// Helper function to get auth headers with proper token validation
+
 const getAuthHeaders = () => {
   const token = localStorage.getItem('access_token');
   
@@ -17,6 +17,22 @@ const getAuthHeaders = () => {
   };
 };
 
+// Helper function to get auth headers for FormData requests (no Content-Type)
+const getAuthHeadersForFormData = () => {
+  const token = localStorage.getItem('access_token');
+  
+  if (!token) {
+    console.error('No access token found');
+    throw new Error('Authentication required');
+  }
+  
+  const cleanToken = token.replace(/^["']|["']$/g, '').trim();
+  
+  return {
+    'Authorization': `Bearer ${cleanToken}`
+  };
+};
+
 // Get all events
 export async function fetchEvents() {
   try {
@@ -29,33 +45,49 @@ export async function fetchEvents() {
   }
 }
 
-// Add a new event (updated with new fields)
+// Add a new event
 export async function addEvent(eventData) {
   try {
-    const token = localStorage.getItem('access_token');
     
-    if (!token) {
-      throw new Error('Authentication required');
-    }
-    
-    const cleanToken = token.replace(/^["']|["']$/g, '').trim();
+    const headers = getAuthHeadersForFormData();
     
     const res = await fetch(`${BASE_URL}`, {
       method: "POST",
-      headers: {
-        'Authorization': `Bearer ${cleanToken}`
-      },
-      body: eventData,
+      headers,
+      body: eventData, 
     });
     
     if (!res.ok) {
       const errorData = await res.json().catch(() => ({}));
-      throw new Error(errorData.message || "Failed to add event");
+      throw new Error(errorData.error || errorData.message || "Failed to add event");
     }
     
     return await res.json();
   } catch (error) {
     console.error("Add event error:", error);
+    throw error;
+  }
+}
+
+// Update an event 
+export async function updateEvent(id, eventData) {
+  try {
+    const headers = getAuthHeadersForFormData();
+    
+    const res = await fetch(`${BASE_URL}/${id}`, {
+      method: "PUT",
+      headers,
+      body: eventData,
+    });
+    
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      throw new Error(errorData.error || errorData.message || "Failed to update event");
+    }
+    
+    return await res.json();
+  } catch (error) {
+    console.error("Update event error:", error);
     throw error;
   }
 }
@@ -72,7 +104,7 @@ export async function deleteEvent(id) {
     
     if (!res.ok) {
       const errorData = await res.json().catch(() => ({}));
-      throw new Error(errorData.message || "Failed to delete event");
+      throw new Error(errorData.error || errorData.message || "Failed to delete event");
     }
     
     return await res.json();
@@ -93,6 +125,21 @@ export async function fetchEventById(id) {
     return await res.json();
   } catch (error) {
     console.error("Fetch event error:", error);
+    throw error;
+  }
+}
+
+
+export async function fetchEventTeamInfo(id) {
+  try {
+    const res = await fetch(`${BASE_URL}/${id}/team-info`);
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({}));
+      throw new Error(errorData.message || "Failed to fetch event team info");
+    }
+    return await res.json();
+  } catch (error) {
+    console.error("Fetch event team info error:", error);
     throw error;
   }
 }

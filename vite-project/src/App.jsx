@@ -26,6 +26,7 @@ import AdminRegistrationDashboard from "./pages/AdminRegistrationDashboard.jsx";
 import PageNotFound from "./pages/PageNotFound.jsx";
 import ScrollToTop from "./components/ScrollToTop.jsx";
 import NationSkillUpPage from "./pages/NationSkillUp.jsx";
+import Teams from './pages/Team.jsx';
 
 
 
@@ -56,6 +57,7 @@ function App() {
           <Route path="/my-registrations" element={<MyRegistrations />} />
           <Route path="/event-history" element={<EventHistory />} />
           <Route path="/admin/registrations" element={<AdminRegistrationDashboard />} />
+          <Route path="/teams" element={<Teams />} />
           
           <Route path="*" element={<PageNotFound />} />
         </Routes>

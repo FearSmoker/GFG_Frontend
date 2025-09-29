@@ -25,7 +25,6 @@ export default function GetProfile() {
 
   useEffect(() => {
     if (user) {
-      console.log("User object:", user);
       setUserData({
         username: user.username || "",
         fullName: user.fullName || "",

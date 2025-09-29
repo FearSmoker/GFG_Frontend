@@ -1,13 +1,15 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css";
 import Slider from "react-slick";
+import { getUserTeams } from "../api/Team_api";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import "../css/EventComponents.css";
 import "../css/Calender.css";
+import { registerForEvent } from "../api/Registration_api";
 
 export const EventCalendar = ({
   selectedDate,
@@ -326,7 +328,50 @@ export const EventForm = ({
     }));
   };
 
+  const handleParticipationModeChange = (mode) => {
+    setNewEvent((prev) => {
+      let allowedTeamSizes = [];
+
+      if (mode === "solo") {
+        allowedTeamSizes = ["solo"];
+      } else if (mode === "team") {
+        allowedTeamSizes = ["duo", "trio", "quad", "five"];
+      } else if (mode === "both") {
+        allowedTeamSizes = ["solo", "duo", "trio", "quad", "five"];
+      }
+
+      return {
+        ...prev,
+        participationMode: mode,
+        allowedTeamSizes,
+
+        maxTeams: mode === "solo" ? null : prev.maxTeams,
+      };
+    });
+  };
+
+  const handleTeamSizeChange = (size, isChecked) => {
+    setNewEvent((prev) => {
+      const currentSizes = prev.allowedTeamSizes || [];
+      let newSizes;
+
+      if (isChecked) {
+        newSizes = [...currentSizes, size];
+      } else {
+        newSizes = currentSizes.filter((s) => s !== size);
+      }
+
+      return {
+        ...prev,
+        allowedTeamSizes: newSizes,
+      };
+    });
+  };
+
   const isPaidEvent = parseFloat(newEvent.registrationFee) > 0;
+  const participationMode = newEvent.participationMode || "solo";
+  const allowsTeams =
+    participationMode === "team" || participationMode === "both";
 
   const formatDateForInput = (date) => {
     if (!date) return "";
@@ -389,6 +434,92 @@ export const EventForm = ({
             <option value="Seminar">Seminar</option>
           </select>
         </div>
+
+        {/* Participation Mode */}
+        <div>
+          <RequiredLabel isRequired={true}>Participation Mode</RequiredLabel>
+          <select
+            value={participationMode}
+            onChange={(e) => handleParticipationModeChange(e.target.value)}
+            className="w-full p-3 rounded-md bg-gray-700 text-white border border-gray-600 focus:border-green-500 focus:outline-none"
+            required
+          >
+            <option value="solo">Solo Only</option>
+            <option value="team">Team Only</option>
+            <option value="both">Both Solo and Team</option>
+          </select>
+        </div>
+
+        {/* Allowed Team Sizes - Show only when teams are allowed */}
+        {allowsTeams && (
+          <div>
+            <RequiredLabel isRequired={true}>Allowed Team Sizes</RequiredLabel>
+            <div className="bg-gray-700 p-4 rounded-md border border-gray-600">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                {participationMode === "both" && (
+                  <label className="flex items-center space-x-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={newEvent.allowedTeamSizes?.includes("solo")}
+                      onChange={(e) =>
+                        handleTeamSizeChange("solo", e.target.checked)
+                      }
+                      className="form-checkbox text-green-500 bg-gray-600 border-gray-500"
+                    />
+                    <span className="text-white text-sm">Solo (1)</span>
+                  </label>
+                )}
+                <label className="flex items-center space-x-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={newEvent.allowedTeamSizes?.includes("duo")}
+                    onChange={(e) =>
+                      handleTeamSizeChange("duo", e.target.checked)
+                    }
+                    className="form-checkbox text-green-500 bg-gray-600 border-gray-500"
+                  />
+                  <span className="text-white text-sm">Duo (2)</span>
+                </label>
+                <label className="flex items-center space-x-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={newEvent.allowedTeamSizes?.includes("trio")}
+                    onChange={(e) =>
+                      handleTeamSizeChange("trio", e.target.checked)
+                    }
+                    className="form-checkbox text-green-500 bg-gray-600 border-gray-500"
+                  />
+                  <span className="text-white text-sm">Trio (3)</span>
+                </label>
+                <label className="flex items-center space-x-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={newEvent.allowedTeamSizes?.includes("quad")}
+                    onChange={(e) =>
+                      handleTeamSizeChange("quad", e.target.checked)
+                    }
+                    className="form-checkbox text-green-500 bg-gray-600 border-gray-500"
+                  />
+                  <span className="text-white text-sm">Quad (4)</span>
+                </label>
+                <label className="flex items-center space-x-2 cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={newEvent.allowedTeamSizes?.includes("five")}
+                    onChange={(e) =>
+                      handleTeamSizeChange("five", e.target.checked)
+                    }
+                    className="form-checkbox text-green-500 bg-gray-600 border-gray-500"
+                  />
+                  <span className="text-white text-sm">Five (5)</span>
+                </label>
+              </div>
+              <p className="text-gray-400 text-xs mt-2">
+                Select the team sizes allowed for this event
+              </p>
+            </div>
+          </div>
+        )}
 
         {/* Date */}
         <div>
@@ -472,9 +603,11 @@ export const EventForm = ({
           </div>
         )}
 
-        {/* Max Participants */}
+        {/* Max Participants (for solo registrations) */}
         <div>
-          <RequiredLabel isRequired={false}>Maximum Participants</RequiredLabel>
+          <RequiredLabel isRequired={false}>
+            Maximum Solo Participants
+          </RequiredLabel>
           <input
             type="number"
             min="1"
@@ -488,7 +621,33 @@ export const EventForm = ({
             className="w-full p-3 rounded-md bg-gray-700 text-white border border-gray-600 focus:border-green-500 focus:outline-none"
             placeholder="Leave empty for unlimited"
           />
+          <p className="text-sm text-gray-400 mt-1">
+            Maximum number of individual participants (for solo registrations)
+          </p>
         </div>
+
+        {/* Max Teams - Show only when teams are allowed */}
+        {allowsTeams && (
+          <div>
+            <RequiredLabel isRequired={false}>Maximum Teams</RequiredLabel>
+            <input
+              type="number"
+              min="1"
+              value={newEvent.maxTeams || ""}
+              onChange={(e) =>
+                handleInputChange(
+                  "maxTeams",
+                  e.target.value ? parseInt(e.target.value) : null
+                )
+              }
+              className="w-full p-3 rounded-md bg-gray-700 text-white border border-gray-600 focus:border-green-500 focus:outline-none"
+              placeholder="Leave empty for unlimited"
+            />
+            <p className="text-sm text-gray-400 mt-1">
+              Maximum number of teams allowed to register
+            </p>
+          </div>
+        )}
 
         {/* Registration Deadline */}
         <div>
@@ -562,6 +721,17 @@ export const RegisterForm = ({
   registrationStep = "form",
   onPaymentCompleted,
 }) => {
+  const [userTeams, setUserTeams] = useState([]);
+  const [loadingTeams, setLoadingTeams] = useState(false);
+  const [participationType, setParticipationType] = useState("");
+  const [showToast, setShowToast] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [teamRegistering, setTeamRegistering] = useState(false);
+
+  const selectedTeam = useMemo(() => {
+    return userTeams.find((team) => team._id === registrationData.teamId);
+  }, [userTeams, registrationData.teamId]);
+
   const branches = [
     "B.Tech Civil Engineering",
     "B.Tech Mechanical Engineering",
@@ -587,201 +757,610 @@ export const RegisterForm = ({
 
   const isPaidEvent = event && parseFloat(event.registrationFee) > 0;
 
+  const participationMode = event?.participationMode || "both";
+  const allowedTeamSizes = useMemo(() => {
+    if (!event?.allowedTeamSizes || event.allowedTeamSizes.length === 0) {
+      return ["solo", "duo", "trio", "quad"];
+    }
+    return event.allowedTeamSizes;
+  }, [event?.allowedTeamSizes]);
+
+  const canRegisterSolo = allowedTeamSizes.includes("solo");
+  const canRegisterTeam =
+    participationMode === "team" || participationMode === "both";
+
+  const showToastNotification = (message, type = "error") => {
+    setToastMessage(message);
+    setShowToast(true);
+    setTimeout(() => {
+      setShowToast(false);
+      setToastMessage("");
+    }, 3000);
+  };
+
+  const fetchUserLeaderTeams = useCallback(async () => {
+    try {
+      setLoadingTeams(true);
+
+      const response = await getUserTeams({
+        status: "verified",
+        role: "leader",
+        limit: 100,
+      });
+
+      if (response?.success && response?.data?.teams) {
+        setUserTeams(response.data.teams);
+      } else {
+        setUserTeams([]);
+      }
+    } catch (error) {
+      console.error("Error fetching leader teams:", error);
+
+      try {
+        const fallbackResponse = await getUserTeams({
+          status: "verified",
+          limit: 100,
+        });
+
+        if (fallbackResponse?.success && fallbackResponse?.data?.teams) {
+          const leaderTeams = fallbackResponse.data.teams.filter((team) => {
+            return team.userRole === "leader";
+          });
+
+          setUserTeams(leaderTeams);
+        } else {
+          setUserTeams([]);
+        }
+      } catch (fallbackError) {
+        console.error("Fallback approach failed:", fallbackError);
+        setUserTeams([]);
+      }
+    } finally {
+      setLoadingTeams(false);
+    }
+  }, []);
+
+  // Initialize participation type based on event mode
+  useEffect(() => {
+    if (participationMode === "solo") {
+      setParticipationType("solo");
+    } else if (participationMode === "team") {
+      setParticipationType("team");
+    }
+    // For "both" mode, don't set initially - let user choose
+  }, [participationMode]);
+
+  useEffect(() => {
+    if (canRegisterTeam) {
+      fetchUserLeaderTeams();
+    }
+  }, [canRegisterTeam, fetchUserLeaderTeams]);
+
+  const getTeamSizeString = (memberCount) => {
+    switch (memberCount) {
+      case 1:
+        return "solo";
+      case 2:
+        return "duo";
+      case 3:
+        return "trio";
+      case 4:
+        return "quad";
+      case 5:
+        return "five";
+      default:
+        return "unknown";
+    }
+  };
+
+  const isTeamEligible = (team) => {
+    const teamMemberCount =
+      team.currentMemberCount ?? team.members?.length ?? 1;
+    const teamSizeString = getTeamSizeString(teamMemberCount);
+    return allowedTeamSizes.includes(teamSizeString);
+  };
+
+  const handleParticipationTypeChange = (type) => {
+    setParticipationType(type);
+    setRegistrationData((prev) => ({
+      ...prev,
+      participationType: type,
+      teamId: type === "solo" ? null : prev.teamId,
+    }));
+  };
+
+  const handleTeamSelection = (teamId) => {
+    setRegistrationData((prev) => ({ ...prev, teamId }));
+  };
+
+  const validateSoloForm = () => {
+    const { fullName, email, enrollmentNo, branch, mobileNo } =
+      registrationData;
+
+    if (participationType !== "solo" && participationMode !== "solo") {
+      return true;
+    }
+
+    if (!fullName?.trim()) {
+      showToastNotification("Please enter your full name.");
+      return false;
+    }
+
+    if (!email?.trim()) {
+      showToastNotification("Please enter your email address.");
+      return false;
+    }
+
+    if (!enrollmentNo?.trim()) {
+      showToastNotification("Please enter your enrollment number.");
+      return false;
+    }
+
+    if (!branch?.trim()) {
+      showToastNotification("Please select your branch.");
+      return false;
+    }
+
+    if (!mobileNo?.trim()) {
+      showToastNotification("Please enter your mobile number.");
+      return false;
+    }
+
+    if (!/^[0-9]{10}$/.test(mobileNo.trim())) {
+      showToastNotification("Please enter a valid 10-digit mobile number.");
+      return false;
+    }
+
+    return true;
+  };
+
+  const handleSoloRegister = (e) => {
+    e.preventDefault();
+
+    if (!validateSoloForm()) {
+      return;
+    }
+
+    const apiRegistrationData = {
+      participationType: "solo",
+      ...registrationData,
+    };
+
+    handleRegisterSubmit(e, apiRegistrationData);
+  };
+
+  const handleTeamRegister = async (e) => {
+    e.preventDefault();
+
+    if (!registrationData.teamId) {
+      showToastNotification("Please select a team first.");
+      return;
+    }
+
+    if (!selectedTeam) {
+      showToastNotification("Selected team data not found. Please try again.");
+      return;
+    }
+
+    if (
+      !selectedTeam.members ||
+      selectedTeam.members.length !== selectedTeam.currentMemberCount
+    ) {
+      showToastNotification(
+        "Team member data is incomplete. Please try again."
+      );
+      return;
+    }
+
+    const apiRegistrationData = {
+      participationType: "team",
+      teamId: registrationData.teamId,
+    };
+
+    setTeamRegistering(true);
+    showToastNotification("Registering team...", "info");
+
+    try {
+      const response = await registerForEvent(event._id, apiRegistrationData);
+
+      if (response.success) {
+        setRegistrationData((prev) => ({
+          ...prev,
+          ...apiRegistrationData,
+        }));
+
+        showToastNotification(
+          `Registration successful! Email sent to all ${selectedTeam.currentMemberCount} team members.`,
+          "success"
+        );
+
+        if (isPaidEvent) {
+          setTimeout(() => {
+            onPaymentCompleted && onPaymentCompleted(response);
+          }, 1500);
+        } else {
+          setTimeout(() => {
+            onCancel();
+          }, 2000);
+        }
+      }
+    } catch (error) {
+      console.error("Team registration failed:", error);
+      showToastNotification(
+        error.message || "Team registration failed. Please try again."
+      );
+    } finally {
+      setTeamRegistering(false);
+    }
+  };
+
   if (registrationStep === "form") {
     return (
-      <div className="bg-gray-800 rounded-2xl p-6 shadow-2xl backdrop-blur-sm border border-gray-700/50">
-        <h3 className="text-xl font-bold text-white mb-6 text-center bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text">
-          Event Registration
-        </h3>
-
-        <form onSubmit={handleRegisterSubmit} className="space-y-4">
-          {/* Full Name */}
-          <div>
-            <label
-              htmlFor="fullName"
-              className="block text-gray-300 text-xs font-medium mb-2"
-            >
-              Full Name *
-            </label>
-            <input
-              type="text"
-              id="fullName"
-              required
-              placeholder="Enter your full name"
-              value={registrationData.fullName || ""}
-              onChange={(e) =>
-                setRegistrationData((prev) => ({
-                  ...prev,
-                  fullName: e.target.value,
-                }))
-              }
-              className="w-full p-3 text-sm rounded-xl bg-gray-700/70 text-white border border-gray-600/50 focus:border-green-400 focus:ring-2 focus:ring-green-400/20 focus:outline-none transition-all duration-300 backdrop-blur-sm"
-              disabled={isLoading}
-            />
+      <>
+        {showToast && (
+          <div
+            className={`fixed top-4 right-4 z-50 text-white px-4 py-2 rounded-lg shadow-lg ${
+              toastMessage.includes("successful") ||
+              toastMessage.includes("Registering")
+                ? "bg-green-600"
+                : "bg-red-600"
+            }`}
+          >
+            {toastMessage}
           </div>
+        )}
 
-          {/* Email */}
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-gray-300 text-xs font-medium mb-2"
-            >
-              Email Address *
-            </label>
-            <input
-              type="email"
-              id="email"
-              required
-              placeholder="Enter your email address"
-              value={registrationData.email || ""}
-              onChange={(e) =>
-                setRegistrationData((prev) => ({
-                  ...prev,
-                  email: e.target.value,
-                }))
-              }
-              className="w-full p-3 text-sm rounded-xl bg-gray-700/70 text-white border border-gray-600/50 focus:border-green-400 focus:ring-2 focus:ring-green-400/20 focus:outline-none transition-all duration-300 backdrop-blur-sm"
-              disabled={isLoading}
-            />
-          </div>
+        <div className="bg-gray-800 rounded-2xl p-6 shadow-2xl backdrop-blur-sm border border-gray-700/50">
+          <h3 className="text-xl font-bold text-white mb-6 text-center">
+            Event Registration
+          </h3>
 
-          {/* Enrollment Number */}
-          <div>
-            <label
-              htmlFor="enrollmentNo"
-              className="block text-gray-300 text-xs font-medium mb-2"
-            >
-              Enrollment Number *
-            </label>
-            <input
-              type="text"
-              id="enrollmentNo"
-              required
-              placeholder="Enter your enrollment number"
-              value={registrationData.enrollmentNo || ""}
-              onChange={(e) =>
-                setRegistrationData((prev) => ({
-                  ...prev,
-                  enrollmentNo: e.target.value,
-                }))
-              }
-              className="w-full p-3 text-sm rounded-xl bg-gray-700/70 text-white border border-gray-600/50 focus:border-green-400 focus:ring-2 focus:ring-green-400/20 focus:outline-none transition-all duration-300 backdrop-blur-sm"
-              disabled={isLoading}
-            />
-          </div>
-
-          {/* Branch */}
-          <div>
-            <label
-              htmlFor="branch"
-              className="block text-gray-300 text-xs font-medium mb-2"
-            >
-              Branch *
-            </label>
-            <select
-              id="branch"
-              required
-              value={registrationData.branch || ""}
-              onChange={(e) =>
-                setRegistrationData((prev) => ({
-                  ...prev,
-                  branch: e.target.value,
-                }))
-              }
-              className="w-full p-3 text-sm rounded-xl bg-gray-700/70 text-white border border-gray-600/50 focus:border-green-400 focus:ring-2 focus:ring-green-400/20 focus:outline-none transition-all duration-300 backdrop-blur-sm"
-              disabled={isLoading}
-            >
-              <option value="">Select your branch</option>
-              {branches.map((branch) => (
-                <option
-                  key={branch}
-                  value={branch}
-                  className="bg-gray-700 text-white"
-                >
-                  {branch}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Mobile Number */}
-          <div>
-            <label
-              htmlFor="mobileNo"
-              className="block text-gray-300 text-xs font-medium mb-2"
-            >
-              Mobile Number *
-            </label>
-            <input
-              type="tel"
-              id="mobileNo"
-              required
-              placeholder="Enter your mobile number"
-              value={registrationData.mobileNo || ""}
-              onChange={(e) =>
-                setRegistrationData((prev) => ({
-                  ...prev,
-                  mobileNo: e.target.value,
-                }))
-              }
-              pattern="[0-9]{10}"
-              title="Please enter a valid 10-digit mobile number"
-              className="w-full p-3 text-sm rounded-xl bg-gray-700/70 text-white border border-gray-600/50 focus:border-green-400 focus:ring-2 focus:ring-green-400/20 focus:outline-none transition-all duration-300 backdrop-blur-sm"
-              disabled={isLoading}
-            />
-            <p className="text-gray-400 text-xs mt-1 ml-1">
-              Please enter a 10-digit mobile number
-            </p>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex gap-3 pt-4">
-            {onCancel && (
-              <button
-                type="button"
-                onClick={onCancel}
-                className="flex-1 bg-gray-600/80 hover:bg-gray-700 text-white font-medium py-3 px-4 text-sm rounded-xl transition-all duration-300 transform hover:scale-105 backdrop-blur-sm border border-gray-500/30"
-                disabled={isLoading}
-              >
-                Cancel
-              </button>
-            )}
-
-            <button
-              type="submit"
-              className={`flex-1 font-bold py-3 px-4 text-sm rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl ${
-                isLoading
-                  ? "bg-gray-500/80 cursor-not-allowed text-gray-300 border border-gray-400/30"
-                  : "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white shadow-green-500/25"
-              }`}
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <div className="flex items-center justify-center">
-                  <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-gray-300 mr-2"></div>
-                  {isPaidEvent ? "Registering..." : "Registering..."}
+          {/* Show participation type selection FIRST for "both" mode */}
+          {participationMode === "both" && !participationType && (
+            <div className="mb-6">
+              <label className="block text-gray-300 text-xs font-medium mb-2">
+                Participation Type *
+              </label>
+              <div className="bg-gray-700/70 p-3 rounded-xl border border-gray-600/50">
+                <div className="flex gap-4">
+                  {canRegisterSolo && (
+                    <label className="flex items-center space-x-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="participationType"
+                        value="solo"
+                        checked={participationType === "solo"}
+                        onChange={(e) =>
+                          handleParticipationTypeChange(e.target.value)
+                        }
+                        className="form-radio text-green-500"
+                      />
+                      <span className="text-white text-sm">Solo</span>
+                    </label>
+                  )}
+                  {canRegisterTeam && (
+                    <label className="flex items-center space-x-2 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="participationType"
+                        value="team"
+                        checked={participationType === "team"}
+                        onChange={(e) =>
+                          handleParticipationTypeChange(e.target.value)
+                        }
+                        className="form-radio text-green-500"
+                      />
+                      <span className="text-white text-sm">Team</span>
+                    </label>
+                  )}
                 </div>
-              ) : isPaidEvent ? (
-                "Continue to Payment"
-              ) : (
-                "Register Now"
+              </div>
+            </div>
+          )}
+
+          {/* Show solo form only after solo is selected OR if mode is solo-only */}
+          {(participationType === "solo" || participationMode === "solo") && (
+            <form onSubmit={handleSoloRegister} className="space-y-4">
+              <div>
+                <label
+                  htmlFor="fullName"
+                  className="block text-gray-300 text-xs font-medium mb-2"
+                >
+                  Full Name *
+                </label>
+                <input
+                  type="text"
+                  id="fullName"
+                  placeholder="Enter your full name"
+                  value={registrationData.fullName || ""}
+                  onChange={(e) =>
+                    setRegistrationData((prev) => ({
+                      ...prev,
+                      fullName: e.target.value,
+                    }))
+                  }
+                  className="w-full p-3 text-sm rounded-xl bg-gray-700/70 text-white border border-gray-600/50 focus:border-green-400 focus:ring-2 focus:ring-green-400/20 focus:outline-none transition-all duration-300"
+                  disabled={isLoading}
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="email"
+                  className="block text-gray-300 text-xs font-medium mb-2"
+                >
+                  Email Address *
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  placeholder="Enter your email"
+                  value={registrationData.email || ""}
+                  onChange={(e) =>
+                    setRegistrationData((prev) => ({
+                      ...prev,
+                      email: e.target.value,
+                    }))
+                  }
+                  className="w-full p-3 text-sm rounded-xl bg-gray-700/70 text-white border border-gray-600/50 focus:border-green-400 focus:ring-2 focus:ring-green-400/20 focus:outline-none transition-all duration-300"
+                  disabled={isLoading}
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="enrollmentNo"
+                  className="block text-gray-300 text-xs font-medium mb-2"
+                >
+                  Enrollment Number *
+                </label>
+                <input
+                  type="text"
+                  id="enrollmentNo"
+                  placeholder="Enter enrollment number"
+                  value={registrationData.enrollmentNo || ""}
+                  onChange={(e) =>
+                    setRegistrationData((prev) => ({
+                      ...prev,
+                      enrollmentNo: e.target.value,
+                    }))
+                  }
+                  className="w-full p-3 text-sm rounded-xl bg-gray-700/70 text-white border border-gray-600/50 focus:border-green-400 focus:ring-2 focus:ring-green-400/20 focus:outline-none transition-all duration-300"
+                  disabled={isLoading}
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="branch"
+                  className="block text-gray-300 text-xs font-medium mb-2"
+                >
+                  Branch *
+                </label>
+                <select
+                  id="branch"
+                  value={registrationData.branch || ""}
+                  onChange={(e) =>
+                    setRegistrationData((prev) => ({
+                      ...prev,
+                      branch: e.target.value,
+                    }))
+                  }
+                  className="w-full p-3 text-sm rounded-xl bg-gray-700/70 text-white border border-gray-600/50 focus:border-green-400 focus:ring-2 focus:ring-green-400/20 focus:outline-none transition-all duration-300"
+                  disabled={isLoading}
+                >
+                  <option value="">Select your branch</option>
+                  {branches.map((branch) => (
+                    <option key={branch} value={branch}>
+                      {branch}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label
+                  htmlFor="mobileNo"
+                  className="block text-gray-300 text-xs font-medium mb-2"
+                >
+                  Mobile Number *
+                </label>
+                <input
+                  type="tel"
+                  id="mobileNo"
+                  placeholder="Enter 10-digit mobile number"
+                  value={registrationData.mobileNo || ""}
+                  onChange={(e) =>
+                    setRegistrationData((prev) => ({
+                      ...prev,
+                      mobileNo: e.target.value,
+                    }))
+                  }
+                  pattern="[0-9]{10}"
+                  className="w-full p-3 text-sm rounded-xl bg-gray-700/70 text-white border border-gray-600/50 focus:border-green-400 focus:ring-2 focus:ring-green-400/20 focus:outline-none transition-all duration-300"
+                  disabled={isLoading}
+                />
+              </div>
+              <div className="flex gap-3 pt-4">
+                <button
+                  type="button"
+                  onClick={onCancel}
+                  className="flex-1 bg-gray-600/80 hover:bg-gray-700 text-white font-medium py-3 rounded-xl transition-colors"
+                  disabled={isLoading}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-xl transition-colors"
+                  disabled={isLoading}
+                >
+                  {isLoading
+                    ? "Processing..."
+                    : isPaidEvent
+                    ? "Continue to Payment"
+                    : "Register Now"}
+                </button>
+              </div>
+            </form>
+          )}
+
+          {/* Show team selection only after team is selected OR if mode is team-only */}
+          {(participationType === "team" || participationMode === "team") && (
+            <div>
+              <label className="block text-gray-300 text-xs font-medium mb-2">
+                Select Your Team *
+              </label>
+              {loadingTeams && (
+                <p className="text-gray-300 text-center py-4">
+                  Loading your teams...
+                </p>
               )}
-            </button>
-          </div>
-        </form>
-      </div>
+
+              {!loadingTeams && userTeams.length > 0 && (
+                <div className="space-y-2 mb-6">
+                  {userTeams.map((team) => {
+                    const isEligible = isTeamEligible(team);
+                    const memberCount =
+                      team.currentMemberCount ?? team.members?.length ?? 1;
+
+                    return (
+                      <div
+                        key={team._id}
+                        onClick={() =>
+                          isEligible && handleTeamSelection(team._id)
+                        }
+                        className={`border rounded-xl p-4 transition-all ${
+                          registrationData.teamId === team._id
+                            ? "border-green-500 bg-green-500/10"
+                            : isEligible
+                            ? "border-gray-600/50 bg-gray-700/70 hover:border-green-400/50 cursor-pointer"
+                            : "border-gray-700 bg-gray-800 opacity-50 cursor-not-allowed"
+                        }`}
+                      >
+                        <h4 className="font-medium text-white mb-2">
+                          {team.teamName}
+                        </h4>
+                        <div className="space-y-1 text-xs">
+                          <p className="text-gray-400">
+                            {memberCount} / {team.teamSize} Members
+                          </p>
+                        </div>
+                        {!isEligible && (
+                          <p className="text-xs text-yellow-400 mt-2">
+                            Team size not eligible for this event.
+                          </p>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+
+              {selectedTeam && (
+                <div className="bg-gray-700/50 p-4 rounded-xl border border-gray-600/50 mt-4">
+                  <h4 className="text-white font-bold mb-3">
+                    Team Registration Summary
+                  </h4>
+                  <div className="mb-4 space-y-2 text-sm">
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Team Name:</span>
+                      <span className="text-white font-semibold">
+                        {selectedTeam.teamName}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Total Members:</span>
+                      <span className="text-white font-semibold">
+                        {selectedTeam.currentMemberCount}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="mb-4">
+                    <h5 className="text-gray-300 font-medium mb-2 text-sm">
+                      Team Members:
+                    </h5>
+                    <div className="space-y-1">
+                      {selectedTeam.members?.map((member, index) => {
+                        const memberData = member._doc;
+                        if (!memberData) return null;
+
+                        return (
+                          <div
+                            key={memberData.userId || index}
+                            className="flex justify-between items-center text-xs"
+                          >
+                            <span className="text-gray-400">
+                              {memberData.fullName}{" "}
+                              {memberData.isLeader && "(Leader)"}
+                            </span>
+                            <div className="flex items-center gap-1">
+                              <span className="px-2 py-1 rounded-full text-green-400 bg-green-400/10">
+                                Ready
+                              </span>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+
+                  <div className="bg-blue-900/20 rounded-lg p-3 mb-4">
+                    <p className="text-xs text-blue-100">
+                      <strong>Important:</strong> All members of "
+                      {selectedTeam.teamName}" will be automatically registered
+                      for this event using their verified profile details. Each
+                      member will receive individual registration confirmations.
+                    </p>
+                  </div>
+
+                  <div className="flex gap-3 pt-2">
+                    <button
+                      type="button"
+                      onClick={onCancel}
+                      className="flex-1 bg-gray-600/80 hover:bg-gray-700 text-white font-medium py-3 rounded-xl transition-colors"
+                      disabled={isLoading}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      onClick={handleTeamRegister}
+                      className="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-xl transition-colors disabled:opacity-50"
+                      disabled={isLoading || teamRegistering}
+                    >
+                      {teamRegistering
+                        ? "Registering Team..."
+                        : isLoading
+                        ? "Processing..."
+                        : isPaidEvent
+                        ? "Continue with Team"
+                        : "Register Entire Team"}
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {!loadingTeams && userTeams.length === 0 && (
+                <div className="text-center text-gray-400 p-4 bg-gray-700/50 rounded-xl">
+                  You are not a leader of any verified teams.{" "}
+                  <Link to="/teams" className="text-green-400 hover:underline">
+                    Create a team
+                  </Link>{" "}
+                  to participate.
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      </>
     );
   }
 
   if (registrationStep === "payment" && isPaidEvent) {
     return (
       <div className="bg-gray-800 rounded-2xl p-6 shadow-2xl backdrop-blur-sm border border-gray-700/50">
-        <h3 className="text-xl font-bold text-white mb-6 text-center bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text">
+        <h3 className="text-xl font-bold text-white mb-6 text-center">
           Complete Payment
         </h3>
-
-        {/* Registration Summary */}
-        <div className="bg-gray-700/60 rounded-xl p-4 mb-6 backdrop-blur-sm border border-gray-600/30">
+        <div className="bg-gray-700/60 rounded-xl p-4 mb-6">
           <h4 className="text-base font-semibold text-green-400 mb-3">
             Registration Details
           </h4>
@@ -793,124 +1372,59 @@ export const RegisterForm = ({
             <div className="flex justify-between items-center py-1">
               <span className="text-gray-300">Participant:</span>
               <span className="text-white font-medium">
-                {registrationData.fullName}
-              </span>
-            </div>
-            <div className="flex justify-between items-center py-1">
-              <span className="text-gray-300">Email:</span>
-              <span className="text-white font-medium">
-                {registrationData.email}
+                {registrationData.participationType === "team"
+                  ? `${selectedTeam?.teamName} (${selectedTeam?.currentMemberCount} members)`
+                  : registrationData.fullName}
               </span>
             </div>
             <div className="border-t border-gray-600/50 pt-3 mt-3">
               <div className="flex justify-between items-center py-1">
                 <span className="text-gray-300 text-sm">Registration Fee:</span>
                 <span className="text-green-400 font-bold text-xl">
-                  ₹{event.registrationFee}
+                  ₹
+                  {registrationData.participationType === "team"
+                    ? event.registrationFee *
+                      (selectedTeam?.currentMemberCount || 1)
+                    : event.registrationFee}
                 </span>
               </div>
-            </div>
-            <div className="flex justify-between items-center py-1">
-              <span className="text-gray-300">Payment Status:</span>
-              <span className="text-yellow-400 font-medium bg-yellow-400/10 px-2 py-1 rounded-full text-xs">
-                Pending
-              </span>
-            </div>
-            <div className="flex justify-between items-center py-1">
-              <span className="text-gray-300">Approval Status:</span>
-              <span className="text-yellow-400 font-medium bg-yellow-400/10 px-2 py-1 rounded-full text-xs">
-                Pending
-              </span>
+              {registrationData.participationType === "team" && (
+                <p className="text-gray-400 text-xs mt-1">
+                  (₹{event.registrationFee} × {selectedTeam?.currentMemberCount}{" "}
+                  members)
+                </p>
+              )}
             </div>
           </div>
         </div>
-
-        {/* Payment Instructions */}
-        <div className="bg-blue-900/30 rounded-xl p-4 mb-6 backdrop-blur-sm border border-blue-500/20">
-          <h4 className="text-base font-semibold text-blue-300 mb-3">
-            Payment Instructions
-          </h4>
-          <div className="text-xs text-blue-100 space-y-2">
-            <div className="flex items-start">
-              <span className="flex-shrink-0 w-5 h-5 bg-blue-500/20 rounded-full flex items-center justify-center text-xs font-bold text-blue-300 mr-2 mt-0.5">
-                1
-              </span>
-              <p>Click on the payment form link below</p>
-            </div>
-            <div className="flex items-start">
-              <span className="flex-shrink-0 w-5 h-5 bg-blue-500/20 rounded-full flex items-center justify-center text-xs font-bold text-blue-300 mr-2 mt-0.5">
-                2
-              </span>
-              <p>Complete the payment using the provided details</p>
-            </div>
-            <div className="flex items-start">
-              <span className="flex-shrink-0 w-5 h-5 bg-blue-500/20 rounded-full flex items-center justify-center text-xs font-bold text-blue-300 mr-2 mt-0.5">
-                3
-              </span>
-              <p>Submit the payment proof in the Google form</p>
-            </div>
-            <div className="flex items-start">
-              <span className="flex-shrink-0 w-5 h-5 bg-blue-500/20 rounded-full flex items-center justify-center text-xs font-bold text-blue-300 mr-2 mt-0.5">
-                4
-              </span>
-              <p>Click "I've Completed Payment" button below to notify admin</p>
-            </div>
-          </div>
+        <div className="bg-blue-900/30 rounded-xl p-4 mb-6">
+          <p className="text-blue-100 text-xs">
+            Please complete payment using the form link below and click "I've
+            Completed Payment" to notify the admin for approval.
+          </p>
         </div>
-
-        {/* Payment Form Link */}
         <div className="mb-6">
           <a
             href={event.paymentFormLink}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-bold py-3 px-4 text-sm rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center group"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-xl flex items-center justify-center transition-colors"
           >
-            <svg
-              className="w-4 h-4 mr-2 group-hover:translate-x-1 transition-transform duration-300"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-              ></path>
-            </svg>
             Open Payment Form
           </a>
         </div>
-
-        {/* Important Note */}
-        <div className="bg-yellow-900/30 rounded-xl p-4 mb-6 backdrop-blur-sm border border-yellow-500/20">
-          <h4 className="text-base font-semibold text-yellow-300 mb-2">
-            Important Note
-          </h4>
-          <p className="text-yellow-100 text-xs leading-relaxed">
-            Your registration has been submitted successfully with a "Pending
-            Approval" status. Please complete the payment through the Google
-            form link above, then click the "I've Completed Payment" button
-            below to notify the admin. They will verify your payment proof and
-            update your approval status accordingly.
-          </p>
-        </div>
-
-        {/* Action Buttons */}
         <div className="flex gap-3">
           <button
             type="button"
             onClick={onCancel}
-            className="flex-1 bg-gray-600/80 hover:bg-gray-700 text-white font-medium py-3 px-4 text-sm rounded-xl transition-all duration-300 transform hover:scale-105 backdrop-blur-sm border border-gray-500/30"
+            className="flex-1 bg-gray-600/80 hover:bg-gray-700 text-white font-medium py-3 rounded-xl transition-colors"
           >
-            Cancel Registration
+            Cancel
           </button>
-
           <button
             type="button"
-            onClick={() => onPaymentCompleted && onPaymentCompleted()}
-            className="flex-1 bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-3 px-4 text-sm rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+            onClick={onPaymentCompleted}
+            className="flex-1 bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl transition-colors"
           >
             I've Completed Payment
           </button>
@@ -924,7 +1438,7 @@ export const RegisterForm = ({
       <div className="bg-gray-800 rounded-2xl p-6 shadow-2xl backdrop-blur-sm border border-gray-700/50 text-center">
         <div className="mb-6">
           <div className="text-green-400 mb-4">
-            <div className="w-16 h-16 mx-auto mb-4 bg-green-400/10 rounded-full flex items-center justify-center backdrop-blur-sm border border-green-400/20">
+            <div className="w-16 h-16 mx-auto mb-4 bg-green-400/10 rounded-full flex items-center justify-center">
               <svg
                 className="w-10 h-10"
                 fill="currentColor"
@@ -940,31 +1454,40 @@ export const RegisterForm = ({
             <h3 className="text-xl font-bold text-white mb-2">
               Registration Successful!
             </h3>
-            <p className="text-gray-300 mb-4 text-sm leading-relaxed">
+            <p className="text-gray-300 text-sm">
               {isPaidEvent
-                ? "Registration submitted successfully. Please complete payment for approval."
-                : "You have been successfully registered for the event."}
+                ? `Your ${
+                    registrationData.participationType === "team"
+                      ? "team"
+                      : "solo"
+                  } registration is submitted and pending payment approval.`
+                : `You have been successfully registered for the event ${
+                    registrationData.participationType === "team"
+                      ? "as a team"
+                      : "individually"
+                  }.`}
             </p>
           </div>
         </div>
-
-        <div className="bg-gray-700/60 rounded-xl p-4 mb-6 backdrop-blur-sm border border-gray-600/30">
+        <div className="bg-gray-700/60 rounded-xl p-4 mb-6">
           <h4 className="text-base font-semibold text-green-400 mb-3">
             Registration Summary
           </h4>
-          <div className="space-y-2 text-xs">
-            <div className="flex justify-between items-center py-1">
-              <span className="text-gray-300">Event:</span>
+          <div className="space-y-2 text-xs text-left">
+            <div className="flex justify-between">
+              <span className="text-gray-400">Event:</span>
               <span className="text-white font-medium">{event?.title}</span>
             </div>
-            <div className="flex justify-between items-center py-1">
-              <span className="text-gray-300">Participant:</span>
+            <div className="flex justify-between">
+              <span className="text-gray-400">Participant:</span>
               <span className="text-white font-medium">
-                {registrationData.fullName}
+                {registrationData.participationType === "team"
+                  ? `${selectedTeam?.teamName} (${selectedTeam?.currentMemberCount} members)`
+                  : registrationData.fullName}
               </span>
             </div>
-            <div className="flex justify-between items-center py-1">
-              <span className="text-gray-300">Registration Status:</span>
+            <div className="flex justify-between">
+              <span className="text-gray-400">Status:</span>
               <span
                 className={`font-bold px-2 py-1 rounded-full text-xs ${
                   isPaidEvent
@@ -975,55 +1498,30 @@ export const RegisterForm = ({
                 {isPaidEvent ? "Pending Approval" : "Approved"}
               </span>
             </div>
-            <div className="flex justify-between items-center py-1">
-              <span className="text-gray-300">Payment Status:</span>
-              <span
-                className={`font-bold px-2 py-1 rounded-full text-xs ${
-                  isPaidEvent
-                    ? "text-yellow-400 bg-yellow-400/10"
-                    : "text-green-400 bg-green-400/10"
-                }`}
-              >
-                {isPaidEvent ? "Pending" : "Not Required"}
-              </span>
-            </div>
-            <div className="flex justify-between items-center py-1">
-              <span className="text-gray-300">Attendance Status:</span>
-              <span className="text-blue-400 font-medium bg-blue-400/10 px-2 py-1 rounded-full text-xs">
-                Registered
-              </span>
-            </div>
-            {isPaidEvent && (
-              <div className="border-t border-gray-600/50 pt-3 mt-3">
-                <div className="flex justify-between items-center py-1">
-                  <span className="text-gray-300 text-sm">
-                    Registration Fee:
-                  </span>
-                  <span className="text-green-400 font-bold text-xl">
-                    ₹{event?.registrationFee}
-                  </span>
-                </div>
-              </div>
-            )}
           </div>
         </div>
-
         {isPaidEvent && (
-          <div className="bg-blue-900/30 rounded-xl p-4 mb-6 backdrop-blur-sm border border-blue-500/20">
-            <p className="text-blue-100 text-xs leading-relaxed">
-              <strong className="text-blue-300">Next Steps:</strong> Please
-              complete the payment through the Google form link if you haven't
-              already done so. The admin will review your payment proof and
-              update your approval status. You will receive a confirmation email
-              once your registration is approved.
+          <div className="bg-blue-900/30 rounded-xl p-4 mb-6">
+            <p className="text-blue-100 text-xs">
+              <strong>Next Steps:</strong> Please complete the payment if you
+              haven't. An admin will review and approve your registration.
             </p>
           </div>
         )}
-
+        {registrationData.participationType === "team" && (
+          <div className="bg-green-900/20 rounded-xl p-4 mb-6">
+            <p className="text-green-100 text-xs">
+              <strong>Team Registration:</strong> All{" "}
+              {selectedTeam?.currentMemberCount} team members have been
+              registered automatically. Each member will receive individual
+              confirmation emails.
+            </p>
+          </div>
+        )}
         <button
           type="button"
           onClick={onCancel}
-          className="w-full bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-bold py-3 px-4 text-sm rounded-xl transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl"
+          className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-xl transition-colors"
         >
           Back to Events
         </button>
@@ -1387,7 +1885,7 @@ export const EventMiniCard = ({
   const handleLearnMoreClick = (eventId) => {
     if (eventId) {
       navigate(`/events/${eventId}`);
-      // Scroll to top after navigation
+
       setTimeout(() => {
         window.scrollTo(0, 0);
       }, 100);

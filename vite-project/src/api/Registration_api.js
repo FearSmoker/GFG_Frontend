@@ -26,16 +26,23 @@ const getRegistrationAuthHeaders = () => {
   };
 };
 
-// Register for an event
-export const registerForEvent = async (eventId) => {
+// Register for an event (updated to support team registration)
+export const registerForEvent = async (eventId, registrationData = {}) => {
   try {
     const headers = getRegistrationAuthHeaders();
+
+    // Default to solo registration if not specified
+    const requestBody = {
+      participationType: "solo",
+      ...registrationData
+    };
 
     const response = await fetch(
       `${REGISTRATION_BASE_URL}/register/${eventId}`,
       {
         method: "POST",
         headers,
+        body: JSON.stringify(requestBody),
       }
     );
 

@@ -25,6 +25,9 @@ const AddEvents = () => {
     registrationDeadline: null,
     eventStatus: "upcoming",
     paymentFormLink: "",
+    participationMode: "solo",
+    allowedTeamSizes: ["solo"],
+    maxTeams: null,
   });
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [isLoading, setIsLoading] = useState(false);
@@ -69,15 +72,35 @@ const AddEvents = () => {
     setIsLoading(true);
     try {
       const formData = new FormData();
+
       formData.append("title", newEvent.title);
       formData.append("description", newEvent.description);
       formData.append("date", selectedDate.toISOString());
       formData.append("image", newEvent.imageFile);
-
       formData.append("eventType", newEvent.eventType);
       formData.append("eventPrize", newEvent.eventPrize);
       formData.append("registrationFee", newEvent.registrationFee.toString());
       formData.append("eventStatus", newEvent.eventStatus);
+
+      formData.append(
+        "participationMode",
+        newEvent.participationMode || "solo"
+      );
+
+      if (newEvent.allowedTeamSizes && newEvent.allowedTeamSizes.length > 0) {
+        formData.append(
+          "allowedTeamSizes",
+          JSON.stringify(newEvent.allowedTeamSizes)
+        );
+      }
+
+      if (
+        newEvent.maxTeams !== null &&
+        newEvent.maxTeams !== "" &&
+        newEvent.maxTeams !== undefined
+      ) {
+        formData.append("maxTeams", newEvent.maxTeams.toString());
+      }
 
       if (
         parseFloat(newEvent.registrationFee) > 0 &&
@@ -114,6 +137,9 @@ const AddEvents = () => {
           registrationDeadline: null,
           eventStatus: "upcoming",
           paymentFormLink: "",
+          participationMode: "solo",
+          allowedTeamSizes: ["solo"],
+          maxTeams: null,
         });
         setSelectedDate(new Date());
         setShowSuccess(true);

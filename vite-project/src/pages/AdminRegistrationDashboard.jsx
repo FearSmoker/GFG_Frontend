@@ -56,7 +56,6 @@ const AdminRegistrationDashboard = () => {
         });
       }
 
-      console.log("Registrations response:", response);
       const registrationsData =
         response.data?.registrations ||
         response.registrations ||
@@ -229,18 +228,24 @@ const AdminRegistrationDashboard = () => {
               className="text-center mb-4"
             >
               <span
-                className={`${isLightTheme ? "text-[#2195DE]" : "text-[#0065A5]"}`}
+                className={`${
+                  isLightTheme ? "text-[#2195DE]" : "text-[#0065A5]"
+                }`}
               >
                 &lt;{" "}
               </span>
               <span
-                className={`${isLightTheme ? "text-[#0A7956]" : "text-[#00FFAF]"}`}
+                className={`${
+                  isLightTheme ? "text-[#0A7956]" : "text-[#00FFAF]"
+                }`}
               >
                 {" "}
                 Registration Management{" "}
               </span>
               <span
-                className={`${isLightTheme ? "text-[#2195DE]" : "text-[#0065A5]"}`}
+                className={`${
+                  isLightTheme ? "text-[#2195DE]" : "text-[#0065A5]"
+                }`}
               >
                 &gt;
               </span>
@@ -360,7 +365,8 @@ const AdminRegistrationDashboard = () => {
                   </thead>
                   <tbody className="divide-y divide-gray-700">
                     {filteredRegistrations.map((registration) => {
-                      const registrationId = registration._id || registration.id;
+                      const registrationId =
+                        registration._id || registration.id;
 
                       const participantName =
                         registration.userDetails?.fullName ||
@@ -452,7 +458,10 @@ const AdminRegistrationDashboard = () => {
                               <div className="flex gap-2">
                                 <button
                                   onClick={() =>
-                                    handleApprovalAction(registration, "approve")
+                                    handleApprovalAction(
+                                      registration,
+                                      "approve"
+                                    )
                                   }
                                   disabled={processing[registrationId]}
                                   className="bg-green-600 hover:bg-green-700 disabled:bg-gray-600 text-white px-3 py-1 rounded text-xs transition-colors duration-200"
@@ -559,8 +568,8 @@ const AdminRegistrationDashboard = () => {
                 {actionType === "approve" ? (
                   <div className="bg-green-900 border border-green-600 rounded-lg p-3 mb-4">
                     <p className="text-green-300 text-sm">
-                      This will approve the registration and the participant will
-                      be notified.
+                      This will approve the registration and the participant
+                      will be notified.
                     </p>
                   </div>
                 ) : (
@@ -569,7 +578,7 @@ const AdminRegistrationDashboard = () => {
                       This will reject the registration and the participant will
                       be notified.
                     </p>
-                    </div>
+                  </div>
                 )}
               </div>
               <div className="flex gap-3">
@@ -596,7 +605,9 @@ const AdminRegistrationDashboard = () => {
                       : "bg-red-600 hover:bg-red-700 disabled:bg-gray-600"
                   } text-white`}
                 >
-                  {processing[selectedRegistration._id || selectedRegistration.id]
+                  {processing[
+                    selectedRegistration._id || selectedRegistration.id
+                  ]
                     ? "Processing..."
                     : `Confirm ${
                         actionType === "approve" ? "Approval" : "Rejection"
