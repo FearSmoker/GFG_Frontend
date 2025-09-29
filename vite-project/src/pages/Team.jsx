@@ -1213,16 +1213,27 @@ const Teams = () => {
                                   <User size={20} />
                                 )}
                               </div>
+
                               <div>
                                 <h5 className="text-white font-semibold">
                                   {member.fullName ||
                                     member.username ||
-                                    "Unknown User"}
-                                  {member.userDetails &&
-                                    ` (${member.userDetails.username})`}
+                                    (member.userDetails &&
+                                      member.userDetails.username) ||
+                                    "Name"}
                                 </h5>
                                 <p className="text-gray-400 text-sm">
-                                  {member.isLeader
+                                  {member.isLeader &&
+                                  selectedTeamDetails.members.filter(
+                                    (m) => m.isLeader
+                                  ).length === 1
+                                    ? "Team Leader"
+                                    : !member.isLeader &&
+                                      selectedTeamDetails.members.filter(
+                                        (m) => m.isLeader
+                                      ).length >= 1
+                                    ? "Team Member"
+                                    : index === 0
                                     ? "Team Leader"
                                     : "Team Member"}
                                 </p>
