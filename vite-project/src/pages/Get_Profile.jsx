@@ -18,7 +18,6 @@ export default function GetProfile() {
   const [avatar, setAvatar] = useState("");
   const [tempAvatar, setTempAvatar] = useState(null);
 
-  const [successMessage, setSuccessMessage] = useState(false);
   const [profileModalVisible, setProfileModalVisible] = useState(false);
   const [avatarModalVisible, setAvatarModalVisible] = useState(false);
   const [imageZoomVisible, setImageZoomVisible] = useState(false);
@@ -67,7 +66,7 @@ export default function GetProfile() {
       if (result?.data?.avatar) {
         setAvatar(result.data.avatar);
         fetchAndUpdateUserData({ avatar: result.data.avatar });
-        showSuccessMessage();
+        toast.success("Avatar updated successfully!");
       }
       setAvatarModalVisible(false);
     } catch (error) {
@@ -83,18 +82,13 @@ export default function GetProfile() {
       const result = await updateAccountDetails({ fullName, email, mobileNo });
       setUserData({ ...tempUserData, ...result });
       fetchAndUpdateUserData(result);
-      showSuccessMessage();
+      toast.success("Profile updated successfully!");
       setProfileModalVisible(false);
     } catch (error) {
       toast.error(
         "Failed to update profile: " + (error.message || "Unknown error")
       );
     }
-  };
-
-  const showSuccessMessage = () => {
-    setSuccessMessage(true);
-    setTimeout(() => setSuccessMessage(false), 3000);
   };
 
   const handleUpdateProfile = () => {
@@ -183,12 +177,6 @@ export default function GetProfile() {
     <>
       <OtherPage3 />
       <div className="otherpage3-content min-h-screen flex items-center justify-center p-4 pt-32 pb-16">
-        {successMessage && (
-          <div className="fixed top-16 left-4 right-4 z-50 bg-green-800 p-4 rounded text-center">
-            Profile updated successfully!
-          </div>
-        )}
-
         <ProfileCard
           userData={userData}
           avatar={avatar}
