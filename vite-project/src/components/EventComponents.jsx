@@ -1993,7 +1993,8 @@ export const Timeline = ({
                     </span>
                   )}
 
-                  {event.registrationFee !== undefined && (
+                  {/* Participation mode display */}
+                  {event.participationMode && (
                     <span className="flex items-center">
                       <svg
                         width="12"
@@ -2002,12 +2003,66 @@ export const Timeline = ({
                         fill="currentColor"
                         className="mr-1"
                       >
-                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                       </svg>
-                      {event.registrationFee === 0
-                        ? "Free"
-                        : `₹${event.registrationFee}`}
+                      {event.participationMode === 'both' ? 'Solo & Team' : event.participationMode.charAt(0).toUpperCase() + event.participationMode.slice(1)}
                     </span>
+                  )}
+
+                  {/* Registration fee display based on participation mode */}
+                  {event.participationMode === 'both' ? (
+                    <>
+                      {(event.registrationFee !== undefined || event.teamRegistrationFee !== undefined) && (
+                        <span className="flex items-center">
+                          <svg
+                            width="12"
+                            height="12"
+                            viewBox="0 0 24 24"
+                            fill="currentColor"
+                            className="mr-1"
+                          >
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                          </svg>
+                          Solo: {event.registrationFee === 0 ? "Free" : `₹${event.registrationFee}`}
+                          {" | "}
+                          Team: {event.teamRegistrationFee === 0 ? "Free" : `₹${event.teamRegistrationFee}`}
+                        </span>
+                      )}
+                    </>
+                  ) : event.participationMode === 'team' ? (
+                    event.teamRegistrationFee !== undefined && (
+                      <span className="flex items-center">
+                        <svg
+                          width="12"
+                          height="12"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                          className="mr-1"
+                        >
+                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                        </svg>
+                        {event.teamRegistrationFee === 0
+                          ? "Free"
+                          : `₹${event.teamRegistrationFee}`}
+                      </span>
+                    )
+                  ) : (
+                    event.registrationFee !== undefined && (
+                      <span className="flex items-center">
+                        <svg
+                          width="12"
+                          height="12"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                          className="mr-1"
+                        >
+                          <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z" />
+                        </svg>
+                        {event.registrationFee === 0
+                          ? "Free"
+                          : `₹${event.registrationFee}`}
+                      </span>
+                    )
                   )}
 
                   {event.maxParticipants && (
@@ -2022,6 +2077,21 @@ export const Timeline = ({
                         <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
                       </svg>
                       {event.currentParticipants || 0}/{event.maxParticipants}
+                    </span>
+                  )}
+
+                  {event.maxTeams && (
+                    <span className="flex items-center">
+                      <svg
+                        width="12"
+                        height="12"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        className="mr-1"
+                      >
+                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                      </svg>
+                      {event.currentTeams || 0}/{event.maxTeams} teams
                     </span>
                   )}
                 </div>
