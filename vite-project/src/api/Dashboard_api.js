@@ -3,6 +3,9 @@ const BASE_URL = "https://gfg-backend-rjtn.onrender.com/api/v1/dashboard";
 // Helper function to get auth headers
 const getAuthHeaders = () => {
   const token = localStorage.getItem('access_token');
+  if (!token) {
+    throw new Error('No authentication token found');
+  }
   return {
     'Authorization': `Bearer ${token}`,
     'Content-Type': 'application/json'
@@ -18,7 +21,11 @@ export async function getDashboardData() {
     });
     
     const data = await res.json();
-    if (!res.ok) throw new Error(data.message || "Failed to fetch dashboard data");
+    
+    if (!res.ok) {
+      throw new Error(data.message || `HTTP error! status: ${res.status}`);
+    }
+    
     return data;
   } catch (error) {
     console.error("Dashboard data error:", error);
@@ -29,7 +36,15 @@ export async function getDashboardData() {
 // Get detailed event history
 export async function getEventHistory(params = {}) {
   try {
-    const queryParams = new URLSearchParams(params).toString();
+    // Filter out undefined/null values from params
+    const filteredParams = Object.entries(params).reduce((acc, [key, value]) => {
+      if (value !== undefined && value !== null && value !== '') {
+        acc[key] = value;
+      }
+      return acc;
+    }, {});
+    
+    const queryParams = new URLSearchParams(filteredParams).toString();
     const url = queryParams ? `${BASE_URL}/history?${queryParams}` : `${BASE_URL}/history`;
     
     const res = await fetch(url, {
@@ -38,7 +53,11 @@ export async function getEventHistory(params = {}) {
     });
     
     const data = await res.json();
-    if (!res.ok) throw new Error(data.message || "Failed to fetch event history");
+    
+    if (!res.ok) {
+      throw new Error(data.message || `HTTP error! status: ${res.status}`);
+    }
+    
     return data;
   } catch (error) {
     console.error("Event history error:", error);
@@ -55,7 +74,11 @@ export async function getSpendingAnalytics() {
     });
     
     const data = await res.json();
-    if (!res.ok) throw new Error(data.message || "Failed to fetch spending analytics");
+    
+    if (!res.ok) {
+      throw new Error(data.message || `HTTP error! status: ${res.status}`);
+    }
+    
     return data;
   } catch (error) {
     console.error("Spending analytics error:", error);

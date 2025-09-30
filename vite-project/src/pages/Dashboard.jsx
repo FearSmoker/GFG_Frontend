@@ -13,23 +13,33 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const isLightTheme = themeMode === "light";
 
   useEffect(() => {
     if (user) {
       fetchDashboardData();
+    } else {
+      setLoading(false);
     }
   }, [user]);
 
   const fetchDashboardData = async () => {
     try {
+      setError(null);
       const response = await getDashboardData();
-      if (response?.data) {
+      
+      // Validate response structure
+      if (response && response.data) {
         setDashboardData(response.data);
+      } else {
+        throw new Error("Invalid response format");
       }
     } catch (error) {
-      toast.error("Failed to fetch dashboard data");
+      console.error("Failed to fetch dashboard data:", error);
+      setError(error.message || "Failed to fetch dashboard data");
+      toast.error(error.message || "Failed to fetch dashboard data");
     } finally {
       setLoading(false);
     }
@@ -80,6 +90,26 @@ const Dashboard = () => {
     }, 100);
   };
 
+  const formatDate = (dateString) => {
+    if (!dateString) return "Date TBD";
+    try {
+      return new Date(dateString).toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+      });
+    } catch (e) {
+      return "Invalid Date";
+    }
+  };
+
+  // Safe data accessors with fallbacks
+  const getUserStats = () => dashboardData?.userStats || {};
+  const getRegistrationStats = () => dashboardData?.registrationStats || [];
+  const getApprovalStats = () => dashboardData?.approvalStats || [];
+  const getRecentRegistrations = () => dashboardData?.recentRegistrations || [];
+  const getUpcomingEvents = () => dashboardData?.upcomingEvents || [];
+
   if (!user) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -98,13 +128,20 @@ const Dashboard = () => {
     );
   }
 
-  const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    });
-  };
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center flex-col">
+        <OtherPage2 />
+        <div className="text-red-400 text-xl mb-4">Error: {error}</div>
+        <button
+          onClick={fetchDashboardData}
+          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200"
+        >
+          Retry
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen py-20 px-4">
@@ -140,7 +177,7 @@ const Dashboard = () => {
               Confirmed Events
             </h3>
             <p className="text-3xl font-bold text-blue-400">
-              {dashboardData?.userStats?.totalEventsRegistered || 0}
+              {getUserStats().totalEventsRegistered || 0}
             </p>
             <p className="text-xs text-gray-400 mt-1">Free + Approved Paid</p>
           </div>
@@ -150,7 +187,7 @@ const Dashboard = () => {
               Pending Events
             </h3>
             <p className="text-3xl font-bold text-yellow-400">
-              {dashboardData?.userStats?.pendingRegistrations || 0}
+              {getUserStats().pendingRegistrations || 0}
             </p>
             <p className="text-xs text-gray-400 mt-1">Awaiting Approval</p>
           </div>
@@ -160,7 +197,7 @@ const Dashboard = () => {
               Total Spent
             </h3>
             <p className="text-3xl font-bold text-green-400">
-              ₹{dashboardData?.userStats?.totalMoneySpent || 0}
+              ₹{getUserStats().totalMoneySpent || 0}
             </p>
             <p className="text-xs text-gray-400 mt-1">Approved Payments Only</p>
           </div>
@@ -170,71 +207,69 @@ const Dashboard = () => {
               All Registrations
             </h3>
             <p className="text-3xl font-bold text-purple-400">
-              {dashboardData?.userStats?.registrationCount || 0}
+              {getUserStats().registrationCount || 0}
             </p>
             <p className="text-xs text-gray-400 mt-1">Total Attempts</p>
           </div>
         </div>
 
         {/* Registration Status */}
-        {dashboardData?.registrationStats &&
-          dashboardData.registrationStats.length > 0 && (
-            <div className="bg-gray-800 p-6 rounded-lg mb-8">
-              <h3 className="text-xl font-semibold text-white mb-4">
-                Registration Status
-              </h3>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                {dashboardData.registrationStats.map((stat, index) => (
-                  <div key={index} className="text-center">
-                    <p className="text-2xl font-bold text-white">
-                      {stat.count}
+        {getRegistrationStats().length > 0 && (
+          <div className="bg-gray-800 p-6 rounded-lg mb-8">
+            <h3 className="text-xl font-semibold text-white mb-4">
+              Registration Status
+            </h3>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {getRegistrationStats().map((stat, index) => (
+                <div key={index} className="text-center">
+                  <p className="text-2xl font-bold text-white">
+                    {stat.count || 0}
+                  </p>
+                  <p className="text-gray-400 capitalize">{stat._id || "Unknown"}</p>
+                  {(stat.totalAmount || 0) > 0 && (
+                    <p className="text-xs text-green-400 mt-1">
+                      ₹{stat.totalAmount}
                     </p>
-                    <p className="text-gray-400 capitalize">{stat._id}</p>
-                    {stat.totalAmount > 0 && (
-                      <p className="text-xs text-green-400 mt-1">
-                        ₹{stat.totalAmount}
-                      </p>
-                    )}
-                  </div>
-                ))}
-              </div>
+                  )}
+                </div>
+              ))}
             </div>
-          )}
+          </div>
+        )}
 
         {/* Approval Status for Paid Events */}
-        {dashboardData?.approvalStats &&
-          dashboardData.approvalStats.length > 0 && (
-            <div className="bg-gray-800 p-6 rounded-lg mb-8">
-              <h3 className="text-xl font-semibold text-white mb-4">
-                Paid Events Approval Status
-              </h3>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {dashboardData.approvalStats.map((stat, index) => (
-                  <div key={index} className="text-center">
-                    <p className="text-2xl font-bold text-white">
-                      {stat.count}
-                    </p>
-                    <p
-                      className={`capitalize ${
-                        stat._id === "approved"
-                          ? "text-green-400"
-                          : stat._id === "pending"
-                          ? "text-yellow-400"
-                          : stat._id === "denied" || stat._id === "rejected"
-                          ? "text-red-400"
-                          : "text-gray-400"
-                      }`}
-                    >
-                      {stat._id || "Pending"}
-                    </p>
-                    <p className="text-xs text-gray-400 mt-1">
-                      ₹{stat.totalAmount || 0}
-                    </p>
-                  </div>
-                ))}
-              </div>
+        {getApprovalStats().length > 0 && (
+          <div className="bg-gray-800 p-6 rounded-lg mb-8">
+            <h3 className="text-xl font-semibold text-white mb-4">
+              Paid Events Approval Status
+            </h3>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {getApprovalStats().map((stat, index) => (
+                <div key={index} className="text-center">
+                  <p className="text-2xl font-bold text-white">
+                    {stat.count || 0}
+                  </p>
+                  <p
+                    className={`capitalize ${
+                      stat._id === "approved"
+                        ? "text-green-400"
+                        : stat._id === "pending"
+                        ? "text-yellow-400"
+                        : stat._id === "denied" || stat._id === "rejected"
+                        ? "text-red-400"
+                        : "text-gray-400"
+                    }`}
+                  >
+                    {stat._id || "Pending"}
+                  </p>
+                  <p className="text-xs text-gray-400 mt-1">
+                    ₹{stat.totalAmount || 0}
+                  </p>
+                </div>
+              ))}
             </div>
-          )}
+          </div>
+        )}
 
         {/* Recent Registrations */}
         <div className="bg-gray-800 p-6 rounded-lg mb-8">
@@ -250,88 +285,95 @@ const Dashboard = () => {
             </button>
           </div>
 
-          {dashboardData?.recentRegistrations?.length > 0 ? (
+          {getRecentRegistrations().length > 0 ? (
             <div className="space-y-3">
-              {dashboardData.recentRegistrations
+              {getRecentRegistrations()
                 .slice(0, 5)
-                .map((registration) => (
-                  <div
-                    key={registration._id}
-                    className="flex items-center justify-between bg-gray-700 p-3 rounded hover:bg-gray-600 transition-colors duration-200"
-                  >
-                    <div className="flex items-center flex-1">
-                      {registration.eventId?.image && (
-                        <img
-                          src={registration.eventId.image}
-                          alt={registration.eventId?.title || "Event"}
-                          className="w-12 h-12 object-cover rounded mr-3"
-                          onError={(e) => {
-                            e.target.style.display = "none";
-                          }}
-                        />
-                      )}
-                      <div className="flex-1">
-                        <p className="text-white font-medium">
-                          {registration.eventId?.title || "Event Title"}
-                        </p>
-                        <p className="text-gray-400 text-sm">
-                          {formatDate(registration.registrationDate)}
-                        </p>
-                        {/* Show status badges */}
-                        <div className="flex flex-wrap gap-1 mt-1">
-                          {/* Show approval status for paid events */}
-                          {registration.eventId?.registrationFee > 0 && (
-                            <span
-                              className={`text-xs px-2 py-1 rounded ${
-                                registration.approvalStatus === "approved"
-                                  ? "bg-green-600 text-white"
-                                  : registration.approvalStatus === "pending" ||
-                                    !registration.approvalStatus
-                                  ? "bg-yellow-600 text-white"
-                                  : registration.approvalStatus === "denied" ||
-                                    registration.approvalStatus === "rejected"
-                                  ? "bg-red-600 text-white"
-                                  : "bg-gray-600 text-white"
-                              }`}
-                            >
-                              {(registration.approvalStatus || "Pending")
-                                .charAt(0)
-                                .toUpperCase() +
-                                (
-                                  registration.approvalStatus || "Pending"
-                                ).slice(1)}{" "}
-                              Approval
-                            </span>
-                          )}
-
-                          {/* Show cancelled status */}
-                          {registration.attendanceStatus === "cancelled" && (
-                            <span className="text-xs px-2 py-1 rounded bg-red-600 text-white">
-                              Cancelled
-                            </span>
-                          )}
-
-                          {/* Show completed status if event date has passed */}
-                          {registration.eventId?.date &&
-                            new Date(registration.eventId.date) < new Date() &&
-                            registration.attendanceStatus !== "cancelled" && (
-                              <span className="text-xs px-2 py-1 rounded bg-gray-600 text-white">
-                                Completed
+                .map((registration) => {
+                  const eventData = registration.eventId || {};
+                  const fee = registration.participationType === "team" 
+                    ? (eventData.teamRegistrationFee || 0)
+                    : (eventData.registrationFee || 0);
+                  
+                  return (
+                    <div
+                      key={registration._id}
+                      className="flex items-center justify-between bg-gray-700 p-3 rounded hover:bg-gray-600 transition-colors duration-200"
+                    >
+                      <div className="flex items-center flex-1">
+                        {eventData.image && (
+                          <img
+                            src={eventData.image}
+                            alt={eventData.title || "Event"}
+                            className="w-12 h-12 object-cover rounded mr-3"
+                            onError={(e) => {
+                              e.target.style.display = "none";
+                            }}
+                          />
+                        )}
+                        <div className="flex-1">
+                          <p className="text-white font-medium">
+                            {eventData.title || "Event Title"}
+                          </p>
+                          <p className="text-gray-400 text-sm">
+                            {formatDate(registration.registrationDate)}
+                          </p>
+                          {/* Show status badges */}
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {/* Show approval status for paid events */}
+                            {fee > 0 && (
+                              <span
+                                className={`text-xs px-2 py-1 rounded ${
+                                  registration.approvalStatus === "approved"
+                                    ? "bg-green-600 text-white"
+                                    : registration.approvalStatus === "pending" ||
+                                      !registration.approvalStatus
+                                    ? "bg-yellow-600 text-white"
+                                    : registration.approvalStatus === "denied" ||
+                                      registration.approvalStatus === "rejected"
+                                    ? "bg-red-600 text-white"
+                                    : "bg-gray-600 text-white"
+                                }`}
+                              >
+                                {(registration.approvalStatus || "Pending")
+                                  .charAt(0)
+                                  .toUpperCase() +
+                                  (
+                                    registration.approvalStatus || "Pending"
+                                  ).slice(1)}{" "}
+                                Approval
                               </span>
                             )}
+
+                            {/* Show cancelled status */}
+                            {registration.attendanceStatus === "cancelled" && (
+                              <span className="text-xs px-2 py-1 rounded bg-red-600 text-white">
+                                Cancelled
+                              </span>
+                            )}
+
+                            {/* Show completed status if event date has passed */}
+                            {eventData.date &&
+                              new Date(eventData.date) < new Date() &&
+                              registration.attendanceStatus !== "cancelled" && (
+                                <span className="text-xs px-2 py-1 rounded bg-gray-600 text-white">
+                                  Completed
+                                </span>
+                              )}
+                          </div>
                         </div>
                       </div>
+                      <div className="text-right">
+                        <span className="text-green-400 font-semibold">
+                          ₹{fee}
+                        </span>
+                        {fee === 0 && (
+                          <p className="text-xs text-gray-400">Free Event</p>
+                        )}
+                      </div>
                     </div>
-                    <div className="text-right">
-                      <span className="text-green-400 font-semibold">
-                        ₹{registration.eventId?.registrationFee || 0}
-                      </span>
-                      {registration.eventId?.registrationFee === 0 && (
-                        <p className="text-xs text-gray-400">Free Event</p>
-                      )}
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
             </div>
           ) : (
             <div className="text-center py-8">
@@ -352,101 +394,106 @@ const Dashboard = () => {
             Upcoming Events
           </h3>
 
-          {dashboardData?.upcomingEvents?.length > 0 ? (
+          {getUpcomingEvents().length > 0 ? (
             <div className="grid md:grid-cols-2 gap-4">
-              {dashboardData.upcomingEvents.map((registration) => (
-                <div
-                  key={registration._id}
-                  className="bg-gray-700 p-4 rounded hover:bg-gray-600 transition-colors duration-200"
-                >
-                  <div className="flex items-start justify-between mb-2">
-                    <h4 className="text-white font-semibold flex-1 mr-2">
-                      {registration.eventId?.title || "Event Title"}
-                    </h4>
-                    <div className="text-right">
-                      <span className="text-green-400 font-semibold">
-                        ₹{registration.eventId?.registrationFee || 0}
-                      </span>
-                      {registration.eventId?.registrationFee === 0 && (
-                        <p className="text-xs text-gray-400">Free</p>
-                      )}
+              {getUpcomingEvents().map((registration) => {
+                const eventData = registration.eventId || {};
+                const fee = registration.participationType === "team"
+                  ? (eventData.teamRegistrationFee || 0)
+                  : (eventData.registrationFee || 0);
+                
+                return (
+                  <div
+                    key={registration._id}
+                    className="bg-gray-700 p-4 rounded hover:bg-gray-600 transition-colors duration-200"
+                  >
+                    <div className="flex items-start justify-between mb-2">
+                      <h4 className="text-white font-semibold flex-1 mr-2">
+                        {eventData.title || "Event Title"}
+                      </h4>
+                      <div className="text-right">
+                        <span className="text-green-400 font-semibold">
+                          ₹{fee}
+                        </span>
+                        {fee === 0 && (
+                          <p className="text-xs text-gray-400">Free</p>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                  <p className="text-gray-400 text-sm mb-3">
-                    {registration.eventId?.date
-                      ? formatDate(registration.eventId.date)
-                      : "Date TBD"}
-                  </p>
-                  <div className="flex justify-between items-center">
-                    <div className="flex flex-wrap gap-1">
-                      <span
-                        className={`px-2 py-1 rounded text-xs ${
-                          registration.attendanceStatus === "registered"
-                            ? "bg-blue-600 text-white"
-                            : registration.attendanceStatus === "attended"
-                            ? "bg-green-600 text-white"
-                            : registration.attendanceStatus === "absent"
-                            ? "bg-red-600 text-white"
-                            : registration.attendanceStatus === "cancelled"
-                            ? "bg-gray-600 text-white"
-                            : "bg-gray-600 text-white"
-                        }`}
-                      >
-                        {registration.attendanceStatus || "Registered"}
-                      </span>
-
-                      {/* Show approval status for paid events */}
-                      {registration.eventId?.registrationFee > 0 && (
+                    <p className="text-gray-400 text-sm mb-3">
+                      {formatDate(eventData.date)}
+                    </p>
+                    <div className="flex justify-between items-center">
+                      <div className="flex flex-wrap gap-1">
                         <span
                           className={`px-2 py-1 rounded text-xs ${
-                            registration.approvalStatus === "approved"
+                            registration.attendanceStatus === "registered"
+                              ? "bg-blue-600 text-white"
+                              : registration.attendanceStatus === "attended"
                               ? "bg-green-600 text-white"
-                              : registration.approvalStatus === "pending" ||
-                                !registration.approvalStatus
-                              ? "bg-yellow-600 text-white"
-                              : registration.approvalStatus === "denied" ||
-                                registration.approvalStatus === "rejected"
+                              : registration.attendanceStatus === "absent"
                               ? "bg-red-600 text-white"
+                              : registration.attendanceStatus === "cancelled"
+                              ? "bg-gray-600 text-white"
                               : "bg-gray-600 text-white"
                           }`}
                         >
-                          {(registration.approvalStatus || "Pending")
-                            .charAt(0)
-                            .toUpperCase() +
-                            (registration.approvalStatus || "Pending").slice(
-                              1
-                            )}{" "}
-                          Approval
+                          {registration.attendanceStatus || "Registered"}
                         </span>
-                      )}
 
-                      {/* Show cancelled status */}
-                      {registration.attendanceStatus === "cancelled" && (
-                        <span className="px-2 py-1 rounded text-xs bg-red-600 text-white">
-                          Cancelled
-                        </span>
-                      )}
-
-                      {/* Show completed status if event date has passed */}
-                      {registration.eventId?.date &&
-                        new Date(registration.eventId.date) < new Date() &&
-                        registration.attendanceStatus !== "cancelled" && (
-                          <span className="px-2 py-1 rounded text-xs bg-gray-600 text-white">
-                            Completed
+                        {/* Show approval status for paid events */}
+                        {fee > 0 && (
+                          <span
+                            className={`px-2 py-1 rounded text-xs ${
+                              registration.approvalStatus === "approved"
+                                ? "bg-green-600 text-white"
+                                : registration.approvalStatus === "pending" ||
+                                  !registration.approvalStatus
+                                ? "bg-yellow-600 text-white"
+                                : registration.approvalStatus === "denied" ||
+                                  registration.approvalStatus === "rejected"
+                                ? "bg-red-600 text-white"
+                                : "bg-gray-600 text-white"
+                            }`}
+                          >
+                            {(registration.approvalStatus || "Pending")
+                              .charAt(0)
+                              .toUpperCase() +
+                              (registration.approvalStatus || "Pending").slice(
+                                1
+                              )}{" "}
+                            Approval
                           </span>
                         )}
+
+                        {/* Show cancelled status */}
+                        {registration.attendanceStatus === "cancelled" && (
+                          <span className="px-2 py-1 rounded text-xs bg-red-600 text-white">
+                            Cancelled
+                          </span>
+                        )}
+
+                        {/* Show completed status if event date has passed */}
+                        {eventData.date &&
+                          new Date(eventData.date) < new Date() &&
+                          registration.attendanceStatus !== "cancelled" && (
+                            <span className="px-2 py-1 rounded text-xs bg-gray-600 text-white">
+                              Completed
+                            </span>
+                          )}
+                      </div>
+                      {eventData._id && (
+                        <Link
+                          to={`/events/${eventData._id}`}
+                          className="text-blue-400 hover:text-blue-300 text-sm transition-colors duration-200"
+                        >
+                          View Details
+                        </Link>
+                      )}
                     </div>
-                    {registration.eventId?._id && (
-                      <Link
-                        to={`/events/${registration.eventId._id}`}
-                        className="text-blue-400 hover:text-blue-300 text-sm transition-colors duration-200"
-                      >
-                        View Details
-                      </Link>
-                    )}
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           ) : (
             <div className="text-center py-8">
