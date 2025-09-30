@@ -147,8 +147,8 @@ const EventHistory = () => {
   const getApplicableFee = (registration) => {
     const event = registration.eventId;
     if (!event) return registration.paymentAmount || 0;
-    
-    if (registration.participationType === 'team') {
+
+    if (registration.participationType === "team") {
       return event.teamRegistrationFee || registration.paymentAmount || 0;
     }
     return event.registrationFee || registration.paymentAmount || 0;
@@ -163,7 +163,9 @@ const EventHistory = () => {
   };
 
   const getSpendingAmount = (registration) => {
-    return isSpendingCountable(registration) ? getApplicableFee(registration) : 0;
+    return isSpendingCountable(registration)
+      ? getApplicableFee(registration)
+      : 0;
   };
 
   const getAvailableYears = () => {
@@ -238,13 +240,25 @@ const EventHistory = () => {
             {/* Header */}
             <div className="mb-8 mt-8">
               <h1 className="text-4xl md:text-5xl font-bold tracking-wide mb-2 text-center">
-                <span className={`${isLightTheme ? "text-[#2195DE]" : "text-[#0065A5]"}`}>
+                <span
+                  className={`${
+                    isLightTheme ? "text-[#2195DE]" : "text-[#0065A5]"
+                  }`}
+                >
                   &lt;
                 </span>
-                <span className={`${isLightTheme ? "text-[#0A7956]" : "text-[#00FFAF]"} mx-2`}>
+                <span
+                  className={`${
+                    isLightTheme ? "text-[#0A7956]" : "text-[#00FFAF]"
+                  } mx-2`}
+                >
                   Event History
                 </span>
-                <span className={`${isLightTheme ? "text-[#2195DE]" : "text-[#0065A5]"}`}>
+                <span
+                  className={`${
+                    isLightTheme ? "text-[#2195DE]" : "text-[#0065A5]"
+                  }`}
+                >
                   &gt;
                 </span>
               </h1>
@@ -297,50 +311,59 @@ const EventHistory = () => {
             )}
 
             {/* Yearly Spending Overview */}
-            {analyticsData?.yearlySpending && analyticsData.yearlySpending.length > 0 && (
-              <div className="bg-gray-800 p-6 rounded-lg mb-8">
-                <h3 className="text-xl font-semibold text-white mb-4">
-                  Yearly Spending Overview
-                </h3>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                  {analyticsData.yearlySpending.map((year) => (
-                    <div key={year._id} className="text-center bg-gray-700 p-4 rounded">
-                      <p className="text-2xl font-bold text-white">
-                        ₹{year.totalSpent}
-                      </p>
-                      <p className="text-gray-400">{year._id}</p>
-                      <p className="text-sm text-gray-500">
-                        {year.eventCount} events
-                      </p>
-                    </div>
-                  ))}
+            {analyticsData?.yearlySpending &&
+              analyticsData.yearlySpending.length > 0 && (
+                <div className="bg-gray-800 p-6 rounded-lg mb-8">
+                  <h3 className="text-xl font-semibold text-white mb-4">
+                    Yearly Spending Overview
+                  </h3>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {analyticsData.yearlySpending.map((year) => (
+                      <div
+                        key={year._id}
+                        className="text-center bg-gray-700 p-4 rounded"
+                      >
+                        <p className="text-2xl font-bold text-white">
+                          ₹{year.totalSpent}
+                        </p>
+                        <p className="text-gray-400">{year._id}</p>
+                        <p className="text-sm text-gray-500">
+                          {year.eventCount} events
+                        </p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
             {/* Participation Type Spending */}
-            {analyticsData?.participationTypeSpending && analyticsData.participationTypeSpending.length > 0 && (
-              <div className="bg-gray-800 p-6 rounded-lg mb-8">
-                <h3 className="text-xl font-semibold text-white mb-4">
-                  Spending by Participation Type
-                </h3>
-                <div className="grid grid-cols-2 gap-4">
-                  {analyticsData.participationTypeSpending.map((stat) => (
-                    <div key={stat._id} className="text-center bg-gray-700 p-4 rounded">
-                      <p className="text-2xl font-bold text-white">
-                        ₹{stat.totalSpent}
-                      </p>
-                      <p className="text-gray-400 capitalize mb-2">
-                        {stat._id === 'solo' ? 'Solo Events' : 'Team Events'}
-                      </p>
-                      <p className="text-sm text-gray-500">
-                        {stat.eventCount} events • Avg: ₹{Math.round(stat.avgSpent || 0)}
-                      </p>
-                    </div>
-                  ))}
+            {analyticsData?.participationTypeSpending &&
+              analyticsData.participationTypeSpending.length > 0 && (
+                <div className="bg-gray-800 p-6 rounded-lg mb-8">
+                  <h3 className="text-xl font-semibold text-white mb-4">
+                    Spending by Participation Type
+                  </h3>
+                  <div className="grid grid-cols-2 gap-4">
+                    {analyticsData.participationTypeSpending.map((stat) => (
+                      <div
+                        key={stat._id}
+                        className="text-center bg-gray-700 p-4 rounded"
+                      >
+                        <p className="text-2xl font-bold text-white">
+                          ₹{stat.totalSpent}
+                        </p>
+                        <p className="text-gray-400 capitalize mb-2">
+                          {stat._id === "solo" ? "Solo Events" : "Team Events"}
+                        </p>
+                        <p className="text-sm text-gray-500">
+                          {stat.eventCount} events • Avg: ₹
+                          {Math.round(stat.avgSpent || 0)}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
             {/* Filters */}
             <div className="bg-gray-800 p-6 rounded-lg mb-8">
@@ -352,7 +375,9 @@ const EventHistory = () => {
                   <label className="block text-gray-400 mb-2">Event Type</label>
                   <select
                     value={filters.eventType}
-                    onChange={(e) => handleFilterChange("eventType", e.target.value)}
+                    onChange={(e) =>
+                      handleFilterChange("eventType", e.target.value)
+                    }
                     className="w-full bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
                   >
                     <option value="">All</option>
@@ -382,7 +407,9 @@ const EventHistory = () => {
                   <label className="block text-gray-400 mb-2">Month</label>
                   <select
                     value={filters.month}
-                    onChange={(e) => handleFilterChange("month", e.target.value)}
+                    onChange={(e) =>
+                      handleFilterChange("month", e.target.value)
+                    }
                     className="w-full bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
                   >
                     <option value="">All Months</option>
@@ -400,7 +427,9 @@ const EventHistory = () => {
                   <label className="block text-gray-400 mb-2">Status</label>
                   <select
                     value={filters.status}
-                    onChange={(e) => handleFilterChange("status", e.target.value)}
+                    onChange={(e) =>
+                      handleFilterChange("status", e.target.value)
+                    }
                     className="w-full bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
                   >
                     <option value="">All Status</option>
@@ -412,10 +441,14 @@ const EventHistory = () => {
                 </div>
 
                 <div>
-                  <label className="block text-gray-400 mb-2">Participation</label>
+                  <label className="block text-gray-400 mb-2">
+                    Participation
+                  </label>
                   <select
                     value={filters.participationType}
-                    onChange={(e) => handleFilterChange("participationType", e.target.value)}
+                    onChange={(e) =>
+                      handleFilterChange("participationType", e.target.value)
+                    }
                     className="w-full bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
                   >
                     <option value="">All Types</option>
@@ -428,7 +461,9 @@ const EventHistory = () => {
                   <label className="block text-gray-400 mb-2">Per Page</label>
                   <select
                     value={filters.limit}
-                    onChange={(e) => handleFilterChange("limit", parseInt(e.target.value))}
+                    onChange={(e) =>
+                      handleFilterChange("limit", parseInt(e.target.value))
+                    }
                     className="w-full bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
                   >
                     <option value={5}>5</option>
@@ -456,18 +491,24 @@ const EventHistory = () => {
               </div>
 
               {loading ? (
-                <div className="p-8 text-center">
-                  <div className="text-white text-xl">
-                    Loading event history...
+                <div className="p-8 flex flex-col items-center justify-center text-center">
+                  <div className="relative w-10 h-10">
+                    <div className="absolute inset-0 rounded-full border-4 border-green-400 border-t-transparent animate-spin"></div>
+                  </div>
+                  <div className="text-white text-xl mt-2">
+                    Loading event history
                   </div>
                 </div>
-              ) : historyData?.eventHistory && historyData.eventHistory.length > 0 ? (
+              ) : historyData?.eventHistory &&
+                historyData.eventHistory.length > 0 ? (
                 <div className="divide-y divide-gray-700">
                   {historyData.eventHistory.map((registration) => {
                     const applicableFee = getApplicableFee(registration);
                     const spendingAmount = getSpendingAmount(registration);
-                    const isPaidEvent = parseFloat(registration.paymentAmount || 0) > 0;
-                    const approvalStatus = registration.approvalStatus || "pending";
+                    const isPaidEvent =
+                      parseFloat(registration.paymentAmount || 0) > 0;
+                    const approvalStatus =
+                      registration.approvalStatus || "pending";
 
                     return (
                       <div
@@ -481,7 +522,9 @@ const EventHistory = () => {
                                 src={registration.eventId.image}
                                 alt={registration.eventId?.title || "Event"}
                                 className="w-16 h-16 object-cover rounded"
-                                onError={(e) => { e.target.style.display = "none"; }}
+                                onError={(e) => {
+                                  e.target.style.display = "none";
+                                }}
                               />
                             )}
                             <div className="flex-1">
@@ -489,12 +532,16 @@ const EventHistory = () => {
                                 {registration.eventId?.title || "Event Title"}
                               </h4>
                               <p className="text-gray-400 text-sm mb-2">
-                                {registration.eventId?.description?.substring(0, 100)}
+                                {registration.eventId?.description?.substring(
+                                  0,
+                                  100
+                                )}
                                 ...
                               </p>
                               <div className="flex flex-wrap gap-4 text-sm text-gray-400">
                                 <span>
-                                  Registered: {formatDate(registration.registrationDate)}
+                                  Registered:{" "}
+                                  {formatDate(registration.registrationDate)}
                                 </span>
                                 <span>
                                   Event Date:{" "}
@@ -502,7 +549,13 @@ const EventHistory = () => {
                                     ? formatDate(registration.eventId.date)
                                     : "TBD"}
                                 </span>
-                                <span className={`${spendingAmount > 0 ? "text-green-400" : "text-gray-400"}`}>
+                                <span
+                                  className={`${
+                                    spendingAmount > 0
+                                      ? "text-green-400"
+                                      : "text-gray-400"
+                                  }`}
+                                >
                                   {isPaidEvent
                                     ? approvalStatus === "approved"
                                       ? `Spent: ₹${applicableFee}`
@@ -517,9 +570,11 @@ const EventHistory = () => {
                               <div className="flex flex-wrap gap-2 mt-2">
                                 {/* Participation Type */}
                                 <span className="px-2 py-1 rounded text-xs font-medium bg-purple-600 text-white">
-                                  {registration.participationType === 'team'
-                                    ? `Team (${registration.teamSize || 'unknown'})`
-                                    : 'Solo'}
+                                  {registration.participationType === "team"
+                                    ? `Team (${
+                                        registration.teamSize || "unknown"
+                                      })`
+                                    : "Solo"}
                                 </span>
 
                                 {/* Approval Status for Paid Events */}
@@ -541,7 +596,8 @@ const EventHistory = () => {
                                 )}
 
                                 {/* Attendance Status */}
-                                {registration.attendanceStatus !== 'registered' && (
+                                {registration.attendanceStatus !==
+                                  "registered" && (
                                   <span
                                     className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(
                                       registration.attendanceStatus
@@ -560,7 +616,9 @@ const EventHistory = () => {
                           <div className="flex items-center gap-3">
                             {registration.attendanceStatus === "registered" && (
                               <button
-                                onClick={() => handleCancelRegistration(registration._id)}
+                                onClick={() =>
+                                  handleCancelRegistration(registration._id)
+                                }
                                 disabled={cancelling === registration._id}
                                 className="bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white px-4 py-2 rounded text-sm font-medium transition-colors duration-200"
                               >
@@ -613,7 +671,10 @@ const EventHistory = () => {
                     { length: Math.min(5, historyData.totalPages) },
                     (_, i) => {
                       const pageNum =
-                        Math.max(1, Math.min(historyData.totalPages - 4, filters.page - 2)) + i;
+                        Math.max(
+                          1,
+                          Math.min(historyData.totalPages - 4, filters.page - 2)
+                        ) + i;
                       return (
                         <button
                           key={pageNum}
@@ -642,28 +703,30 @@ const EventHistory = () => {
             )}
 
             {/* Event Type Spending */}
-            {analyticsData?.eventTypeSpending && analyticsData.eventTypeSpending.length > 0 && (
-              <div className="bg-gray-800 p-6 rounded-lg mt-8">
-                <h3 className="text-xl font-semibold text-white mb-4">
-                  Spending by Event Type
-                </h3>
-                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {analyticsData.eventTypeSpending.map((category, index) => (
-                    <div key={index} className="bg-gray-700 p-4 rounded">
-                      <h4 className="text-white font-semibold mb-2">
-                        {category._id || "Uncategorized"}
-                      </h4>
-                      <p className="text-2xl font-bold text-green-400 mb-1">
-                        ₹{category.totalSpent}
-                      </p>
-                      <p className="text-gray-400 text-sm">
-                        {category.eventCount} events • Avg: ₹{Math.round(category.avgSpent || 0)}
-                      </p>
-                    </div>
-                  ))}
+            {analyticsData?.eventTypeSpending &&
+              analyticsData.eventTypeSpending.length > 0 && (
+                <div className="bg-gray-800 p-6 rounded-lg mt-8">
+                  <h3 className="text-xl font-semibold text-white mb-4">
+                    Spending by Event Type
+                  </h3>
+                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {analyticsData.eventTypeSpending.map((category, index) => (
+                      <div key={index} className="bg-gray-700 p-4 rounded">
+                        <h4 className="text-white font-semibold mb-2">
+                          {category._id || "Uncategorized"}
+                        </h4>
+                        <p className="text-2xl font-bold text-green-400 mb-1">
+                          ₹{category.totalSpent}
+                        </p>
+                        <p className="text-gray-400 text-sm">
+                          {category.eventCount} events • Avg: ₹
+                          {Math.round(category.avgSpent || 0)}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
           </div>
         </div>
       </div>

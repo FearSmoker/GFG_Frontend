@@ -106,7 +106,7 @@ const DeleteEvents = () => {
       return;
     }
 
-    if (deleting) return; 
+    if (deleting) return;
 
     const confirmDelete = window.confirm(
       `Are you sure you want to delete ${selectedIds.length} event(s)? This action cannot be undone.`
@@ -115,8 +115,8 @@ const DeleteEvents = () => {
     if (!confirmDelete) return;
 
     setDeleting(true);
-    
-    const loadingToast = toast.loading("Deleting events...", {
+
+    const loadingToast = toast.loading("Deleting events", {
       duration: Infinity,
     });
 
@@ -170,7 +170,7 @@ const DeleteEvents = () => {
         className="text-white overflow-hidden flex items-center justify-center"
         overlayHeight={800}
       >
-        <div className="text-xl">Loading...</div>
+        <div className="text-xl">Loading</div>
       </BackgroundComponent>
     );
   }
@@ -182,10 +182,13 @@ const DeleteEvents = () => {
   if (loading) {
     return (
       <BackgroundComponent
-        className="text-white overflow-hidden flex items-center justify-center"
+        className="text-white overflow-hidden flex flex-col items-center justify-center"
         overlayHeight={800}
       >
-        <div className="text-xl">Loading events...</div>
+        <div className="relative w-8 h-8">
+          <div className="absolute inset-0 rounded-full border-4 border-green-400 border-t-transparent animate-spin"></div>
+        </div>
+        <div className="text-xl mt-2">Loading</div>
       </BackgroundComponent>
     );
   }
@@ -297,7 +300,11 @@ const DeleteEvents = () => {
                 {currentEvents.map((event) => (
                   <label
                     key={event.id}
-                    className={`flex items-center gap-4 bg-gray-800 bg-opacity-70 p-4 rounded shadow hover:bg-gray-700 hover:bg-opacity-70 transition ${deleting ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
+                    className={`flex items-center gap-4 bg-gray-800 bg-opacity-70 p-4 rounded shadow hover:bg-gray-700 hover:bg-opacity-70 transition ${
+                      deleting
+                        ? "cursor-not-allowed opacity-50"
+                        : "cursor-pointer"
+                    }`}
                   >
                     <input
                       type="checkbox"
@@ -334,7 +341,7 @@ const DeleteEvents = () => {
                         currentPage === index + 1
                           ? "bg-blue-600 text-white"
                           : "bg-gray-700 hover:bg-gray-600 text-gray-300"
-                      } ${deleting ? 'disabled:opacity-50' : ''}`}
+                      } ${deleting ? "disabled:opacity-50" : ""}`}
                     >
                       {index + 1}
                     </button>
@@ -356,7 +363,9 @@ const DeleteEvents = () => {
                   disabled={selectedIds.length === 0 || deleting}
                   className="bg-red-600 hover:bg-red-700 px-6 py-3 rounded-md text-white font-bold disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
                 >
-                  {deleting ? "Deleting..." : `Delete Selected Events (${selectedIds.length})`}
+                  {deleting
+                    ? "Deleting..."
+                    : `Delete Selected Events (${selectedIds.length})`}
                 </button>
               </div>
             </>

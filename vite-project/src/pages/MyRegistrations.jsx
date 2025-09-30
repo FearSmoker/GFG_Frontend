@@ -93,12 +93,12 @@ const MyRegistrations = () => {
 
   // Helper function to get applicable fee based on participation type
   const getApplicableFee = (registration, eventData) => {
-    const participationType = registration.participationType || 'solo';
-    
-    if (participationType === 'team') {
+    const participationType = registration.participationType || "solo";
+
+    if (participationType === "team") {
       return eventData.teamRegistrationFee || registration.paymentAmount || 0;
     }
-    
+
     return eventData.registrationFee || registration.paymentAmount || 0;
   };
 
@@ -179,13 +179,13 @@ const MyRegistrations = () => {
 
   // Helper to get participation type badge
   const getParticipationBadge = (registration) => {
-    const participationType = registration.participationType || 'solo';
+    const participationType = registration.participationType || "solo";
     const teamSize = registration.teamSize;
 
-    if (participationType === 'team') {
+    if (participationType === "team") {
       return (
         <span className="px-2 py-1 rounded text-xs font-medium bg-purple-600 text-white">
-          Team {teamSize ? `(${teamSize})` : ''}
+          Team {teamSize ? `(${teamSize})` : ""}
         </span>
       );
     }
@@ -246,8 +246,13 @@ const MyRegistrations = () => {
         </div>
 
         {loading ? (
-          <div className="text-center text-white text-xl">
-            Loading registrations...
+          <div className="flex flex-col items-center justify-center">
+            <div className="relative w-10 h-10">
+              <div className="absolute inset-0 rounded-full border-4 border-green-400 border-t-transparent animate-spin"></div>
+            </div>
+            <div className="text-center text-white text-xl mt-2">
+              Loading registrations
+            </div>
           </div>
         ) : registrations.length === 0 ? (
           <div className="text-center">
@@ -486,7 +491,7 @@ const MyRegistrations = () => {
                                 <span className="text-green-400 font-semibold text-lg">
                                   ₹{applicableFee}
                                 </span>
-                                {registration.participationType === 'team' && (
+                                {registration.participationType === "team" && (
                                   <div className="text-xs text-purple-400">
                                     (Team Fee)
                                   </div>
@@ -541,20 +546,22 @@ const MyRegistrations = () => {
                         </div>
 
                         {/* Team Details if applicable */}
-                        {registration.participationType === 'team' && registration.teamDetails && (
-                          <div className="bg-gray-700 p-3 rounded-lg mb-4">
-                            <div className="text-sm text-gray-300">
-                              <span className="font-semibold text-purple-400">
-                                Team: {registration.teamDetails.teamName || 'N/A'}
-                              </span>
-                              {registration.teamDetails.teamSize && (
-                                <span className="ml-3">
-                                  Size: {registration.teamDetails.teamSize}
+                        {registration.participationType === "team" &&
+                          registration.teamDetails && (
+                            <div className="bg-gray-700 p-3 rounded-lg mb-4">
+                              <div className="text-sm text-gray-300">
+                                <span className="font-semibold text-purple-400">
+                                  Team:{" "}
+                                  {registration.teamDetails.teamName || "N/A"}
                                 </span>
-                              )}
+                                {registration.teamDetails.teamSize && (
+                                  <span className="ml-3">
+                                    Size: {registration.teamDetails.teamSize}
+                                  </span>
+                                )}
+                              </div>
                             </div>
-                          </div>
-                        )}
+                          )}
 
                         {/* Action Buttons */}
                         <div className="flex gap-4">

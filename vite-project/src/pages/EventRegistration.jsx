@@ -105,7 +105,8 @@ const EventRegistration = () => {
 
       const idsMatch =
         regEventId &&
-        (regEventId.toString() === eventId.toString() || regEventId === eventId);
+        (regEventId.toString() === eventId.toString() ||
+          regEventId === eventId);
 
       const isNotCancelled =
         !reg.attendanceStatus || reg.attendanceStatus !== "cancelled";
@@ -170,7 +171,10 @@ const EventRegistration = () => {
     setRegistering((prev) => ({ ...prev, [selectedEvent._id]: true }));
 
     try {
-      const result = await registerForEvent(selectedEvent._id, apiRegistrationData);
+      const result = await registerForEvent(
+        selectedEvent._id,
+        apiRegistrationData
+      );
 
       let registrationId = null;
       if (result.registration && result.registration._id) {
@@ -182,11 +186,13 @@ const EventRegistration = () => {
       }
 
       // Determine fee based on participation type
-      const participationType = apiRegistrationData?.participationType || 'solo';
-      const applicableFee = participationType === 'team' 
-        ? parseFloat(selectedEvent.teamRegistrationFee || 0)
-        : parseFloat(selectedEvent.registrationFee || 0);
-      
+      const participationType =
+        apiRegistrationData?.participationType || "solo";
+      const applicableFee =
+        participationType === "team"
+          ? parseFloat(selectedEvent.teamRegistrationFee || 0)
+          : parseFloat(selectedEvent.registrationFee || 0);
+
       const isPaidEvent = applicableFee > 0;
 
       if (isPaidEvent) {
@@ -293,7 +299,7 @@ const EventRegistration = () => {
   const getEventPricingBadge = (event) => {
     const soloFee = parseFloat(event.registrationFee || 0);
     const teamFee = parseFloat(event.teamRegistrationFee || 0);
-    const participationMode = event.participationMode || 'solo';
+    const participationMode = event.participationMode || "solo";
 
     // If both are free
     if (soloFee === 0 && teamFee === 0) {
@@ -305,7 +311,7 @@ const EventRegistration = () => {
     }
 
     // If participation mode allows both
-    if (participationMode === 'both') {
+    if (participationMode === "both") {
       return (
         <div className="flex flex-col gap-1">
           {soloFee > 0 && (
@@ -323,7 +329,7 @@ const EventRegistration = () => {
     }
 
     // If only team mode
-    if (participationMode === 'team' && teamFee > 0) {
+    if (participationMode === "team" && teamFee > 0) {
       return (
         <span className="bg-purple-500 text-white px-2 py-1 rounded text-sm font-semibold">
           ₹{teamFee} (Team)
@@ -353,12 +359,13 @@ const EventRegistration = () => {
     if (userRegistration) {
       const approvalStatus = userRegistration.approvalStatus;
       const paymentStatus = userRegistration.paymentStatus;
-      const participationType = userRegistration.participationType || 'solo';
-      
-      const applicableFee = participationType === 'team'
-        ? parseFloat(event.teamRegistrationFee || 0)
-        : parseFloat(event.registrationFee || 0);
-      
+      const participationType = userRegistration.participationType || "solo";
+
+      const applicableFee =
+        participationType === "team"
+          ? parseFloat(event.teamRegistrationFee || 0)
+          : parseFloat(event.registrationFee || 0);
+
       const isPaidEvent = applicableFee > 0;
 
       switch (approvalStatus) {
@@ -499,8 +506,11 @@ const EventRegistration = () => {
         </div>
 
         {loading || loadingRegistrations ? (
-          <div className="text-center text-white text-xl py-12">
-            Loading events...
+          <div className="flex flex-col items-center justify-center text-center py-12">
+            <div className="relative w-8 h-8">
+              <div className="absolute inset-0 rounded-full border-4 border-green-400 border-t-transparent animate-spin"></div>
+            </div>
+            <div className="text-white text-xl mt-2">Loading events</div>
           </div>
         ) : filteredEvents.length === 0 ? (
           <div className="text-center py-12">

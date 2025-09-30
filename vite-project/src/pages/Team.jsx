@@ -599,8 +599,10 @@ const Teams = () => {
       <div className="min-h-screen flex items-center justify-center">
         <OtherPage2 />
         <div className="flex flex-col items-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-400 mb-4"></div>
-          <div className="text-white text-xl">Loading teams...</div>
+          <div className="relative w-10 h-10">
+            <div className="absolute inset-0 rounded-full border-4 border-green-400 border-t-transparent animate-spin"></div>
+          </div>
+          <div className="text-white text-xl mt-2">Loading teams</div>
         </div>
       </div>
     );

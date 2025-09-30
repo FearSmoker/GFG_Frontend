@@ -188,8 +188,10 @@ const AddEvents = () => {
       {isLoading && (
         <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
           <div className="bg-gray-800 p-6 rounded-lg shadow-lg flex flex-col items-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white mb-4"></div>
-            <p className="text-lg font-semibold">Adding your event...</p>
+            <div className="relative w-10 h-10">
+              <div className="absolute inset-0 rounded-full border-4 border-green-400 border-t-transparent animate-spin"></div>
+            </div>
+            <p className="text-lg font-semibold mt-2">Adding your event</p>
           </div>
         </div>
       )}

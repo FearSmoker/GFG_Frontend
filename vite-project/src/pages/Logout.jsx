@@ -34,7 +34,7 @@ const Logout = () => {
 
   useEffect(() => {
     const performLogout = async () => {
-      const loggingOutToast = toast.loading("Logging out...");
+      const loggingOutToast = toast.loading("Logging out");
       try {
         await logoutUser();
         logout();

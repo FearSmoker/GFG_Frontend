@@ -172,16 +172,19 @@ const Events = () => {
   if (loading) {
     return (
       <BackgroundComponent
-        className="text-white overflow-hidden"
+        className="text-white overflow-hidden relative"
         overlayHeight={overlayHeight}
       >
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="text-white text-xl">Loading events...</div>
+        <div className="fixed inset-0 flex flex-col items-center justify-center z-50">
+          <div className="relative w-10 h-10">
+            <div className="absolute inset-0 rounded-full border-4 border-green-400 border-t-transparent animate-spin"></div>
+          </div>
+          <div className="text-white text-xl mt-2">Loading events</div>
         </div>
       </BackgroundComponent>
     );
   }
-  
+
   return (
     <BackgroundComponent
       className="text-white overflow-hidden "
@@ -235,7 +238,9 @@ const Events = () => {
             &lt;{" "}
           </span>
           <span
-            className={`${isLightTheme ? "text-[#0A7956]" : "text-[#00FFAF]"} text-3xl sm:text-5xl`}
+            className={`${
+              isLightTheme ? "text-[#0A7956]" : "text-[#00FFAF]"
+            } text-3xl sm:text-5xl`}
           >
             {" "}
             Upcoming Events{" "}
@@ -303,7 +308,7 @@ const Events = () => {
 
         {/* Event Tabs - Moved down a bit */}
         <div className="mb-12  mt-6 event-tabs-section">
-          <EventTabs 
+          <EventTabs
             selectedEventType={selectedEventType}
             onEventTypeChange={setSelectedEventType}
           />

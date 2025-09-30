@@ -77,11 +77,11 @@ const POTD = () => {
             >
               <div>
                 <strong>Name:</strong>{" "}
-                {problem ? problem.problem_name : "Loading..."}
+                {problem ? problem.problem_name : "Loading"}
               </div>
               <div>
                 <strong>Difficulty:</strong>{" "}
-                {problem ? problem.difficulty : "Loading..."}
+                {problem ? problem.difficulty : "Loading"}
               </div>
             </div>
 

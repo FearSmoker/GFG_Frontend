@@ -321,8 +321,13 @@ const AdminRegistrationDashboard = () => {
 
           {/* Registrations Table */}
           {loading ? (
-            <div className="text-center text-white text-xl py-12">
-              Loading registrations...
+            <div className="flex flex-col items-center justify-center text-center py-12">
+              <div className="relative w-10 h-10">
+                <div className="absolute inset-0 rounded-full border-4 border-green-400 border-t-transparent animate-spin"></div>
+              </div>
+              <div className="text-white text-xl mt-2">
+                Loading registrations
+              </div>
             </div>
           ) : filteredRegistrations.length === 0 ? (
             <div className="text-center py-12">

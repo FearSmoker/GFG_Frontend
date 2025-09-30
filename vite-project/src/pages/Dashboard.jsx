@@ -29,7 +29,7 @@ const Dashboard = () => {
     try {
       setError(null);
       const response = await getDashboardData();
-      
+
       // Validate response structure
       if (response && response.data) {
         setDashboardData(response.data);
@@ -123,7 +123,12 @@ const Dashboard = () => {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <OtherPage2 />
-        <div className="text-white text-xl">Loading dashboard...</div>
+        <div className="text-center">
+          <div className="relative w-10 h-10 mx-auto">
+            <div className="absolute inset-0 rounded-full border-4 border-green-400 border-t-transparent animate-spin"></div>
+          </div>
+          <div className="text-white text-xl mt-2">Loading dashboard</div>
+        </div>
       </div>
     );
   }
@@ -225,7 +230,9 @@ const Dashboard = () => {
                   <p className="text-2xl font-bold text-white">
                     {stat.count || 0}
                   </p>
-                  <p className="text-gray-400 capitalize">{stat._id || "Unknown"}</p>
+                  <p className="text-gray-400 capitalize">
+                    {stat._id || "Unknown"}
+                  </p>
                   {(stat.totalAmount || 0) > 0 && (
                     <p className="text-xs text-green-400 mt-1">
                       ₹{stat.totalAmount}
@@ -291,10 +298,11 @@ const Dashboard = () => {
                 .slice(0, 5)
                 .map((registration) => {
                   const eventData = registration.eventId || {};
-                  const fee = registration.participationType === "team" 
-                    ? (eventData.teamRegistrationFee || 0)
-                    : (eventData.registrationFee || 0);
-                  
+                  const fee =
+                    registration.participationType === "team"
+                      ? eventData.teamRegistrationFee || 0
+                      : eventData.registrationFee || 0;
+
                   return (
                     <div
                       key={registration._id}
@@ -326,10 +334,12 @@ const Dashboard = () => {
                                 className={`text-xs px-2 py-1 rounded ${
                                   registration.approvalStatus === "approved"
                                     ? "bg-green-600 text-white"
-                                    : registration.approvalStatus === "pending" ||
+                                    : registration.approvalStatus ===
+                                        "pending" ||
                                       !registration.approvalStatus
                                     ? "bg-yellow-600 text-white"
-                                    : registration.approvalStatus === "denied" ||
+                                    : registration.approvalStatus ===
+                                        "denied" ||
                                       registration.approvalStatus === "rejected"
                                     ? "bg-red-600 text-white"
                                     : "bg-gray-600 text-white"
@@ -398,10 +408,11 @@ const Dashboard = () => {
             <div className="grid md:grid-cols-2 gap-4">
               {getUpcomingEvents().map((registration) => {
                 const eventData = registration.eventId || {};
-                const fee = registration.participationType === "team"
-                  ? (eventData.teamRegistrationFee || 0)
-                  : (eventData.registrationFee || 0);
-                
+                const fee =
+                  registration.participationType === "team"
+                    ? eventData.teamRegistrationFee || 0
+                    : eventData.registrationFee || 0;
+
                 return (
                   <div
                     key={registration._id}
