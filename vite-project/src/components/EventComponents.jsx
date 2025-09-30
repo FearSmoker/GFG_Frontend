@@ -344,8 +344,9 @@ export const EventForm = ({
         ...prev,
         participationMode: mode,
         allowedTeamSizes,
-
         maxTeams: mode === "solo" ? null : prev.maxTeams,
+        // Reset team fee if switching to solo mode
+        teamRegistrationFee: mode === "solo" ? 0 : prev.teamRegistrationFee,
       };
     });
   };
@@ -368,10 +369,14 @@ export const EventForm = ({
     });
   };
 
-  const isPaidEvent = parseFloat(newEvent.registrationFee) > 0;
   const participationMode = newEvent.participationMode || "solo";
-  const allowsTeams =
-    participationMode === "team" || participationMode === "both";
+  const allowsTeams = participationMode === "team" || participationMode === "both";
+  const allowsSolo = participationMode === "solo" || participationMode === "both";
+  
+  // Check if any fee is set for payment form validation
+  const soloFee = parseFloat(newEvent.registrationFee) || 0;
+  const teamFee = parseFloat(newEvent.teamRegistrationFee) || 0;
+  const isPaidEvent = soloFee > 0 || teamFee > 0;
 
   const formatDateForInput = (date) => {
     if (!date) return "";
@@ -562,24 +567,71 @@ export const EventForm = ({
           />
         </div>
 
-        {/* Registration Fee */}
-        <div>
-          <RequiredLabel isRequired={false}>Registration Fee (₹)</RequiredLabel>
-          <input
-            type="number"
-            min="0"
-            value={
-              newEvent.registrationFee === 0 ? "" : newEvent.registrationFee
-            }
-            onChange={(e) =>
-              handleInputChange(
-                "registrationFee",
-                parseInt(e.target.value) || 0
-              )
-            }
-            className="w-full p-3 rounded-md bg-gray-700 text-white border border-gray-600 focus:border-green-500 focus:outline-none"
-            placeholder="0"
-          />
+        {/* Registration Fees Section */}
+        <div className="bg-gray-700 p-4 rounded-md border border-gray-600 space-y-4">
+          <h3 className="text-lg font-semibold text-white mb-3">
+            Registration Fees
+          </h3>
+
+          {/* Solo Registration Fee - Show only if solo is allowed */}
+          {allowsSolo && (
+            <div>
+              <RequiredLabel isRequired={false}>
+                Solo Registration Fee (₹)
+              </RequiredLabel>
+              <input
+                type="number"
+                min="0"
+                value={newEvent.registrationFee === 0 ? "" : newEvent.registrationFee}
+                onChange={(e) =>
+                  handleInputChange(
+                    "registrationFee",
+                    parseInt(e.target.value) || 0
+                  )
+                }
+                className="w-full p-3 rounded-md bg-gray-600 text-white border border-gray-500 focus:border-green-500 focus:outline-none"
+                placeholder="0"
+              />
+              <p className="text-xs text-gray-400 mt-1">
+                Fee for individual participants
+              </p>
+            </div>
+          )}
+
+          {/* Team Registration Fee - Show only if teams are allowed */}
+          {allowsTeams && (
+            <div>
+              <RequiredLabel isRequired={false}>
+                Team Registration Fee (₹)
+              </RequiredLabel>
+              <input
+                type="number"
+                min="0"
+                value={
+                  newEvent.teamRegistrationFee === 0
+                    ? ""
+                    : newEvent.teamRegistrationFee
+                }
+                onChange={(e) =>
+                  handleInputChange(
+                    "teamRegistrationFee",
+                    parseInt(e.target.value) || 0
+                  )
+                }
+                className="w-full p-3 rounded-md bg-gray-600 text-white border border-gray-500 focus:border-green-500 focus:outline-none"
+                placeholder="0"
+              />
+              <p className="text-xs text-gray-400 mt-1">
+                Fee per team (regardless of team size)
+              </p>
+            </div>
+          )}
+
+          {participationMode === "both" && (
+            <p className="text-xs text-yellow-400 mt-2">
+              Note: Set different fees for solo and team registrations. Leave at 0 for free registration.
+            </p>
+          )}
         </div>
 
         {/* Payment Form Link - Shows only for paid events */}
@@ -755,6 +807,7 @@ export const RegisterForm = ({
     "B.Tech Electrical and Computer Engineering",
     "Other",
   ];
+
 
   const getApplicableFee = useCallback(() => {
     if (participationType === 'team') {
