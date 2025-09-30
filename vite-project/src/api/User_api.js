@@ -336,10 +336,13 @@ export const getProfile = async () => {
 
 // Update account details
 export const updateAccountDetails = async (data) => {
+  const token = localStorage.getItem("access_token");
+  
   const response = await fetch(`${BASE_URL}/update-account`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(data),
     credentials: "include",
@@ -351,11 +354,10 @@ export const updateAccountDetails = async (data) => {
     if (response.status === 429) {
       handleRateLimitError(responseData);
     }
+    throw new Error(responseData.message || "Failed to update account");
   }
 
-  const {
-    data: { fullName, email, mobileNo },
-  } = responseData;
+  const { fullName, email, mobileNo } = responseData.data;
   return { fullName, email, mobileNo };
 };
 
