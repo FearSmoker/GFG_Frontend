@@ -7,7 +7,7 @@ import {
 } from "../api/Registration_api";
 import useAuth from "../context/AuthContext";
 import toast from "react-hot-toast";
-import { RegisterForm } from "../components/EventComponents.jsx"; 
+import { RegisterForm } from "../components/EventComponents.jsx";
 
 const EventRegistration = () => {
   const { user, isAuthenticated, loading: authLoading } = useAuth();
@@ -36,7 +36,6 @@ const EventRegistration = () => {
     setLoadingRegistrations(true);
     try {
       const response = await getUserRegistrations();
-
       const registrations =
         response.data?.registrations ||
         response.registrations ||
@@ -56,7 +55,6 @@ const EventRegistration = () => {
     setLoading(true);
     try {
       const response = await fetchEvents();
-
       if (Array.isArray(response)) {
         setEvents(response);
       } else if (response?.data) {
@@ -87,7 +85,6 @@ const EventRegistration = () => {
 
     const registration = userRegistrations.find((reg) => {
       let regEventId;
-
       if (reg.eventId) {
         if (typeof reg.eventId === "object" && reg.eventId._id) {
           regEventId = reg.eventId._id;
@@ -108,8 +105,7 @@ const EventRegistration = () => {
 
       const idsMatch =
         regEventId &&
-        (regEventId.toString() === eventId.toString() ||
-          regEventId === eventId);
+        (regEventId.toString() === eventId.toString() || regEventId === eventId);
 
       const isNotCancelled =
         !reg.attendanceStatus || reg.attendanceStatus !== "cancelled";
@@ -122,7 +118,6 @@ const EventRegistration = () => {
 
   const handleRegisterClick = (event) => {
     const hasToken = localStorage.getItem("access_token");
-
     const isLoggedIn = (user && isAuthenticated) || hasToken;
 
     if (!isLoggedIn) {
@@ -149,7 +144,6 @@ const EventRegistration = () => {
       return;
     }
 
-    // Initialize registration data based on user info
     const initialData = {
       fullName: user?.name || user?.username || "",
       email: user?.email || "",
@@ -167,7 +161,6 @@ const EventRegistration = () => {
     if (!selectedEvent) return;
 
     const hasToken = localStorage.getItem("access_token");
-
     if (!isAuthenticated || !hasToken) {
       toast.error("Your session has expired. Please log in again.");
       navigate("/signin");
@@ -188,13 +181,19 @@ const EventRegistration = () => {
         registrationId = result._id;
       }
 
-      const isPaidEvent =
-        parseFloat(selectedEvent.registrationFee || selectedEvent.fee || 0) > 0;
+      // Determine fee based on participation type
+      const participationType = apiRegistrationData?.participationType || 'solo';
+      const applicableFee = participationType === 'team' 
+        ? parseFloat(selectedEvent.teamRegistrationFee || 0)
+        : parseFloat(selectedEvent.registrationFee || 0);
+      
+      const isPaidEvent = applicableFee > 0;
 
       if (isPaidEvent) {
         toast.success(
           `Registration submitted for ${selectedEvent.title}! ` +
             `Registration ID: ${registrationId}. ` +
+            `Fee: ₹${applicableFee}. ` +
             `Please complete payment using the provided Google form link and wait for admin approval.`
         );
       } else {
@@ -204,7 +203,6 @@ const EventRegistration = () => {
         );
       }
 
-      // Add email notification messages after the success message
       setTimeout(() => {
         toast.success("Registration confirmation mail sent to your inbox.");
       }, 1500);
@@ -292,14 +290,76 @@ const EventRegistration = () => {
     }
   };
 
+  const getEventPricingBadge = (event) => {
+    const soloFee = parseFloat(event.registrationFee || 0);
+    const teamFee = parseFloat(event.teamRegistrationFee || 0);
+    const participationMode = event.participationMode || 'solo';
+
+    // If both are free
+    if (soloFee === 0 && teamFee === 0) {
+      return (
+        <span className="bg-blue-500 text-white px-2 py-1 rounded text-sm font-semibold">
+          FREE
+        </span>
+      );
+    }
+
+    // If participation mode allows both
+    if (participationMode === 'both') {
+      return (
+        <div className="flex flex-col gap-1">
+          {soloFee > 0 && (
+            <span className="bg-green-500 text-white px-2 py-1 rounded text-xs font-semibold">
+              Solo: ₹{soloFee}
+            </span>
+          )}
+          {teamFee > 0 && (
+            <span className="bg-purple-500 text-white px-2 py-1 rounded text-xs font-semibold">
+              Team: ₹{teamFee}
+            </span>
+          )}
+        </div>
+      );
+    }
+
+    // If only team mode
+    if (participationMode === 'team' && teamFee > 0) {
+      return (
+        <span className="bg-purple-500 text-white px-2 py-1 rounded text-sm font-semibold">
+          ₹{teamFee} (Team)
+        </span>
+      );
+    }
+
+    // If only solo mode or default
+    if (soloFee > 0) {
+      return (
+        <span className="bg-green-500 text-white px-2 py-1 rounded text-sm font-semibold">
+          ₹{soloFee}
+        </span>
+      );
+    }
+
+    return (
+      <span className="bg-blue-500 text-white px-2 py-1 rounded text-sm font-semibold">
+        FREE
+      </span>
+    );
+  };
+
   const getRegistrationButtonInfo = (event) => {
     const userRegistration = getUserRegistrationStatus(event._id);
 
     if (userRegistration) {
       const approvalStatus = userRegistration.approvalStatus;
       const paymentStatus = userRegistration.paymentStatus;
-      const isPaidEvent =
-        parseFloat(event.registrationFee || event.fee || 0) > 0;
+      const participationType = userRegistration.participationType || 'solo';
+      
+      const applicableFee = participationType === 'team'
+        ? parseFloat(event.teamRegistrationFee || 0)
+        : parseFloat(event.registrationFee || 0);
+      
+      const isPaidEvent = applicableFee > 0;
 
       switch (approvalStatus) {
         case "pending":
@@ -393,7 +453,6 @@ const EventRegistration = () => {
   return (
     <div className="min-h-screen bg-black py-20 px-4">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-4">
             Event Registration
@@ -409,7 +468,6 @@ const EventRegistration = () => {
           )}
         </div>
 
-        {/* Search and Filter Bar */}
         <div className="bg-gray-800 p-6 rounded-lg mb-8">
           <div className="flex flex-col md:flex-row gap-4 items-center">
             <div className="flex-1">
@@ -440,7 +498,6 @@ const EventRegistration = () => {
           </div>
         </div>
 
-        {/* Events Grid */}
         {loading || loadingRegistrations ? (
           <div className="text-center text-white text-xl py-12">
             Loading events...
@@ -471,7 +528,6 @@ const EventRegistration = () => {
                   key={event._id}
                   className="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-300"
                 >
-                  {/* Event Image */}
                   <div className="relative">
                     <img
                       src={
@@ -487,15 +543,7 @@ const EventRegistration = () => {
                       }}
                     />
                     <div className="absolute top-4 right-4">
-                      {(event.registrationFee || event.fee || 0) > 0 ? (
-                        <span className="bg-green-500 text-white px-2 py-1 rounded text-sm font-semibold">
-                          ₹{event.registrationFee || event.fee}
-                        </span>
-                      ) : (
-                        <span className="bg-blue-500 text-white px-2 py-1 rounded text-sm font-semibold">
-                          FREE
-                        </span>
-                      )}
+                      {getEventPricingBadge(event)}
                     </div>
                     <div className="absolute top-4 left-4">
                       <span
@@ -512,7 +560,6 @@ const EventRegistration = () => {
                     </div>
                   </div>
 
-                  {/* Event Details */}
                   <div className="p-6">
                     <h3 className="text-xl font-bold text-white mb-2 line-clamp-2">
                       {event.title || "Untitled Event"}
@@ -526,7 +573,6 @@ const EventRegistration = () => {
                       {event.description || "No description available."}
                     </p>
 
-                    {/* Participant Info */}
                     {event.maxParticipants && (
                       <div className="mb-4">
                         <div className="flex justify-between text-sm text-gray-400 mb-1">
@@ -552,7 +598,6 @@ const EventRegistration = () => {
                       </div>
                     )}
 
-                    {/* Registration Deadline */}
                     {event.registrationDeadline && (
                       <p className="text-yellow-400 text-xs mb-4">
                         Registration ends:{" "}
@@ -562,7 +607,6 @@ const EventRegistration = () => {
                       </p>
                     )}
 
-                    {/* Action Buttons */}
                     <div className="flex gap-2">
                       <Link
                         to={`/events/${event._id}`}
@@ -589,7 +633,6 @@ const EventRegistration = () => {
         )}
       </div>
 
-      {/* Registration Modal using RegisterForm */}
       {showRegistrationModal && selectedEvent && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center p-4 z-50">
           <div className="max-w-md w-full">

@@ -756,7 +756,15 @@ export const RegisterForm = ({
     "Other",
   ];
 
-  const isPaidEvent = event && parseFloat(event.registrationFee) > 0;
+  const getApplicableFee = useCallback(() => {
+    if (participationType === 'team') {
+      return parseFloat(event?.teamRegistrationFee || 0);
+    }
+    return parseFloat(event?.registrationFee || 0);
+  }, [participationType, event]);
+
+  const applicableFee = getApplicableFee();
+  const isPaidEvent = applicableFee > 0;
 
   const participationMode = event?.participationMode || "both";
   const allowedTeamSizes = useMemo(() => {
@@ -1039,12 +1047,48 @@ export const RegisterForm = ({
             <p className="text-gray-300 mb-2">
               Event Date: {formatDate(event.date || event.eventDate)}
             </p>
-            <p className="text-gray-300 mb-2">
-              Fee:{" "}
-              {(event.registrationFee || event.fee || 0) > 0
-                ? `₹${event.registrationFee || event.fee}`
-                : "Free"}
-            </p>
+            
+            {/* Dynamic Fee Display based on participation type */}
+            {participationType === "solo" && (
+              <p className="text-gray-300 mb-2">
+                Solo Registration Fee:{" "}
+                {(event.registrationFee || 0) > 0
+                  ? `₹${event.registrationFee}`
+                  : "Free"}
+              </p>
+            )}
+            
+            {participationType === "team" && (
+              <p className="text-gray-300 mb-2">
+                Team Registration Fee:{" "}
+                {(event.teamRegistrationFee || 0) > 0
+                  ? `₹${event.teamRegistrationFee}`
+                  : "Free"}
+              </p>
+            )}
+
+            {/* Show both fees if no participation type selected yet */}
+            {!participationType && participationMode === "both" && (
+              <>
+                {canRegisterSolo && (
+                  <p className="text-gray-300 mb-1">
+                    Solo Fee:{" "}
+                    {(event.registrationFee || 0) > 0
+                      ? `₹${event.registrationFee}`
+                      : "Free"}
+                  </p>
+                )}
+                {canRegisterTeam && (
+                  <p className="text-gray-300 mb-2">
+                    Team Fee:{" "}
+                    {(event.teamRegistrationFee || 0) > 0
+                      ? `₹${event.teamRegistrationFee}`
+                      : "Free"}
+                  </p>
+                )}
+              </>
+            )}
+
             {event.maxParticipants && (
               <p className="text-gray-300 mb-4">
                 Spots remaining:{" "}
@@ -1077,7 +1121,9 @@ export const RegisterForm = ({
                         }
                         className="form-radio text-green-500"
                       />
-                      <span className="text-white text-sm">Solo</span>
+                      <span className="text-white text-sm">
+                        Solo {event.registrationFee > 0 && `(₹${event.registrationFee})`}
+                      </span>
                     </label>
                   )}
                   {canRegisterTeam && (
@@ -1092,7 +1138,9 @@ export const RegisterForm = ({
                         }
                         className="form-radio text-green-500"
                       />
-                      <span className="text-white text-sm">Team</span>
+                      <span className="text-white text-sm">
+                        Team {event.teamRegistrationFee > 0 && `(₹${event.teamRegistrationFee})`}
+                      </span>
                     </label>
                   )}
                 </div>
@@ -1369,6 +1417,12 @@ export const RegisterForm = ({
                         {selectedTeam.currentMemberCount}
                       </span>
                     </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-400">Team Fee:</span>
+                      <span className="text-green-400 font-bold text-lg">
+                        ₹{event.teamRegistrationFee || 0}
+                      </span>
+                    </div>
                   </div>
 
                   <div className="mb-4">
@@ -1465,7 +1519,7 @@ export const RegisterForm = ({
     );
   }
 
-  // Payment and Success steps remain the same...
+  // Payment step
   if (registrationStep === "payment" && isPaidEvent) {
     return (
       <div className="bg-gray-800 rounded-2xl p-6 shadow-2xl backdrop-blur-sm border border-gray-700/50">
@@ -1493,17 +1547,12 @@ export const RegisterForm = ({
               <div className="flex justify-between items-center py-1">
                 <span className="text-gray-300 text-sm">Registration Fee:</span>
                 <span className="text-green-400 font-bold text-xl">
-                  ₹
-                  {registrationData.participationType === "team"
-                    ? event.registrationFee *
-                      (selectedTeam?.currentMemberCount || 1)
-                    : event.registrationFee}
+                  ₹{applicableFee}
                 </span>
               </div>
               {registrationData.participationType === "team" && (
                 <p className="text-gray-400 text-xs mt-1">
-                  (₹{event.registrationFee} × {selectedTeam?.currentMemberCount}{" "}
-                  members)
+                  Team registration fee for {selectedTeam?.currentMemberCount} members
                 </p>
               )}
             </div>
@@ -1596,6 +1645,12 @@ export const RegisterForm = ({
                 {registrationData.participationType === "team"
                   ? `${selectedTeam?.teamName} (${selectedTeam?.currentMemberCount} members)`
                   : registrationData.fullName}
+              </span>
+            </div>
+            <div className="flex justify-between">
+              <span className="text-gray-400">Fee Paid:</span>
+              <span className="text-green-400 font-bold">
+                ₹{applicableFee}
               </span>
             </div>
             <div className="flex justify-between">

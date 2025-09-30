@@ -38,10 +38,13 @@ const MyRegistrations = () => {
         eventType: e.eventType,
         eventPrize: e.eventPrize,
         registrationFee: e.registrationFee,
+        teamRegistrationFee: e.teamRegistrationFee,
         maxParticipants: e.maxParticipants,
         currentParticipants: e.currentParticipants,
         registrationDeadline: e.registrationDeadline,
         eventStatus: e.eventStatus,
+        participationMode: e.participationMode,
+        allowedTeamSizes: e.allowedTeamSizes,
         _id: e._id,
       }));
       setEvents(formattedEvents);
@@ -60,7 +63,6 @@ const MyRegistrations = () => {
         }
 
         const response = await getUserRegistrations(params);
-
         const responseData = response?.data || response;
 
         if (responseData) {
@@ -88,6 +90,17 @@ const MyRegistrations = () => {
       fetchRegistrations();
     }
   }, [user, fetchEventsData, fetchRegistrations]);
+
+  // Helper function to get applicable fee based on participation type
+  const getApplicableFee = (registration, eventData) => {
+    const participationType = registration.participationType || 'solo';
+    
+    if (participationType === 'team') {
+      return eventData.teamRegistrationFee || registration.paymentAmount || 0;
+    }
+    
+    return eventData.registrationFee || registration.paymentAmount || 0;
+  };
 
   const getEventData = (registration) => {
     const eventId =
@@ -161,6 +174,26 @@ const MyRegistrations = () => {
       registration.eventId ||
       registration.event?._id ||
       registration.event?.id
+    );
+  };
+
+  // Helper to get participation type badge
+  const getParticipationBadge = (registration) => {
+    const participationType = registration.participationType || 'solo';
+    const teamSize = registration.teamSize;
+
+    if (participationType === 'team') {
+      return (
+        <span className="px-2 py-1 rounded text-xs font-medium bg-purple-600 text-white">
+          Team {teamSize ? `(${teamSize})` : ''}
+        </span>
+      );
+    }
+
+    return (
+      <span className="px-2 py-1 rounded text-xs font-medium bg-blue-600 text-white">
+        Solo
+      </span>
     );
   };
 
@@ -304,6 +337,7 @@ const MyRegistrations = () => {
               {registrations.map((registration) => {
                 const eventData = getEventData(registration);
                 const eventId = getEventId(registration);
+                const applicableFee = getApplicableFee(registration, eventData);
 
                 return (
                   <div
@@ -311,7 +345,7 @@ const MyRegistrations = () => {
                     className="bg-gray-800 rounded-lg overflow-hidden"
                   >
                     <div className="flex flex-col md:flex-row">
-                      {/* Event Image - Using EventMiniCard approach with better fallback */}
+                      {/* Event Image */}
                       <div className="md:w-1/3 relative">
                         <div
                           className="w-full h-48 md:h-full rounded-l-lg"
@@ -327,7 +361,6 @@ const MyRegistrations = () => {
                               : "#374151",
                           }}
                         >
-                          {/* Fallback content when no image */}
                           {!eventData.image && (
                             <div className="w-full h-full bg-gradient-to-br from-gray-700 to-gray-800 flex items-center justify-center rounded-l-lg">
                               <div className="text-center">
@@ -357,11 +390,14 @@ const MyRegistrations = () => {
                       <div className="md:w-2/3 p-6">
                         <div className="flex justify-between items-start mb-4">
                           <div className="flex-1">
-                            <h3 className="text-xl font-bold text-white mb-2">
-                              {eventData.title || "Event Title Not Available"}
-                            </h3>
+                            <div className="flex items-center gap-2 mb-2">
+                              <h3 className="text-xl font-bold text-white">
+                                {eventData.title || "Event Title Not Available"}
+                              </h3>
+                              {getParticipationBadge(registration)}
+                            </div>
 
-                            {/* Date with Calendar Icon - Using same format as Events.jsx */}
+                            {/* Date with Calendar Icon */}
                             <div className="flex items-center mb-2">
                               <div className="flex items-center text-green-400 text-sm">
                                 <svg
@@ -436,7 +472,7 @@ const MyRegistrations = () => {
                             </p>
                           </div>
 
-                          {/* Status Badge */}
+                          {/* Status Badge and Fee */}
                           <div className="flex flex-col items-end gap-2">
                             <span
                               className={`px-3 py-1 rounded-full text-white text-sm font-medium ${getStatusColor(
@@ -445,26 +481,33 @@ const MyRegistrations = () => {
                             >
                               {registration.attendanceStatus || "unknown"}
                             </span>
-                            {(registration.paymentAmount || 0) > 0 && (
-                              <span className="text-green-400 font-semibold">
-                                ₹{registration.paymentAmount}
-                              </span>
+                            {applicableFee > 0 && (
+                              <div className="text-right">
+                                <span className="text-green-400 font-semibold text-lg">
+                                  ₹{applicableFee}
+                                </span>
+                                {registration.participationType === 'team' && (
+                                  <div className="text-xs text-purple-400">
+                                    (Team Fee)
+                                  </div>
+                                )}
+                              </div>
                             )}
                           </div>
                         </div>
 
                         {/* Registration Details */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
                           <div>
-                            <span className="text-gray-400">
+                            <span className="text-gray-400 text-sm">
                               Registered on:
                             </span>
-                            <div className="text-white">
+                            <div className="text-white font-medium">
                               {formatDate(registration.registrationDate)}
                             </div>
                           </div>
                           <div>
-                            <span className="text-gray-400">
+                            <span className="text-gray-400 text-sm">
                               Payment Status:
                             </span>
                             <div
@@ -479,7 +522,39 @@ const MyRegistrations = () => {
                               {registration.paymentStatus || "unknown"}
                             </div>
                           </div>
+                          <div>
+                            <span className="text-gray-400 text-sm">
+                              Approval Status:
+                            </span>
+                            <div
+                              className={`font-medium ${
+                                registration.approvalStatus === "approved"
+                                  ? "text-green-400"
+                                  : registration.approvalStatus === "pending"
+                                  ? "text-yellow-400"
+                                  : "text-red-400"
+                              }`}
+                            >
+                              {registration.approvalStatus || "unknown"}
+                            </div>
+                          </div>
                         </div>
+
+                        {/* Team Details if applicable */}
+                        {registration.participationType === 'team' && registration.teamDetails && (
+                          <div className="bg-gray-700 p-3 rounded-lg mb-4">
+                            <div className="text-sm text-gray-300">
+                              <span className="font-semibold text-purple-400">
+                                Team: {registration.teamDetails.teamName || 'N/A'}
+                              </span>
+                              {registration.teamDetails.teamSize && (
+                                <span className="ml-3">
+                                  Size: {registration.teamDetails.teamSize}
+                                </span>
+                              )}
+                            </div>
+                          </div>
+                        )}
 
                         {/* Action Buttons */}
                         <div className="flex gap-4">

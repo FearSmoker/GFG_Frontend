@@ -1,6 +1,5 @@
 const BASE_URL = "https://gfg-backend-rjtn.onrender.com/api/v1/events";
 
-
 const getAuthHeaders = () => {
   const token = localStorage.getItem('access_token');
   
@@ -48,7 +47,6 @@ export async function fetchEvents() {
 // Add a new event
 export async function addEvent(eventData) {
   try {
-    
     const headers = getAuthHeadersForFormData();
     
     const res = await fetch(`${BASE_URL}`, {
@@ -129,7 +127,7 @@ export async function fetchEventById(id) {
   }
 }
 
-
+// Get event team info
 export async function fetchEventTeamInfo(id) {
   try {
     const res = await fetch(`${BASE_URL}/${id}/team-info`);

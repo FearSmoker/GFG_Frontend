@@ -22,6 +22,8 @@ const EventHistory = () => {
     month: "",
     status: "",
     eventType: "",
+    paymentStatus: "",
+    participationType: "",
     page: 1,
     limit: 10,
   });
@@ -135,30 +137,34 @@ const EventHistory = () => {
         return "bg-green-600";
       case "cancelled":
         return "bg-red-600";
+      case "absent":
+        return "bg-orange-600";
       default:
         return "bg-gray-600";
     }
   };
 
+  const getApplicableFee = (registration) => {
+    const event = registration.eventId;
+    if (!event) return registration.paymentAmount || 0;
+    
+    if (registration.participationType === 'team') {
+      return event.teamRegistrationFee || registration.paymentAmount || 0;
+    }
+    return event.registrationFee || registration.paymentAmount || 0;
+  };
+
   const isSpendingCountable = (registration) => {
     const isPaidEvent = parseFloat(registration.paymentAmount || 0) > 0;
+    if (!isPaidEvent) return false;
 
-    if (!isPaidEvent) {
-      return false;
-    }
-
-    const approvalStatus =
-      registration.approvalStatus || registration.status || "pending";
+    const approvalStatus = registration.approvalStatus || "pending";
     return approvalStatus === "approved";
   };
 
   const getSpendingAmount = (registration) => {
-    return isSpendingCountable(registration)
-      ? registration.paymentAmount || 0
-      : 0;
+    return isSpendingCountable(registration) ? getApplicableFee(registration) : 0;
   };
-
-
 
   const getAvailableYears = () => {
     if (!historyData?.eventHistory) return [];
@@ -232,21 +238,13 @@ const EventHistory = () => {
             {/* Header */}
             <div className="mb-8 mt-8">
               <h1 className="text-4xl md:text-5xl font-bold tracking-wide mb-2 text-center">
-                <span
-                  className={`${isLightTheme ? "text-[#2195DE]" : "text-[#0065A5]"}`}
-                >
+                <span className={`${isLightTheme ? "text-[#2195DE]" : "text-[#0065A5]"}`}>
                   &lt;
                 </span>
-                <span
-                  className={`${
-                    isLightTheme ? "text-[#0A7956]" : "text-[#00FFAF]"
-                  } mx-2`}
-                >
+                <span className={`${isLightTheme ? "text-[#0A7956]" : "text-[#00FFAF]"} mx-2`}>
                   Event History
                 </span>
-                <span
-                  className={`${isLightTheme ? "text-[#2195DE]" : "text-[#0065A5]"}`}
-                >
+                <span className={`${isLightTheme ? "text-[#2195DE]" : "text-[#0065A5]"}`}>
                   &gt;
                 </span>
               </h1>
@@ -257,7 +255,7 @@ const EventHistory = () => {
 
             {/* Summary Cards */}
             {historyData?.summary && (
-              <div className="grid md:grid-cols-3 gap-6 mb-8">
+              <div className="grid md:grid-cols-4 gap-6 mb-8">
                 <div className="bg-gray-800 p-6 rounded-lg">
                   <h3 className="text-lg font-semibold text-white mb-2">
                     Total Events
@@ -269,18 +267,29 @@ const EventHistory = () => {
 
                 <div className="bg-gray-800 p-6 rounded-lg">
                   <h3 className="text-lg font-semibold text-white mb-2">
-                    Total Spent
+                    Confirmed Events
                   </h3>
                   <p className="text-3xl font-bold text-green-400">
+                    {historyData.summary.confirmedEvents}
+                  </p>
+                  <p className="text-xs text-gray-400 mt-1">Free + Approved</p>
+                </div>
+
+                <div className="bg-gray-800 p-6 rounded-lg">
+                  <h3 className="text-lg font-semibold text-white mb-2">
+                    Total Spent
+                  </h3>
+                  <p className="text-3xl font-bold text-purple-400">
                     ₹{historyData.summary.totalSpent}
                   </p>
+                  <p className="text-xs text-gray-400 mt-1">Approved Only</p>
                 </div>
 
                 <div className="bg-gray-800 p-6 rounded-lg">
                   <h3 className="text-lg font-semibold text-white mb-2">
                     Average Spent
                   </h3>
-                  <p className="text-3xl font-bold text-purple-400">
+                  <p className="text-3xl font-bold text-yellow-400">
                     ₹{Math.round(historyData.summary.avgSpent || 0)}
                   </p>
                 </div>
@@ -288,41 +297,62 @@ const EventHistory = () => {
             )}
 
             {/* Yearly Spending Overview */}
-            {analyticsData?.yearlySpending &&
-              analyticsData.yearlySpending.length > 0 && (
-                <div className="bg-gray-800 p-6 rounded-lg mb-8">
-                  <h3 className="text-xl font-semibold text-white mb-4">
-                    Yearly Spending Overview
-                  </h3>
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                    {analyticsData.yearlySpending.map((year) => (
-                      <div key={year._id} className="text-center">
-                        <p className="text-2xl font-bold text-white">
-                          ₹{year.totalSpent}
-                        </p>
-                        <p className="text-gray-400">{year._id}</p>
-                        <p className="text-sm text-gray-500">
-                          {year.eventCount} events
-                        </p>
-                      </div>
-                    ))}
-                  </div>
+            {analyticsData?.yearlySpending && analyticsData.yearlySpending.length > 0 && (
+              <div className="bg-gray-800 p-6 rounded-lg mb-8">
+                <h3 className="text-xl font-semibold text-white mb-4">
+                  Yearly Spending Overview
+                </h3>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                  {analyticsData.yearlySpending.map((year) => (
+                    <div key={year._id} className="text-center bg-gray-700 p-4 rounded">
+                      <p className="text-2xl font-bold text-white">
+                        ₹{year.totalSpent}
+                      </p>
+                      <p className="text-gray-400">{year._id}</p>
+                      <p className="text-sm text-gray-500">
+                        {year.eventCount} events
+                      </p>
+                    </div>
+                  ))}
                 </div>
-              )}
+              </div>
+            )}
+
+            {/* Participation Type Spending */}
+            {analyticsData?.participationTypeSpending && analyticsData.participationTypeSpending.length > 0 && (
+              <div className="bg-gray-800 p-6 rounded-lg mb-8">
+                <h3 className="text-xl font-semibold text-white mb-4">
+                  Spending by Participation Type
+                </h3>
+                <div className="grid grid-cols-2 gap-4">
+                  {analyticsData.participationTypeSpending.map((stat) => (
+                    <div key={stat._id} className="text-center bg-gray-700 p-4 rounded">
+                      <p className="text-2xl font-bold text-white">
+                        ₹{stat.totalSpent}
+                      </p>
+                      <p className="text-gray-400 capitalize mb-2">
+                        {stat._id === 'solo' ? 'Solo Events' : 'Team Events'}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        {stat.eventCount} events • Avg: ₹{Math.round(stat.avgSpent || 0)}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {/* Filters */}
             <div className="bg-gray-800 p-6 rounded-lg mb-8">
               <h3 className="text-xl font-semibold text-white mb-4">
                 Filter Events
               </h3>
-              <div className="grid md:grid-cols-5 gap-4">
+              <div className="grid md:grid-cols-3 lg:grid-cols-6 gap-4">
                 <div>
                   <label className="block text-gray-400 mb-2">Event Type</label>
                   <select
                     value={filters.eventType}
-                    onChange={(e) =>
-                      handleFilterChange("eventType", e.target.value)
-                    }
+                    onChange={(e) => handleFilterChange("eventType", e.target.value)}
                     className="w-full bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
                   >
                     <option value="">All</option>
@@ -352,9 +382,7 @@ const EventHistory = () => {
                   <label className="block text-gray-400 mb-2">Month</label>
                   <select
                     value={filters.month}
-                    onChange={(e) =>
-                      handleFilterChange("month", e.target.value)
-                    }
+                    onChange={(e) => handleFilterChange("month", e.target.value)}
                     className="w-full bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
                   >
                     <option value="">All Months</option>
@@ -372,15 +400,27 @@ const EventHistory = () => {
                   <label className="block text-gray-400 mb-2">Status</label>
                   <select
                     value={filters.status}
-                    onChange={(e) =>
-                      handleFilterChange("status", e.target.value)
-                    }
+                    onChange={(e) => handleFilterChange("status", e.target.value)}
                     className="w-full bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
                   >
                     <option value="">All Status</option>
                     <option value="registered">Registered</option>
                     <option value="attended">Attended</option>
+                    <option value="absent">Absent</option>
                     <option value="cancelled">Cancelled</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-gray-400 mb-2">Participation</label>
+                  <select
+                    value={filters.participationType}
+                    onChange={(e) => handleFilterChange("participationType", e.target.value)}
+                    className="w-full bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
+                  >
+                    <option value="">All Types</option>
+                    <option value="solo">Solo</option>
+                    <option value="team">Team</option>
                   </select>
                 </div>
 
@@ -388,9 +428,7 @@ const EventHistory = () => {
                   <label className="block text-gray-400 mb-2">Per Page</label>
                   <select
                     value={filters.limit}
-                    onChange={(e) =>
-                      handleFilterChange("limit", parseInt(e.target.value))
-                    }
+                    onChange={(e) => handleFilterChange("limit", parseInt(e.target.value))}
                     className="w-full bg-gray-700 text-white px-3 py-2 rounded border border-gray-600 focus:border-blue-500 focus:outline-none"
                   >
                     <option value={5}>5</option>
@@ -423,17 +461,13 @@ const EventHistory = () => {
                     Loading event history...
                   </div>
                 </div>
-              ) : historyData?.eventHistory &&
-                historyData.eventHistory.length > 0 ? (
+              ) : historyData?.eventHistory && historyData.eventHistory.length > 0 ? (
                 <div className="divide-y divide-gray-700">
                   {historyData.eventHistory.map((registration) => {
+                    const applicableFee = getApplicableFee(registration);
                     const spendingAmount = getSpendingAmount(registration);
-                    const isPaidEvent =
-                      parseFloat(registration.paymentAmount || 0) > 0;
-                    const approvalStatus =
-                      registration.approvalStatus ||
-                      registration.status ||
-                      "pending";
+                    const isPaidEvent = parseFloat(registration.paymentAmount || 0) > 0;
+                    const approvalStatus = registration.approvalStatus || "pending";
 
                     return (
                       <div
@@ -447,9 +481,7 @@ const EventHistory = () => {
                                 src={registration.eventId.image}
                                 alt={registration.eventId?.title || "Event"}
                                 className="w-16 h-16 object-cover rounded"
-                                onError={(e) => {
-                                  e.target.style.display = "none";
-                                }}
+                                onError={(e) => { e.target.style.display = "none"; }}
                               />
                             )}
                             <div className="flex-1">
@@ -457,16 +489,12 @@ const EventHistory = () => {
                                 {registration.eventId?.title || "Event Title"}
                               </h4>
                               <p className="text-gray-400 text-sm mb-2">
-                                {registration.eventId?.description?.substring(
-                                  0,
-                                  100
-                                )}
+                                {registration.eventId?.description?.substring(0, 100)}
                                 ...
                               </p>
                               <div className="flex flex-wrap gap-4 text-sm text-gray-400">
                                 <span>
-                                  Registered:{" "}
-                                  {formatDate(registration.registrationDate)}
+                                  Registered: {formatDate(registration.registrationDate)}
                                 </span>
                                 <span>
                                   Event Date:{" "}
@@ -474,40 +502,55 @@ const EventHistory = () => {
                                     ? formatDate(registration.eventId.date)
                                     : "TBD"}
                                 </span>
-                                <span
-                                  className={`${
-                                    spendingAmount > 0
-                                      ? "text-green-400"
-                                      : "text-gray-400"
-                                  }`}
-                                >
+                                <span className={`${spendingAmount > 0 ? "text-green-400" : "text-gray-400"}`}>
                                   {isPaidEvent
                                     ? approvalStatus === "approved"
-                                      ? `Spent: ₹${registration.paymentAmount}`
-                                      : approvalStatus === "denied" ||
-                                        approvalStatus === "rejected"
-                                      ? `Payment: ₹${registration.paymentAmount} (Rejected)`
-                                      : `Payment: ₹${registration.paymentAmount} (Pending Approval)`
+                                      ? `Spent: ₹${applicableFee}`
+                                      : approvalStatus === "denied"
+                                      ? `Payment: ₹${applicableFee} (Rejected)`
+                                      : `Payment: ₹${applicableFee} (Pending Approval)`
                                     : "Free Event"}
                                 </span>
-                                {/* Show approval status for paid events */}
+                              </div>
+
+                              {/* Status Badges */}
+                              <div className="flex flex-wrap gap-2 mt-2">
+                                {/* Participation Type */}
+                                <span className="px-2 py-1 rounded text-xs font-medium bg-purple-600 text-white">
+                                  {registration.participationType === 'team'
+                                    ? `Team (${registration.teamSize || 'unknown'})`
+                                    : 'Solo'}
+                                </span>
+
+                                {/* Approval Status for Paid Events */}
                                 {isPaidEvent && (
                                   <span
                                     className={`px-2 py-1 rounded text-xs font-medium ${
                                       approvalStatus === "approved"
                                         ? "bg-green-600 text-white"
-                                        : approvalStatus === "denied" ||
-                                          approvalStatus === "rejected"
+                                        : approvalStatus === "denied"
                                         ? "bg-red-600 text-white"
                                         : "bg-yellow-600 text-white"
                                     }`}
                                   >
                                     {approvalStatus === "denied"
                                       ? "Rejected"
-                                      : approvalStatus === "rejected"
-                                      ? "Rejected"
                                       : approvalStatus.charAt(0).toUpperCase() +
                                         approvalStatus.slice(1)}
+                                  </span>
+                                )}
+
+                                {/* Attendance Status */}
+                                {registration.attendanceStatus !== 'registered' && (
+                                  <span
+                                    className={`px-2 py-1 rounded text-xs font-medium ${getStatusColor(
+                                      registration.attendanceStatus
+                                    )} text-white`}
+                                  >
+                                    {registration.attendanceStatus
+                                      ?.charAt(0)
+                                      .toUpperCase() +
+                                      registration.attendanceStatus?.slice(1)}
                                   </span>
                                 )}
                               </div>
@@ -515,22 +558,9 @@ const EventHistory = () => {
                           </div>
 
                           <div className="flex items-center gap-3">
-                            <span
-                              className={`px-3 py-1 rounded text-white text-sm font-medium ${getStatusColor(
-                                registration.attendanceStatus
-                              )}`}
-                            >
-                              {registration.attendanceStatus
-                                ?.charAt(0)
-                                .toUpperCase() +
-                                registration.attendanceStatus?.slice(1)}
-                            </span>
-
                             {registration.attendanceStatus === "registered" && (
                               <button
-                                onClick={() =>
-                                  handleCancelRegistration(registration._id)
-                                }
+                                onClick={() => handleCancelRegistration(registration._id)}
                                 disabled={cancelling === registration._id}
                                 className="bg-red-600 hover:bg-red-700 disabled:bg-red-400 text-white px-4 py-2 rounded text-sm font-medium transition-colors duration-200"
                               >
@@ -583,10 +613,7 @@ const EventHistory = () => {
                     { length: Math.min(5, historyData.totalPages) },
                     (_, i) => {
                       const pageNum =
-                        Math.max(
-                          1,
-                          Math.min(historyData.totalPages - 4, filters.page - 2)
-                        ) + i;
+                        Math.max(1, Math.min(historyData.totalPages - 4, filters.page - 2)) + i;
                       return (
                         <button
                           key={pageNum}
@@ -614,30 +641,29 @@ const EventHistory = () => {
               </div>
             )}
 
-            {/* Category Spending */}
-            {analyticsData?.categorySpending &&
-              analyticsData.categorySpending.length > 0 && (
-                <div className="bg-gray-800 p-6 rounded-lg mt-8">
-                  <h3 className="text-xl font-semibold text-white mb-4">
-                    Spending by Category
-                  </h3>
-                  <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {analyticsData.categorySpending.map((category, index) => (
-                      <div key={index} className="bg-gray-700 p-4 rounded">
-                        <h4 className="text-white font-semibold mb-2">
-                          {category._id || "Uncategorized"}
-                        </h4>
-                        <p className="text-2xl font-bold text-green-400 mb-1">
-                          ₹{category.totalSpent}
-                        </p>
-                        <p className="text-gray-400 text-sm">
-                          {category.eventCount} events
-                        </p>
-                      </div>
-                    ))}
-                  </div>
+            {/* Event Type Spending */}
+            {analyticsData?.eventTypeSpending && analyticsData.eventTypeSpending.length > 0 && (
+              <div className="bg-gray-800 p-6 rounded-lg mt-8">
+                <h3 className="text-xl font-semibold text-white mb-4">
+                  Spending by Event Type
+                </h3>
+                <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {analyticsData.eventTypeSpending.map((category, index) => (
+                    <div key={index} className="bg-gray-700 p-4 rounded">
+                      <h4 className="text-white font-semibold mb-2">
+                        {category._id || "Uncategorized"}
+                      </h4>
+                      <p className="text-2xl font-bold text-green-400 mb-1">
+                        ₹{category.totalSpent}
+                      </p>
+                      <p className="text-gray-400 text-sm">
+                        {category.eventCount} events • Avg: ₹{Math.round(category.avgSpent || 0)}
+                      </p>
+                    </div>
+                  ))}
                 </div>
-              )}
+              </div>
+            )}
           </div>
         </div>
       </div>

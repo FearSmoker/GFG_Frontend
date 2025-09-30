@@ -26,7 +26,7 @@ const getRegistrationAuthHeaders = () => {
   };
 };
 
-// Register for an event (updated to support team registration)
+// Register for an event (supports both solo and team registration)
 export const registerForEvent = async (eventId, registrationData = {}) => {
   try {
     const headers = getRegistrationAuthHeaders();

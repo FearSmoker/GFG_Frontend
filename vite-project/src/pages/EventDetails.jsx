@@ -23,9 +23,11 @@ const EventDetails = () => {
   const [isAlreadyRegistered, setIsAlreadyRegistered] = useState(false);
   const [checkingRegistration, setCheckingRegistration] = useState(false);
   const [registrationStatus, setRegistrationStatus] = useState(null);
-
   const [registrationStep, setRegistrationStep] = useState("form");
   const [registrationId, setRegistrationId] = useState(null);
+  
+  // New state for participation type selection
+  const [selectedParticipationType, setSelectedParticipationType] = useState(null);
 
   useEffect(() => {
     if (user) {
@@ -45,7 +47,6 @@ const EventDetails = () => {
     setCheckingRegistration(true);
     try {
       const response = await getUserRegistrations();
-
       const userRegistrations =
         response.data?.registrations ||
         response.registrations ||
@@ -80,7 +81,6 @@ const EventDetails = () => {
 
         const isNotCancelled =
           !reg.attendanceStatus || reg.attendanceStatus !== "cancelled";
-
         const idsMatch =
           regEventId &&
           (regEventId.toString() === eventId.toString() ||
@@ -143,50 +143,43 @@ const EventDetails = () => {
 
   const getEventStatus = () => {
     if (!event || !event.date) return "upcoming";
-
     const currentDate = new Date();
     const eventDate = new Date(event.date);
 
-    if (event.eventStatus === "cancelled") {
-      return "cancelled";
-    }
-
-    if (eventDate < currentDate) {
-      return "completed";
-    }
-
+    if (event.eventStatus === "cancelled") return "cancelled";
+    if (eventDate < currentDate) return "completed";
     return "upcoming";
   };
 
   const getSeatStatus = () => {
-    if (!event || !event.maxParticipants) return "available";
-
-    const currentParticipants = event.currentParticipants || 0;
-    const maxParticipants = event.maxParticipants;
-
-    return currentParticipants >= maxParticipants ? "full" : "available";
+    if (!event) return "available";
+    
+    // For team events with maxTeams
+    if (event.participationMode === 'team' && event.maxTeams) {
+      return (event.currentTeams || 0) >= event.maxTeams ? "full" : "available";
+    }
+    
+    // For solo or both modes with maxParticipants
+    if (event.maxParticipants) {
+      return (event.currentParticipants || 0) >= event.maxParticipants ? "full" : "available";
+    }
+    
+    return "available";
   };
 
   const getStatusTagStyle = (status, type) => {
     if (type === "event") {
       switch (status) {
-        case "upcoming":
-          return "bg-green-600 text-white";
-        case "completed":
-          return "bg-gray-600 text-white";
-        case "cancelled":
-          return "bg-red-600 text-white";
-        default:
-          return "bg-blue-600 text-white";
+        case "upcoming": return "bg-green-600 text-white";
+        case "completed": return "bg-gray-600 text-white";
+        case "cancelled": return "bg-red-600 text-white";
+        default: return "bg-blue-600 text-white";
       }
     } else if (type === "seat") {
       switch (status) {
-        case "available":
-          return "bg-blue-600 text-white";
-        case "full":
-          return "bg-orange-600 text-white";
-        default:
-          return "bg-gray-600 text-white";
+        case "available": return "bg-blue-600 text-white";
+        case "full": return "bg-orange-600 text-white";
+        default: return "bg-gray-600 text-white";
       }
     }
   };
@@ -218,8 +211,25 @@ const EventDetails = () => {
       return;
     }
 
-    // Directly open the register form
-    setShowRegisterForm(true);
+    // Check participation mode and set accordingly
+    if (event.participationMode === 'solo') {
+      setSelectedParticipationType('solo');
+      setShowRegisterForm(true);
+      setRegistrationStep("form");
+    } else if (event.participationMode === 'team') {
+      setSelectedParticipationType('team');
+      setShowRegisterForm(true);
+      setRegistrationStep("form");
+    } else {
+      // 'both' mode - show selection
+      setSelectedParticipationType(null);
+      setShowRegisterForm(true);
+      setRegistrationStep("selection");
+    }
+  };
+
+  const handleParticipationTypeSelect = (type) => {
+    setSelectedParticipationType(type);
     setRegistrationStep("form");
   };
 
@@ -231,9 +241,8 @@ const EventDetails = () => {
       return;
     }
 
-    // Use provided API data or fall back to solo registration data
     const dataToSubmit = apiRegistrationData || {
-      participationType: "solo",
+      participationType: selectedParticipationType || "solo",
       fullName: registrationData.fullName,
       email: registrationData.email,
       enrollmentNo: registrationData.enrollmentNo,
@@ -260,18 +269,18 @@ const EventDetails = () => {
 
       setRegistrationId(extractedRegistrationId);
 
-      const isPaidEvent = parseFloat(event.registrationFee || 0) > 0;
+      // Determine applicable fee based on participation type
+      const applicableFee = selectedParticipationType === 'team' 
+        ? parseFloat(event.teamRegistrationFee || 0)
+        : parseFloat(event.registrationFee || 0);
+      const isPaidEvent = applicableFee > 0;
 
       if (isPaidEvent) {
         setRegistrationStep("payment");
-        toast.success(
-          `Registration submitted! Please complete the payment process.`
-        );
+        toast.success("Registration submitted! Please complete the payment process.");
       } else {
         setRegistrationStep("success");
-        toast.success(
-          `Successfully registered for the event! Registration ID: ${extractedRegistrationId}`
-        );
+        toast.success(`Successfully registered for the event! Registration ID: ${extractedRegistrationId}`);
         setIsAlreadyRegistered(true);
         setRegistrationStatus("approved");
         await fetchEventDetails();
@@ -279,10 +288,7 @@ const EventDetails = () => {
     } catch (error) {
       console.error("Registration error:", error);
 
-      if (
-        error.message.includes("session has expired") ||
-        error.message.includes("log in again")
-      ) {
+      if (error.message.includes("session has expired") || error.message.includes("log in again")) {
         toast.error(error.message);
         navigate("/signin");
       } else if (error.message.includes("Already registered")) {
@@ -294,9 +300,7 @@ const EventDetails = () => {
       } else if (error.message.includes("Registration deadline")) {
         toast.error("Registration deadline has passed");
       } else {
-        toast.error(
-          error.message || "Failed to register for event. Please try again."
-        );
+        toast.error(error.message || "Failed to register for event. Please try again.");
       }
     } finally {
       setRegistering(false);
@@ -307,17 +311,13 @@ const EventDetails = () => {
     setRegistering(true);
     try {
       setRegistrationStep("success");
-      toast.success(
-        `Payment completed! Registration ID: ${registrationId}. Your enrollment is now pending admin approval.`
-      );
+      toast.success(`Payment completed! Registration ID: ${registrationId}. Your enrollment is now pending admin approval.`);
       setIsAlreadyRegistered(true);
       setRegistrationStatus("pending");
       await fetchEventDetails();
     } catch (error) {
       console.error("Error updating registration status:", error);
-      toast.error(
-        "Failed to update registration status. Please contact support."
-      );
+      toast.error("Failed to update registration status. Please contact support.");
     } finally {
       setRegistering(false);
     }
@@ -327,6 +327,7 @@ const EventDetails = () => {
     setShowRegisterForm(false);
     setRegistrationStep("form");
     setRegistrationId(null);
+    setSelectedParticipationType(null);
 
     if (user) {
       setRegistrationData({
@@ -358,17 +359,14 @@ const EventDetails = () => {
 
   const isRegistrationOpen = () => {
     if (!event) return false;
-
     const eventStatus = getEventStatus();
     if (eventStatus !== "upcoming") return false;
 
     if (event.registrationDeadline) {
       const currentDate = new Date();
       const deadlineDate = new Date(event.registrationDeadline);
-
       return currentDate < deadlineDate;
     }
-
     return true;
   };
 
@@ -377,11 +375,10 @@ const EventDetails = () => {
   };
 
   const getRegistrationButtonInfo = () => {
-    if (!isAlreadyRegistered) {
-      return null;
-    }
+    if (!isAlreadyRegistered) return null;
 
-    const isPaidEvent = parseFloat(event?.registrationFee || 0) > 0;
+    const applicableFee = parseFloat(event?.registrationFee || event?.teamRegistrationFee || 0);
+    const isPaidEvent = applicableFee > 0;
 
     if (isPaidEvent) {
       if (registrationStatus === "approved") {
@@ -389,10 +386,7 @@ const EventDetails = () => {
           text: "✓ Registration Approved",
           style: "bg-green-600 text-white px-6 py-3 rounded-lg font-semibold",
         };
-      } else if (
-        registrationStatus === "denied" ||
-        registrationStatus === "rejected"
-      ) {
+      } else if (registrationStatus === "denied" || registrationStatus === "rejected") {
         return {
           text: "❌ Registration Rejected",
           style: "bg-red-600 text-white px-6 py-3 rounded-lg font-semibold",
@@ -414,11 +408,9 @@ const EventDetails = () => {
   if (loading) {
     return (
       <div className="relative min-h-screen w-full">
-        {/* Background */}
         <div className="absolute inset-0 z-0">
           <OtherPage1 />
         </div>
-
         <div className="relative z-10 flex items-center justify-center min-h-screen">
           <div className="text-white text-xl">Loading event details...</div>
         </div>
@@ -429,9 +421,7 @@ const EventDetails = () => {
   if (!event) {
     return (
       <div className="relative min-h-screen w-full">
-        {/* Background */}
         <OtherPage1 />
-
         <div className="relative z-10 flex items-center justify-center min-h-screen">
           <div className="text-center">
             <div className="text-white text-xl mb-4">Event not found</div>
@@ -453,13 +443,9 @@ const EventDetails = () => {
 
   return (
     <div className="relative min-h-screen w-full">
-      {/* Background */}
       <OtherPage1 />
-
-      {/* Content */}
       <div className="relative z-10 pt-36 pb-12 px-4">
         <div className="max-w-4xl mx-auto">
-          {/* Event Header */}
           <div className="bg-gray-800/90 backdrop-blur-sm border border-gray-700/50 rounded-lg overflow-hidden shadow-xl">
             <div className="relative">
               <img
@@ -467,14 +453,27 @@ const EventDetails = () => {
                 alt={event.title || "Event"}
                 className="w-full h-64 md:h-80 object-cover"
               />
-              <div className="absolute top-4 right-4">
-                {(event.registrationFee || 0) > 0 ? (
-                  <span className="bg-green-500 text-white px-3 py-1 rounded-lg text-lg font-semibold">
-                    ₹{event.registrationFee}
+              <div className="absolute top-4 right-4 flex flex-col gap-2">
+                {event.participationMode === 'both' ? (
+                  <>
+                    {event.registrationFee > 0 && (
+                      <span className="bg-green-500 text-white px-3 py-1 rounded-lg text-sm font-semibold">
+                        Solo: ₹{event.registrationFee}
+                      </span>
+                    )}
+                    {event.teamRegistrationFee > 0 && (
+                      <span className="bg-purple-500 text-white px-3 py-1 rounded-lg text-sm font-semibold">
+                        Team: ₹{event.teamRegistrationFee}
+                      </span>
+                    )}
+                  </>
+                ) : event.participationMode === 'team' ? (
+                  <span className="bg-purple-500 text-white px-3 py-1 rounded-lg text-lg font-semibold">
+                    {event.teamRegistrationFee > 0 ? `₹${event.teamRegistrationFee}` : 'FREE'}
                   </span>
                 ) : (
-                  <span className="bg-blue-500 text-white px-3 py-1 rounded-lg text-lg font-semibold">
-                    FREE
+                  <span className="bg-green-500 text-white px-3 py-1 rounded-lg text-lg font-semibold">
+                    {event.registrationFee > 0 ? `₹${event.registrationFee}` : 'FREE'}
                   </span>
                 )}
               </div>
@@ -492,49 +491,51 @@ const EventDetails = () => {
                     <span>{formatDate(event.date)}</span>
                   </div>
 
-                  {event.maxParticipants && (
+                  {/* Participation Mode Display */}
+                  <div className="flex items-center text-gray-300">
+                    <span className="mr-3">👥</span>
+                    <span className="capitalize">
+                      {event.participationMode === 'both' ? 'Solo & Team' : event.participationMode} Participation
+                    </span>
+                  </div>
+
+                  {event.participationMode !== 'solo' && event.allowedTeamSizes && (
                     <div className="flex items-center text-gray-300">
-                      <span className="mr-3">👥</span>
+                      <span className="mr-3">🎯</span>
                       <span>
-                        {event.currentParticipants || 0}/{event.maxParticipants}{" "}
-                        registered
+                        Team Sizes: {event.allowedTeamSizes.filter(s => s !== 'solo').join(', ')}
                       </span>
                     </div>
                   )}
 
-                  <div className="flex items-center text-gray-300">
-                    <span className="mr-3">💰</span>
-                    <span>
-                      {(event.registrationFee || 0) > 0
-                        ? `₹${event.registrationFee}`
-                        : "Free"}
-                    </span>
-                  </div>
+                  {event.maxParticipants && (
+                    <div className="flex items-center text-gray-300">
+                      <span className="mr-3">👤</span>
+                      <span>
+                        {event.currentParticipants || 0}/{event.maxParticipants} participants
+                      </span>
+                    </div>
+                  )}
+
+                  {event.maxTeams && (
+                    <div className="flex items-center text-gray-300">
+                      <span className="mr-3">🏆</span>
+                      <span>
+                        {event.currentTeams || 0}/{event.maxTeams} teams
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 <div className="space-y-3">
-                  {/* Two Status Tags in a Row */}
                   <div className="flex items-center gap-3 text-gray-300">
                     <span className="mr-1">🏷️</span>
                     <div className="flex gap-2">
-                      {/* Event Status Tag */}
-                      <span
-                        className={`px-3 py-1 rounded-lg text-sm font-medium ${getStatusTagStyle(
-                          eventStatus,
-                          "event"
-                        )}`}
-                      >
+                      <span className={`px-3 py-1 rounded-lg text-sm font-medium ${getStatusTagStyle(eventStatus, "event")}`}>
                         {eventStatus.toUpperCase()}
                       </span>
-
-                      {/* Seat Status Tag */}
-                      {event.maxParticipants && (
-                        <span
-                          className={`px-3 py-1 rounded-lg text-sm font-medium ${getStatusTagStyle(
-                            seatStatus,
-                            "seat"
-                          )}`}
-                        >
+                      {(event.maxParticipants || event.maxTeams) && (
+                        <span className={`px-3 py-1 rounded-lg text-sm font-medium ${getStatusTagStyle(seatStatus, "seat")}`}>
                           {seatStatus.toUpperCase()}
                         </span>
                       )}
@@ -546,9 +547,7 @@ const EventDetails = () => {
                       <span className="mr-3">⏰</span>
                       <span>
                         Registration ends:{" "}
-                        {new Date(
-                          event.registrationDeadline
-                        ).toLocaleDateString("en-US", {
+                        {new Date(event.registrationDeadline).toLocaleDateString("en-US", {
                           year: "numeric",
                           month: "short",
                           day: "numeric",
@@ -562,22 +561,17 @@ const EventDetails = () => {
               </div>
 
               <div className="mb-6">
-                <h2 className="text-xl font-semibold text-white mb-3">
-                  Description
-                </h2>
+                <h2 className="text-xl font-semibold text-white mb-3">Description</h2>
                 <p className="text-gray-300 leading-relaxed">
                   {event.description || "No description available."}
                 </p>
               </div>
 
-              {/* Registration Section */}
               <div className="border-t border-gray-700 pt-6">
                 {user ? (
                   <div className="flex flex-col sm:flex-row gap-4">
                     {checkingRegistration ? (
-                      <div className="text-gray-400">
-                        Checking registration status...
-                      </div>
+                      <div className="text-gray-400">Checking registration status...</div>
                     ) : registrationButtonInfo ? (
                       <span className={registrationButtonInfo.style}>
                         {registrationButtonInfo.text}
@@ -593,11 +587,8 @@ const EventDetails = () => {
                     ) : (
                       <div className="text-gray-400">
                         {eventStatus === "completed" && "Event has ended"}
-                        {eventStatus === "cancelled" &&
-                          "Event has been cancelled"}
-                        {!isRegistrationOpen() &&
-                          eventStatus === "upcoming" &&
-                          "Registration has closed"}
+                        {eventStatus === "cancelled" && "Event has been cancelled"}
+                        {!isRegistrationOpen() && eventStatus === "upcoming" && "Registration has closed"}
                         {isFull() && "Event is full"}
                       </div>
                     )}
@@ -611,9 +602,7 @@ const EventDetails = () => {
                   </div>
                 ) : (
                   <div className="text-center">
-                    <p className="text-gray-300 mb-4">
-                      Please login to register for this event
-                    </p>
+                    <p className="text-gray-300 mb-4">Please login to register for this event</p>
                     <button
                       onClick={() => navigate("/signin")}
                       className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-colors duration-200"
@@ -628,7 +617,7 @@ const EventDetails = () => {
         </div>
       </div>
 
-      {/* Registration Form Modal */}
+      {/* Registration Modal with Participation Type Selection */}
       {showRegisterForm && event && (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-md flex items-center justify-center p-4 z-50">
           <div className="bg-gray-800 rounded-lg p-6 max-w-md w-full max-h-[calc(100vh-4rem)] overflow-y-auto my-8">
@@ -644,17 +633,45 @@ const EventDetails = () => {
               </button>
             </div>
 
-            <RegisterForm
-              registrationData={registrationData}
-              setRegistrationData={setRegistrationData}
-              handleRegisterSubmit={handleRegistrationSubmit}
-              isLoading={registering}
-              onCancel={handleCancelRegistration}
-              event={event}
-              registrationStep={registrationStep}
-              onPaymentCompleted={handlePaymentCompleted}
-              registrationId={registrationId}
-            />
+            {registrationStep === "selection" && event.participationMode === 'both' ? (
+              <div className="space-y-4">
+                <p className="text-gray-300 mb-4">Choose your participation type:</p>
+                <button
+                  onClick={() => handleParticipationTypeSelect('solo')}
+                  className="w-full bg-green-600 hover:bg-green-700 text-white p-4 rounded-lg transition-colors"
+                >
+                  <div className="font-bold text-lg mb-1">Solo Participation</div>
+                  <div className="text-sm">
+                    {event.registrationFee > 0 ? `₹${event.registrationFee}` : 'FREE'}
+                  </div>
+                </button>
+                <button
+                  onClick={() => handleParticipationTypeSelect('team')}
+                  className="w-full bg-purple-600 hover:bg-purple-700 text-white p-4 rounded-lg transition-colors"
+                >
+                  <div className="font-bold text-lg mb-1">Team Participation</div>
+                  <div className="text-sm">
+                    {event.teamRegistrationFee > 0 ? `₹${event.teamRegistrationFee}` : 'FREE'}
+                  </div>
+                  <div className="text-xs mt-1">
+                    Allowed sizes: {event.allowedTeamSizes.filter(s => s !== 'solo').join(', ')}
+                  </div>
+                </button>
+              </div>
+            ) : (
+              <RegisterForm
+                registrationData={registrationData}
+                setRegistrationData={setRegistrationData}
+                handleRegisterSubmit={handleRegistrationSubmit}
+                isLoading={registering}
+                onCancel={handleCancelRegistration}
+                event={event}
+                registrationStep={registrationStep}
+                onPaymentCompleted={handlePaymentCompleted}
+                registrationId={registrationId}
+                participationType={selectedParticipationType}
+              />
+            )}
           </div>
         </div>
       )}

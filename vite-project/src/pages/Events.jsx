@@ -52,10 +52,16 @@ const Events = () => {
           eventType: e.eventType,
           eventPrize: e.eventPrize,
           registrationFee: e.registrationFee,
+          teamRegistrationFee: e.teamRegistrationFee,
           maxParticipants: e.maxParticipants,
           currentParticipants: e.currentParticipants,
           registrationDeadline: e.registrationDeadline,
           eventStatus: e.eventStatus,
+          participationMode: e.participationMode,
+          allowedTeamSizes: e.allowedTeamSizes,
+          maxTeams: e.maxTeams,
+          currentTeams: e.currentTeams,
+          paymentFormLink: e.paymentFormLink,
           _id: e._id,
         }));
         setEvents(formattedEvents);
@@ -163,8 +169,6 @@ const Events = () => {
   const BackgroundComponent =
     themeMode === "dark" ? EventsBg1DarkComponent3 : EventsBg1Component3;
 
-
-    
   if (loading) {
     return (
       <BackgroundComponent
