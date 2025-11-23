@@ -175,7 +175,7 @@ const Navbar = () => {
               active={currentPath === "/about-us"}
             />
             <NavbarLink
-              label="Nation Skill Up!"
+              label="GFG-Connect"
               onClick={() => goTo("/nation-skill-up")}
               active={currentPath === "//nation-skill-up"}
             />
