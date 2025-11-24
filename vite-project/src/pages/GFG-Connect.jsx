@@ -3,10 +3,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import useTheme from "../context/ThemeContext";
 import OtherPage1 from "../components/OtherPage1";
 
-import Pic01 from "/src/assets/Nation-images/Pic01.jpeg";
-import Pic02 from "/src/assets/Nation-images/Pic02.jpeg";
-import Pic03 from "/src/assets/Nation-images/Pic03.jpeg";
-import Pic04 from "/src/assets/Nation-images/Pic04.jpeg";
+import Pic01 from "../assets/Nation-images/Pic01.jpeg";
+import Pic02 from "../assets/Nation-images/Pic02.jpeg";
+import Pic03 from "../assets/Nation-images/Pic03.jpeg";
+import Pic04 from "../assets/Nation-images/Pic04.jpeg";
 // import Pic5 from "/src/assets/Nation-images/Pic5.jpeg";
 // import Pic6 from "/src/assets/Nation-images/Pic6.jpeg";
 // import Pic7 from "/src/assets/Nation-images/Pic7.jpeg";
