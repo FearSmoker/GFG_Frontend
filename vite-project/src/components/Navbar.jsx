@@ -176,8 +176,8 @@ const Navbar = () => {
             />
             <NavbarLink
               label="GFG-Connect"
-              onClick={() => goTo("/nation-skill-up")}
-              active={currentPath === "//nation-skill-up"}
+              onClick={() => goTo("/GFG-Connect")}
+              active={currentPath === "/GFG-Connect"}
             />
             <NavbarLink
               label="POTD"
@@ -447,8 +447,8 @@ const Navbar = () => {
                   },
                   { label: "Events", path: "/events", icon: "🎯" },
                   {
-                    label: "Nation Skill Up!",
-                    path: "/nation-skill-up",
+                    label: "GFG-Connect",
+                    path: "/GFG-Connect",
                     icon: "🚀",
                   },
                   { label: "About Us", path: "/about-us", icon: "ℹ️" },
