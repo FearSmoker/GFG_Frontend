@@ -3,17 +3,17 @@ import { motion, AnimatePresence } from "framer-motion";
 import useTheme from "../context/ThemeContext";
 import OtherPage1 from "../components/OtherPage1";
 
-import Pic1 from "/src/assets/Nation-images/Pic1.jpeg";
-import Pic2 from "/src/assets/Nation-images/Pic2.jpeg";
-import Pic3 from "/src/assets/Nation-images/Pic3.jpeg";
-import Pic4 from "/src/assets/Nation-images/Pic4.jpeg";
-import Pic5 from "/src/assets/Nation-images/Pic5.jpeg";
-import Pic6 from "/src/assets/Nation-images/Pic6.jpeg";
-import Pic7 from "/src/assets/Nation-images/Pic7.jpeg";
+import Pic01 from "/src/assets/Nation-images/Pic01.jpeg";
+import Pic02 from "/src/assets/Nation-images/Pic02.jpeg";
+import Pic03 from "/src/assets/Nation-images/Pic03.jpeg";
+import Pic04 from "/src/assets/Nation-images/Pic04.jpeg";
+// import Pic5 from "/src/assets/Nation-images/Pic5.jpeg";
+// import Pic6 from "/src/assets/Nation-images/Pic6.jpeg";
+// import Pic7 from "/src/assets/Nation-images/Pic7.jpeg";
 
 export default function NationSkillUpPage() {
     // Carousel Images
-    const images = [Pic1, Pic2, Pic3, Pic4, Pic5, Pic6, Pic7];
+    const images = [Pic01, Pic02, Pic03, Pic04];
     const { themeMode } = useTheme();
     const isLightTheme = themeMode === "light";
     const [current, setCurrent] = useState(0);
@@ -77,7 +77,7 @@ export default function NationSkillUpPage() {
                             transition={{ type: "spring", stiffness: 300 }}
                             className="scale-120 mt-2 px-5 py-2.5 bg-emerald-600 text-white font-bold rounded-lg shadow-md w-45"
                         >
-                            <a target="_blank" href="https://www.geeksforgeeks.org/connect">Register Now!</a>
+                            <a target="_blank" href="https://www.geeksforgeeks.org/connect/explore">Register Now!</a>
                         </motion.button>
 
                     </motion.div>
