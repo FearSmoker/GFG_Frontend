@@ -19,7 +19,7 @@ export default function Nationpopup() {
           {/* Illustration */}
           <div className="flex-shrink-0">
             <img
-              src="https://media.GeeksforGeeks.org/auth-dashboard-uploads/Frame-7686.svg"
+              src="./src/assets/Nation-images/Connect-Banner.png"
               alt="nation"
               className="w-16 h-16 sm:w-20 sm:h-20 object-contain rounded-lg shadow-md"
             />
@@ -28,10 +28,10 @@ export default function Nationpopup() {
           {/* Text */}
           <div className="flex-1">
             <h3 className="text-lg sm:text-xl font-bold text-emerald-300">
-              Nation Skill Up
+              GFG-Connect
             </h3>
             <p className="text-sm sm:text-base text-gray-100 leading-snug">
-              upskill now! 🚀
+              connect now! 🚀
             </p>
             <button className="mt-2 px-4 py-2 bg-emerald-500 text-white font-semibold rounded-lg shadow-md hover:bg-emerald-600 transition">
               <Link to="/nation-skill-up">Register Now</Link> 
