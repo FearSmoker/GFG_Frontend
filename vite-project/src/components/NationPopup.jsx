@@ -35,7 +35,7 @@ export default function Nationpopup() {
                             connect now! 🚀
                         </p>
                         <button className="mt-2 px-4 py-2 bg-emerald-500 text-white font-semibold rounded-lg shadow-md hover:bg-emerald-600 transition">
-                            <Link to="https://www.geeksforgeeks.org/connect/explore">Register Now</Link>
+                            <Link to="https://www.gfgcampusbodymitsdu.qzz.io/GFG-Connect">Register Now</Link>
                         </button>
                     </div>
 

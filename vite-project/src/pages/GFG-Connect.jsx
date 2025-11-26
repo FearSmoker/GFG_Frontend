@@ -119,57 +119,51 @@ export default function NationSkillUpPage() {
                     </div>
                 </section>
 
-                {/* Gallery Carousel */}
-                <section className="py-16 relative px-4">
-                    <h2
-                        className={`${isLightTheme ? "text-[#0A7956]" : "text-[#00FFAF]"
-                            } text-3xl sm:text-4xl font-bold text-center mb-10`}
-                    >
-                        Event Highlights
-                    </h2>
+{/* Gallery Carousel */}
+<section className="py-6 relative px-4"> 
+  <h2
+    className={`${isLightTheme ? "text-[#0A7956]" : "text-[#00FFAF]"} 
+    text-xl sm:text-2xl font-bold text-center mb-4`}
+  >
+    Event Highlights
+  </h2>
 
-                    <div className="relative w-full max-w-5xl mx-auto overflow-hidden rounded-2xl shadow-xl">
-                        <AnimatePresence mode="wait">
-                            <motion.div
-                                key={current}
-                                initial={{ opacity: 0, x: 100 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                exit={{ opacity: 0, x: -100 }}
-                                transition={{ duration: 0.8 }}
-                                className="flex justify-center gap-4"
-                            >
-                                {/* ✅ Responsive: 1 image on mobile, 3 on larger screens */}
-                                {images
-                                    .slice(
-                                        current,
-                                        current + (window.innerWidth < 640 ? 1 : 3) // <640px → 1 image
-                                    )
-                                    .map((img, idx) => (
-                                        <img
-                                            key={idx}
-                                            src={img}
-                                            alt={`Slide ${current + idx}`}
-                                            className="w-full sm:w-1/3 h-[520px] sm:h-[680px] md:h-[760px] object-cover rounded-lg"
-                                        />
-                                    ))}
-                            </motion.div>
-                        </AnimatePresence>
+  <div className="relative w-full max-w-2xl mx-auto overflow-hidden rounded-2xl shadow-lg">
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={current}
+        initial={{ opacity: 0, x: 80 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: -80 }}
+        transition={{ duration: 0.7 }}
+        className="relative w-full bg-black/80 rounded-xl"
+      >
+        {/* FIXED 4:5 ASPECT RATIO CONTAINER */}
+        <div className="relative w-full" style={{ paddingBottom: "125%" }}>
+          <img
+            src={images[current]}
+            alt={`Slide ${current}`}
+            className="absolute inset-0 w-full h-full object-contain object-center rounded-xl bg-black"
+            loading="lazy"
+          />
+        </div>
+      </motion.div>
+    </AnimatePresence>
 
-                        {/* Circles */}
-                        <div className="absolute bottom-4 w-full flex justify-center space-x-3">
-                            {images.map((_, idx) => (
-                                <button
-                                    key={idx}
-                                    onClick={() => setCurrent(idx)}
-                                    className={`w-3 h-3 sm:w-4 sm:h-4 rounded-full ${current === idx ? "bg-green-500" : "bg-gray-400"
-                                        }`}
-                                />
-                            ))}
-                        </div>
-                    </div>
-                </section>
-
-
+    {/* Circles */}
+    <div className="absolute bottom-2 w-full flex justify-center space-x-1.5">
+      {images.map((_, idx) => (
+        <button
+          key={idx}
+          onClick={() => setCurrent(idx)}
+          className={`w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full ${
+            current === idx ? "bg-green-500" : "bg-gray-400"
+          }`}
+        />
+      ))}
+    </div>
+  </div>
+</section>
 
                 {/* Testimonials */}
                 <section className="py-16 px-6 md:px-20">
