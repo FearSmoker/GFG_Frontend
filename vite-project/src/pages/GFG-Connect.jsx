@@ -2,14 +2,12 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import useTheme from "../context/ThemeContext";
 import OtherPage1 from "../components/OtherPage1";
+import ConnectBanner from "../assets/Nation-images/ConnectBanner.png";
 
 import Pic01 from "../assets/Nation-images/Pic01.png";
 import Pic02 from "../assets/Nation-images/Pic02.png";
 import Pic03 from "../assets/Nation-images/Pic03.png";
 import Pic04 from "../assets/Nation-images/Pic04.png";
-// import Pic5 from "/src/assets/Nation-images/Pic5.png";
-// import Pic6 from "/src/assets/Nation-images/Pic6.png";
-// import Pic7 from "/src/assets/Nation-images/Pic7.png";
 
 export default function NationSkillUpPage() {
     // Carousel Images
@@ -113,7 +111,7 @@ export default function NationSkillUpPage() {
                             className="flex justify-center md:justify-end"
                         >
                             <img
-                                src="./src/assets/Nation-images/Connect-Banner.png"
+                                src={ConnectBanner}
                                 alt="Event Banner"
                                 className="rounded-xl shadow-lg w-11/12 sm:w-3/4 md:w-full h-64 sm:h-80 md:h-96 object-cover"
                             />
