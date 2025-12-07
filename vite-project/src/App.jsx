@@ -27,6 +27,7 @@ import PageNotFound from "./pages/PageNotFound.jsx";
 import ScrollToTop from "./components/ScrollToTop.jsx";
 import NationSkillUpPage from "./pages/GFG-Connect.jsx";
 import Teams from './pages/Team.jsx';
+import GFGCodeRushPage from "./pages/GFG-CodeRush.jsx";
 
 
 
@@ -38,6 +39,7 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/GFG-Connect" element={<NationSkillUpPage />} />
+          <Route path="/GFG-CodeRush" element={<GFGCodeRushPage />} />
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/events" element={<Events />} />
           <Route path="/event-registration" element={<EventRegistration />} />

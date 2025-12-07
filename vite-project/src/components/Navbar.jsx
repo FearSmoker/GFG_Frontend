@@ -451,6 +451,11 @@ const Navbar = () => {
                     path: "/GFG-Connect",
                     icon: "🚀",
                   },
+                   {
+                    label: "GFG-CodeRush",
+                    path: "/GFG-CodeRush",
+                    icon: "🚀",
+                  },
                   { label: "About Us", path: "/about-us", icon: "ℹ️" },
                   { label: "POTD", path: "/potd", icon: "💡" },
                 ].map(({ label, path, icon }) => (

@@ -2,7 +2,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import { X } from "lucide-react";
 import { Link } from "react-router-dom";
-import ConnectBanner from "../assets/Nation-images/ConnectBanner.png";
+import Logo from "../assets/NewLogoDark.png";
 
 export default function Nationpopup() {
     const [isOpen, setIsOpen] = useState(true);
@@ -20,23 +20,26 @@ export default function Nationpopup() {
                     {/* Illustration */}
                     <div className="flex-shrink-0">
                         <img
-                            src={ConnectBanner}
-                            alt="Conect Banner"
-                            className="w-16 h-16 sm:w-20 sm:h-20 object-contain rounded-lg shadow-md"
+                            src={Logo}
+                            alt="Event Banner"
+                            className="w-16 h-16 sm:w-20 sm:h-20 object-contain rounded-lg shadow-2xl shadow-black/80"
                         />
                     </div>
 
                     {/* Text */}
                     <div className="flex-1">
                         <h3 className="text-lg sm:text-xl font-bold text-emerald-300">
-                            GFG-Connect
+                            GFG CodeRush 2.0
                         </h3>
                         <p className="text-sm sm:text-base text-gray-100 leading-snug">
-                            connect now! 🚀
+                            Code Now! 🚀
                         </p>
-                        <button className="mt-2 px-4 py-2 bg-emerald-500 text-white font-semibold rounded-lg shadow-md hover:bg-emerald-600 transition">
-                            <Link to="https://www.gfgcampusbodymitsdu.qzz.io/GFG-Connect">Register Now</Link>
-                        </button>
+                        <Link
+                            to="/GFG-CodeRush"
+                            className="mt-2 px-4 py-2 bg-emerald-500 text-white font-semibold rounded-lg shadow-md hover:bg-emerald-600 transition inline-block"
+                        >
+                            Register Now
+                        </Link>
                     </div>
 
                     {/* Close Button */}
