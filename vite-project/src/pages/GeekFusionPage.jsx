@@ -2,10 +2,11 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion"; 
 import useTheme from "../context/ThemeContext";
 import OtherPage1 from "../components/OtherPage1";
-import img1 from "../assets/IMG_4171.JPG";
-import img3 from "../assets/IMG_4177.JPG";
-import img2 from "../assets/IMG_3885.JPG";
-import img4 from "../assets/Copy of IMG_3874.JPG";
+import img1 from "../assets/geekfusion-highlight-1.JPG";
+import img3 from "../assets/geekfusion-highlight-3.JPG";
+import img2 from "../assets/geekfusion-highlight-2.JPG";
+import img4 from "../assets/geekfusion-highlight-4.JPG";
+
 // Animation Variants
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -437,7 +438,7 @@ export default function GeekFusionPage() {
                   <img
                     src={eventImages[current]}
                     alt={`Highlight ${current + 1}`}
-                    className="w-full h-full object-cover" // Changed to object-cover for better visuals
+                    className="w-full h-full object-cover"
                     loading="lazy"
                   />
 
