@@ -50,6 +50,7 @@ export default function Nationpopup() {
                         <X size={20} />
                     </button>
                 </motion.div>
+                
             )}
         </>
     );

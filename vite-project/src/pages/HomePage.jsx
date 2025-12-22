@@ -12,6 +12,7 @@ import useTheme from "../context/ThemeContext.jsx";
 import NewLogoLight from "../assets/NewLogoLight.png";
 import { Link } from "react-router-dom";
 import NationPopup from "../components/NationPopup.jsx";
+import GeekFusion from "../components/GeekFusion.jsx";
 
 const HomePage = () => {
   const [events, setEvents] = useState([]);
@@ -94,9 +95,11 @@ const HomePage = () => {
         <GradientBackground />
       )}
 
-      
-      <NationPopup/>
-      
+      <div>
+        <NationPopup />
+        <GeekFusion />
+      </div>
+
       {/* Hero Section */}
       <div className="flex flex-col items-center justify-center flex-grow px-4 md:px-8 text-center min-h-screen">
         {/* Logo Card */}
@@ -107,20 +110,26 @@ const HomePage = () => {
             className="h-40 md:h-48 mx-auto mb-4"
           />
         </div>
-        
+
         {/* Styled Content Block */}
-        <div className={`mt-10 max-w-3xl mx-auto p-6 md:p-8 rounded-2xl shadow-lg transition-all duration-200 hover:shadow-xl bg-transparent ${
-          themeMode === "dark" 
-            ? "text-[#002b46]" 
-            : "text-[#002b46]"
-        }`} style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)', backdropFilter: 'blur(10px)' }}>
+        <div
+          className={`mt-10 max-w-3xl mx-auto p-6 md:p-8 rounded-2xl shadow-lg transition-all duration-200 hover:shadow-xl bg-transparent ${
+            themeMode === "dark" ? "text-[#002b46]" : "text-[#002b46]"
+          }`}
+          style={{
+            backgroundColor: "rgba(255, 255, 255, 0.1)",
+            backdropFilter: "blur(10px)",
+          }}
+        >
           <p className="text-md md:text-xl leading-relaxed font-semibold">
-            The GeeksforGeeks Campus Body is the official GeeksforGeeks affiliated student-driven 
-            community at Madhav Institue of Technology and Science, Gwalior - DU. As a close-knitted 
-            extension of GeeksforGeeks, we bring together curious minds across the campus aiming to 
-            equip them with knowledge, skills, and confidence. By and for the students, the GFG Campus Body 
-            is the embodiment of innovation, inclusivity, and learning, making MITS a hub of rare talent,
-             ingenious ideas, and bold initiatives.
+            The GeeksforGeeks Campus Body is the official GeeksforGeeks
+            affiliated student-driven community at Madhav Institue of Technology
+            and Science, Gwalior - DU. As a close-knitted extension of
+            GeeksforGeeks, we bring together curious minds across the campus
+            aiming to equip them with knowledge, skills, and confidence. By and
+            for the students, the GFG Campus Body is the embodiment of
+            innovation, inclusivity, and learning, making MITS a hub of rare
+            talent, ingenious ideas, and bold initiatives.
           </p>
         </div>
       </div>

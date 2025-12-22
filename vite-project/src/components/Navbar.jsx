@@ -1,6 +1,7 @@
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import React from "react";
+import { motion } from "framer-motion";
 import { useNavigation } from "../context/NavigationContext.jsx";
 import ThemeBtn from "./ThemeBtn.jsx";
 import logoutIcon from "../assets/logout.png";
@@ -168,6 +169,12 @@ const Navbar = () => {
               label="Events"
               onClick={() => goTo("/events")}
               active={currentPath === "/events"}
+            />
+
+            <NavbarLink
+              label="GeekFusion"
+              onClick={() => goTo("/geekfusion")}
+              active={currentPath === "/geekfusion"}
             />
             <NavbarLink
               label="About Us"
@@ -446,12 +453,15 @@ const Navbar = () => {
                     icon: "👥",
                   },
                   { label: "Events", path: "/events", icon: "🎯" },
+
+                  { label: "GEEKFUSION 2025", path: "/geekfusion", icon: "🔥" },
+
                   {
                     label: "GFG-Connect",
                     path: "/GFG-Connect",
                     icon: "🚀",
                   },
-                   {
+                  {
                     label: "GFG-CodeRush",
                     path: "/GFG-CodeRush",
                     icon: "🚀",
