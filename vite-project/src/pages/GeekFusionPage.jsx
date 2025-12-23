@@ -2,10 +2,6 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import useTheme from "../context/ThemeContext";
 import OtherPage1 from "../components/OtherPage1";
-import Image1 from "../assets/GeekFusion/H1.jpeg";
-import Image2 from "../assets/GeekFusion/H2.jpeg";
-import Image3 from "../assets/GeekFusion/H3.jpeg";
-import Image4 from "../assets/GeekFusion/H4.jpeg";
 
 // Animation Variants
 const containerVariants = {
@@ -28,7 +24,11 @@ const hoverEffect = {
 };
 
 // Placeholder Images - REPLACE THESE WITH YOUR ACTUAL CLOUDINARY/ASSET LINKS
-const eventImages = [Image1, Image2, Image3, Image4];
+const eventImages = [
+  "https://media.istockphoto.com/id/598529560/photo/handsome-young-african-american-man-at-job-interview.jpg?s=612x612&w=0&k=20&c=Pq8sQdKjW8yfewG8qR0Ee6RkivHa_FmZ6YmtuT3PSQg=",
+  "https://img.freepik.com/free-photo/headhunters-interviewing-female-job-candidate_1163-4674.jpg?semt=ais_hybrid&w=740&q=80",
+  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSxzUquhnn94E5HMY0-LHUet5DxNu4P854Fw&s",
+];
 
 export default function GeekFusionPage() {
   const { themeMode } = useTheme();
