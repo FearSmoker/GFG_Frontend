@@ -3,6 +3,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import useTheme from "../context/ThemeContext";
 import OtherPage1 from "../components/OtherPage1";
 
+import gf1 from '../assets/GeekFusion2026/gf1.jpeg'
+import gf2 from '../assets/GeekFusion2026/gf2.jpeg'
+import gf3 from '../assets/GeekFusion2026/gf3.jpeg'
+import gf4 from '../assets/GeekFusion2026/gf4.jpeg'
+import gf5 from '../assets/GeekFusion2026/gf5.jpg'
+
 // Animation Variants
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -24,11 +30,7 @@ const hoverEffect = {
 };
 
 // Placeholder Images - REPLACE THESE WITH YOUR ACTUAL CLOUDINARY/ASSET LINKS
-const eventImages = [
-  "https://media.istockphoto.com/id/598529560/photo/handsome-young-african-american-man-at-job-interview.jpg?s=612x612&w=0&k=20&c=Pq8sQdKjW8yfewG8qR0Ee6RkivHa_FmZ6YmtuT3PSQg=",
-  "https://img.freepik.com/free-photo/headhunters-interviewing-female-job-candidate_1163-4674.jpg?semt=ais_hybrid&w=740&q=80",
-  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRSxzUquhnn94E5HMY0-LHUet5DxNu4P854Fw&s",
-];
+const eventImages = [gf1,gf2,gf3,gf4,gf5];
 
 export default function GeekFusionPage() {
   const { themeMode } = useTheme();
