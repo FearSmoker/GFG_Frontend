@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion"; 
+import { motion, AnimatePresence } from "framer-motion";
 import useTheme from "../context/ThemeContext";
 import OtherPage1 from "../components/OtherPage1";
-import img1 from "../assets/geekfusion-highlight-1.JPG";
-import img3 from "../assets/geekfusion-highlight-3.JPG";
-import img2 from "../assets/geekfusion-highlight-2.JPG";
-import img4 from "../assets/geekfusion-highlight-4.JPG";
+import Image1 from "../assets/GeekFusion/H1.jpeg";
+import Image2 from "../assets/GeekFusion/H2.jpeg";
+import Image3 from "../assets/GeekFusion/H3.jpeg";
+import Image4 from "../assets/GeekFusion/H4.jpeg";
 
 // Animation Variants
 const containerVariants = {
@@ -28,7 +28,7 @@ const hoverEffect = {
 };
 
 // Placeholder Images - REPLACE THESE WITH YOUR ACTUAL CLOUDINARY/ASSET LINKS
-const eventImages = [img4, img2, img1,img3];
+const eventImages = [Image1, Image2, Image3, Image4];
 
 export default function GeekFusionPage() {
   const { themeMode } = useTheme();
