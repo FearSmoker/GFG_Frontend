@@ -186,12 +186,12 @@ export default function GeekFusionPage() {
               >
                 THE SYNTAX SIEGE
               </h5>
-              <p className={`text-sm ${bodyText}`}>
-                Online Coding Round (Bring your own laptop).
-                <br />
-                DSA & Problem Solving.
-                <br />
-                Pen-paper/Lab-based.
+              <p className={`text-sm ${bodyText} text-start ml-14`}>
+                <li>Coding Round (Bring your own laptop).</li>
+              
+                <li>DSA & Problem Solving.</li>
+          
+                <li>Pen-paper/Lab-based.</li>
               </p>
             </motion.div>
 
@@ -217,12 +217,12 @@ export default function GeekFusionPage() {
               >
                 THE DISCUSSION PHASE
               </h5>
-              <p className={`text-sm ${bodyText}`}>
-                Group Discussion.
-                <br />
-                Communication, Leadership.
-                <br />
-                Critical Thinking.
+              <p className={`text-sm ${bodyText} text-start ml-22`}>
+                <li>Group Discussion.</li>
+                
+                <li>Communication, Leadership.</li>
+                
+                <li>Critical Thinking.</li>
               </p>
             </motion.div>
 
@@ -248,12 +248,12 @@ export default function GeekFusionPage() {
               >
                 THE FINAL FRONTIER
               </h5>
-              <p className={`text-sm ${bodyText}`}>
-                Personal Interview.
-                <br />
-                1-on-1 Technical + HR.
-                <br />
-                Exclusive for Shortlisted.
+              <p className={`text-sm ${bodyText} text-start ml-24`}>
+                <li>Personal Interview.</li>
+                
+                <li>1-on-1 Technical + HR.</li>
+                
+                <li>Exclusive for Shortlisted.</li>
               </p>
             </motion.div>
           </div>
@@ -272,7 +272,7 @@ export default function GeekFusionPage() {
           >
             The Intelligence
           </h3>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             <motion.div
               whileHover={hoverEffect}
               className={`p-4 rounded-lg border ${cardBorder} ${cardBg}`}
@@ -318,21 +318,7 @@ export default function GeekFusionPage() {
                 To Be Declared
               </p>
             </motion.div>
-            <motion.div
-              whileHover={hoverEffect}
-              className={`p-4 rounded-lg border ${cardBorder} ${cardBg}`}
-            >
-              <span className="text-xs font-bold text-gray-400 uppercase">
-                Eligibility
-              </span>
-              <p
-                className={`font-semibold ${
-                  isLightTheme ? "text-black" : "text-white"
-                }`}
-              >
-                Everyone
-              </p>
-            </motion.div>
+            
             <motion.div
               whileHover={hoverEffect}
               className={`p-4 rounded-lg border ${cardBorder} ${cardBg}`}
@@ -405,9 +391,8 @@ export default function GeekFusionPage() {
                   PERKS
                 </h4>
                 <ul className={`list-disc pl-5 ${bodyText} space-y-1`}>
-                  <li>Direct entry to final rounds</li>
-                  <li>Resume review</li>
-                  <li>Placement Prep</li>
+                  <li>📄Resume review</li>
+                  <li>🎓Placement Prep</li>
                 </ul>
               </div>
             </motion.div>
