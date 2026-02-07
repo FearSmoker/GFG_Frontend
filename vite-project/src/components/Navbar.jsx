@@ -171,11 +171,11 @@ const Navbar = () => {
               active={currentPath === "/events"}
             />
 
-            <NavbarLink
+            {/* <NavbarLink
               label="GeekFusion"
               onClick={() => goTo("/geekfusion")}
               active={currentPath === "/geekfusion"}
-            />
+            /> */}
             <NavbarLink
               label="About Us"
               onClick={() => goTo("/about-us")}
@@ -454,7 +454,7 @@ const Navbar = () => {
                   },
                   { label: "Events", path: "/events", icon: "🎯" },
 
-                  { label: "GEEKFUSION 2025", path: "/geekfusion", icon: "🔥" },
+                  // { label: "GEEKFUSION 2025", path: "/geekfusion", icon: "🔥" },
 
                   {
                     label: "GFG-Connect",

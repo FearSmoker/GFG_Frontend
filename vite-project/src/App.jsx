@@ -28,7 +28,7 @@ import ScrollToTop from "./components/ScrollToTop.jsx";
 import NationSkillUpPage from "./pages/GFG-Connect.jsx";
 import Teams from "./pages/Team.jsx";
 import GFGCodeRushPage from "./pages/GFG-CodeRush.jsx";
-import GeekFusionPage from "./pages/GeekFusionPage";
+//import GeekFusionPage from "./pages/GeekFusionPage";
 
 function App() {
   return (
@@ -56,7 +56,7 @@ function App() {
         <Route path="/events/:eventId" element={<EventDetails />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/my-registrations" element={<MyRegistrations />} />
-        <Route path="/geekfusion" element={<GeekFusionPage />} />
+        {/* <Route path="/geekfusion" element={<GeekFusionPage />} /> */}
         <Route path="/event-history" element={<EventHistory />} />
         <Route
           path="/admin/registrations"

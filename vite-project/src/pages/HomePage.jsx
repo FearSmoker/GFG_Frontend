@@ -97,7 +97,7 @@ const HomePage = () => {
 
       <div>
         <NationPopup />
-        <GeekFusion />
+        {/* <GeekFusion /> */}
       </div>
 
       {/* Hero Section */}
